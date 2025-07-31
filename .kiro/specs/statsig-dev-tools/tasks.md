@@ -7,7 +7,7 @@
   - Create basic project structure with proper folder organization
   - _Requirements: 8.1, 8.2, 8.3_
 
-- [ ] 2. Create extension manifest and basic structure
+- [x] 2. Create extension manifest and basic structure
   - [x] 2.1 Configure manifest.json for Manifest V3 (Chrome) and V2 compatibility (Firefox)
     - Define required permissions: cookies, storage, activeTab, host permissions
     - Configure background service worker and content script declarations
@@ -15,14 +15,14 @@
     - Add CSP configuration for Statsig domains
     - _Requirements: 8.1, 9.2, 9.4_
 
-  - [ ] 2.2 Implement webextension-polyfill integration
+  - [x] 2.2 Implement webextension-polyfill integration
     - Install and configure webextension-polyfill for cross-browser compatibility
     - Create browser API abstraction layer
     - Test basic extension loading in both Chrome and Firefox
     - _Requirements: 8.1, 8.2_
 
 - [ ] 3. Implement secure storage and authentication system
-  - [ ] 3.1 Create storage manager with encryption
+  - [x] 3.1 Create storage manager with encryption
     - Implement encrypted storage for Console API key and Client SDK key
     - Create secure key storage and retrieval methods
     - Add storage cleanup functionality for security

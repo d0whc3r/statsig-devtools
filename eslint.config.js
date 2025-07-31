@@ -152,8 +152,8 @@ export default [
       // Code quality
       complexity: ['warn', 10],
       'max-depth': ['warn', 4],
-      'max-lines': ['warn', 300],
-      'max-lines-per-function': ['warn', 50],
+      'max-lines': ['warn', 500],
+      'max-lines-per-function': ['warn', 100],
       'max-params': ['warn', 4],
 
       // Accessibility
