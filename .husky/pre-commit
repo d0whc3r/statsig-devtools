@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+echo "🚀 Running lint-staged on changed files..."
+npx lint-staged
+
+echo "🧪 Running tests..."
+npm run test

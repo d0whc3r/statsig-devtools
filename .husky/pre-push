@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+# Run full check before pushing
+echo "🚀 Running pre-push checks..."
+
+# Run the complete check script
+echo "📋 Running complete project check..."
+npm run check
+
+# Build the extension to ensure it compiles correctly
+echo "🏗️  Building extension for Chrome..."
+npm run build
+
+echo "🦊 Building extension for Firefox..."
+npm run build:firefox
+
+echo "✅ All pre-push checks passed! Ready to push."
