@@ -1,0 +1,202 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Configuration Processing Integration > Integration Snapshots > should match complete integration flow snapshot > complete-integration-flow 1`] = `
+{
+  "configurations": [
+    {
+      "formattedName": "Test Feature Gate",
+      "id": "gate-1",
+      "isEnabled": true,
+      "name": "test_feature_gate",
+      "overrideSuggestions": {
+        "cookie": "enabled",
+        "key": "statsig_override_test_feature_gate",
+        "localStorage": "true",
+        "sessionStorage": "true",
+      },
+      "type": "feature_gate",
+    },
+    {
+      "formattedName": "Test Dynamic Config",
+      "id": "config-1",
+      "isEnabled": true,
+      "name": "test_dynamic_config",
+      "overrideSuggestions": {
+        "cookie": "custom_config",
+        "key": "statsig_override_test_dynamic_config",
+        "localStorage": "{"theme":"dark","maxItems":10,"features":["feature1","feature2"]}",
+        "sessionStorage": "{"overridden":true}",
+      },
+      "type": "dynamic_config",
+    },
+    {
+      "formattedName": "Test Experiment",
+      "id": "exp-1",
+      "isEnabled": false,
+      "name": "test_experiment",
+      "overrideSuggestions": {
+        "cookie": "treatment_group",
+        "key": "statsig_override_test_experiment",
+        "localStorage": "{"group":"treatment"}",
+        "sessionStorage": "{"variant":"B"}",
+      },
+      "type": "experiment",
+    },
+  ],
+  "summary": {
+    "configurationsByType": {
+      "dynamic_configs": 1,
+      "experiments": 1,
+      "feature_gates": 1,
+    },
+    "enabledConfigurations": 2,
+    "totalConfigurations": 3,
+  },
+}
+`;
+
+exports[`Configuration Processing Integration > Integration Snapshots > should match override suggestions snapshot > override-suggestions 1`] = `
+[
+  {
+    "configName": "test_feature_gate",
+    "configType": "feature_gate",
+    "suggestions": {
+      "cookie": "enabled",
+      "key": "statsig_override_test_feature_gate",
+      "localStorage": "true",
+      "sessionStorage": "true",
+    },
+  },
+  {
+    "configName": "test_dynamic_config",
+    "configType": "dynamic_config",
+    "suggestions": {
+      "cookie": "custom_config",
+      "key": "statsig_override_test_dynamic_config",
+      "localStorage": "{"theme":"dark","maxItems":10,"features":["feature1","feature2"]}",
+      "sessionStorage": "{"overridden":true}",
+    },
+  },
+  {
+    "configName": "test_experiment",
+    "configType": "experiment",
+    "suggestions": {
+      "cookie": "treatment_group",
+      "key": "statsig_override_test_experiment",
+      "localStorage": "{"group":"treatment"}",
+      "sessionStorage": "{"variant":"B"}",
+    },
+  },
+]
+`;
+
+exports[`Configuration Processing Integration > Integration Snapshots > should match processed configuration snapshot > processed-configurations 1`] = `
+{
+  "configurations": [
+    {
+      "createdTime": 1640995200000,
+      "description": "Test feature gate for integration testing",
+      "formattedName": "Test Feature Gate",
+      "id": "gate-1",
+      "isEnabled": true,
+      "lastModifierName": "Test User",
+      "name": "test_feature_gate",
+      "rules": [
+        {
+          "conditions": [
+            {
+              "field": "userID",
+              "operator": "eq",
+              "targetValue": "test-user",
+              "type": "user_id",
+            },
+          ],
+          "name": "Test Rule",
+          "passPercentage": 50,
+        },
+      ],
+      "tags": [
+        "test",
+        "integration",
+      ],
+      "type": "feature_gate",
+    },
+    {
+      "createdTime": 1640995200000,
+      "defaultValue": {
+        "features": [
+          "feature1",
+          "feature2",
+        ],
+        "maxItems": 10,
+        "theme": "dark",
+      },
+      "description": "Test dynamic config",
+      "formattedName": "Test Dynamic Config",
+      "id": "config-1",
+      "isEnabled": true,
+      "lastModifierName": "Config Manager",
+      "name": "test_dynamic_config",
+      "rules": [],
+      "tags": [
+        "config",
+      ],
+      "type": "dynamic_config",
+    },
+    {
+      "createdTime": 1640995200000,
+      "description": "Test experiment for A/B testing",
+      "formattedName": "Test Experiment",
+      "groups": [
+        {
+          "name": "control",
+          "parameterValues": {
+            "variant": "A",
+          },
+          "size": 50,
+        },
+        {
+          "name": "treatment",
+          "parameterValues": {
+            "variant": "B",
+          },
+          "size": 50,
+        },
+      ],
+      "id": "exp-1",
+      "isEnabled": false,
+      "lastModifierName": "Experiment Manager",
+      "name": "test_experiment",
+      "rules": [
+        {
+          "conditions": [
+            {
+              "field": "country",
+              "operator": "in",
+              "targetValue": [
+                "US",
+                "CA",
+              ],
+              "type": "country",
+            },
+          ],
+          "name": "Experiment Rule",
+          "passPercentage": 100,
+        },
+      ],
+      "tags": [
+        "experiment",
+        "ab-test",
+      ],
+      "type": "experiment",
+    },
+  ],
+  "configurationsByType": {
+    "dynamic_configs": 1,
+    "experiments": 1,
+    "feature_gates": 1,
+  },
+  "enabledConfigurations": 2,
+  "totalConfigurations": 3,
+}
+`;

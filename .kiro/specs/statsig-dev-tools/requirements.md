@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The Statsig Developer Tools extension is a browser-based development tool designed to streamline the testing and debugging of Statsig feature flags, experiments, and dynamic configurations. This extension empowers developers and QA engineers to inspect Statsig configurations in real-time, understand targeting rules, and simulate different user conditions by manipulating browser storage and cookies directly from a convenient popup interface.
+The Statsig DevTools extension is a browser-based development tool designed to streamline the testing and debugging of Statsig feature flags, experiments, and dynamic configurations. This extension empowers developers and QA engineers to inspect Statsig configurations in real-time, understand targeting rules, and simulate different user conditions by manipulating browser storage and cookies directly from a convenient popup interface.
 
 The extension addresses the common pain point of manually testing feature flag behavior by providing a unified interface to view all Statsig configurations, understand their evaluation logic, and quickly test different scenarios without requiring backend changes or complex environment setup.
 

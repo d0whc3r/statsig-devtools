@@ -4,21 +4,12 @@
  * using webextension-polyfill under the hood (via WXT)
  */
 
+import { logger } from './logger'
+
 // Re-export browser object with proper typing
 export const browserAPI = browser
 
-/**
- * Logger utility for development and debugging
- */
-const logger = {
-  error: (message: string, error?: unknown): void => {
-    // In development, log to console. In production, this could be sent to a logging service
-    if (process.env.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-console
-      console.error(message, error)
-    }
-  },
-}
+// Logger is imported from './logger' above
 
 /**
  * Storage API abstraction for secure data management
@@ -91,14 +82,50 @@ export class BrowserTabs {
    * Get the currently active tab
    * @returns Active tab or null if not found
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static async getActiveTab(): Promise<any> {
+  static async getActiveTab(): Promise<chrome.tabs.Tab | null> {
     try {
       const tabs = await browserAPI.tabs.query({ active: true, currentWindow: true })
-      return tabs[0] ?? null
+      return (tabs[0] as chrome.tabs.Tab) ?? null
     } catch (error) {
       logger.error('Failed to get active tab:', error)
       throw new Error(`Tab operation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
+  }
+
+  /**
+   * Query tabs with specific criteria
+   * @param queryInfo - Query criteria
+   * @returns Array of matching tabs
+   */
+  static async query(queryInfo: chrome.tabs.QueryInfo): Promise<chrome.tabs.Tab[]> {
+    try {
+      return (await browserAPI.tabs.query(queryInfo as any)) as chrome.tabs.Tab[]
+    } catch (error) {
+      logger.error('Failed to query tabs:', error)
+      throw new Error(`Tab query failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
+  }
+
+  /**
+   * Send message to content script in a specific tab
+   * @param tabId - Tab ID
+   * @param message - Message to send
+   * @returns Response from content script
+   */
+  static async sendMessage(tabId: number, message: unknown): Promise<unknown> {
+    try {
+      return await browserAPI.tabs.sendMessage(tabId, message)
+    } catch (error) {
+      // Don't log as error since this is often expected (content script not available)
+      const errorMessage = error instanceof Error ? error.message : String(error)
+
+      // Only log as warning for debugging, not as error
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.warn(`[Browser API] Tab message failed (tab ${tabId}):`, errorMessage)
+      }
+
+      throw new Error(`Tab message failed: ${errorMessage}`)
     }
   }
 
@@ -107,12 +134,14 @@ export class BrowserTabs {
    * @param tabId - Tab ID
    * @param details - Script execution details
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static async executeScript(tabId: number, details: any): Promise<void> {
+  static async executeScript(
+    tabId: number,
+    details: chrome.scripting.ScriptInjection<unknown[], unknown>,
+  ): Promise<void> {
     try {
       await browserAPI.scripting.executeScript({
-        target: { tabId },
         ...details,
+        target: { tabId },
       })
     } catch (error) {
       logger.error('Failed to execute script:', error)
@@ -129,8 +158,7 @@ export class BrowserCookies {
    * Set a cookie for a specific domain
    * @param details - Cookie details
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static async set(details: any): Promise<any> {
+  static async set(details: chrome.cookies.SetDetails): Promise<chrome.cookies.Cookie | null> {
     try {
       return await browserAPI.cookies.set(details)
     } catch (error) {
@@ -144,8 +172,7 @@ export class BrowserCookies {
    * @param url - URL to get cookies for
    * @returns Array of cookies
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static async get(url: string): Promise<any[]> {
+  static async get(url: string): Promise<chrome.cookies.Cookie[]> {
     try {
       return await browserAPI.cookies.getAll({ url })
     } catch (error) {
@@ -158,10 +185,9 @@ export class BrowserCookies {
    * Remove a cookie
    * @param details - Cookie removal details
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static async remove(details: any): Promise<any> {
+  static async remove(details: { url: string; name: string }): Promise<chrome.cookies.Cookie | null> {
     try {
-      return await browserAPI.cookies.remove(details)
+      return (await browserAPI.cookies.remove(details)) as unknown as chrome.cookies.Cookie | null
     } catch (error) {
       logger.error('Failed to remove cookie:', error)
       throw new Error(`Cookie operation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
@@ -191,30 +217,37 @@ export class BrowserRuntime {
    * Add a message listener
    * @param listener - Message listener function
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   static addMessageListener(
-    listener: (message: any, sender: any, sendResponse: (response?: any) => void) => boolean | void,
+    listener: (
+      message: unknown,
+      sender: chrome.runtime.MessageSender,
+      sendResponse: (response?: unknown) => void,
+    ) => boolean | void,
   ): void {
-    browserAPI.runtime.onMessage.addListener(listener)
+    browserAPI.runtime.onMessage.addListener(listener as any)
   }
 
   /**
    * Remove a message listener
    * @param listener - Message listener function to remove
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   static removeMessageListener(
-    listener: (message: any, sender: any, sendResponse: (response?: any) => void) => boolean | void,
+    listener: (
+      message: unknown,
+      sender: chrome.runtime.MessageSender,
+      sendResponse: (response?: unknown) => void,
+    ) => boolean | void,
   ): void {
-    browserAPI.runtime.onMessage.removeListener(listener)
+    browserAPI.runtime.onMessage.removeListener(listener as any)
   }
 
   /**
    * Get extension manifest
    * @returns Extension manifest
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static getManifest(): any {
+  static getManifest(): chrome.runtime.Manifest {
     return browserAPI.runtime.getManifest()
   }
 
@@ -224,8 +257,7 @@ export class BrowserRuntime {
    * @returns Full extension URL
    */
   static getURL(path: string): string {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (browserAPI.runtime.getURL as any)(path)
+    return browserAPI.runtime.getURL(path as any)
   }
 }
 

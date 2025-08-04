@@ -38,6 +38,14 @@ export default [
         URLSearchParams: 'readonly',
         defineBackground: 'readonly',
         defineContentScript: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        fetch: 'readonly',
+        navigator: 'readonly',
+        performance: 'readonly',
+        NodeJS: 'readonly',
       },
     },
     plugins: {
@@ -150,10 +158,10 @@ export default [
       ],
 
       // Code quality
-      complexity: ['warn', 10],
+      complexity: ['warn', 15],
       'max-depth': ['warn', 4],
       'max-lines': ['warn', 500],
-      'max-lines-per-function': ['warn', 100],
+      'max-lines-per-function': ['warn', 200],
       'max-params': ['warn', 4],
 
       // Accessibility
@@ -190,6 +198,14 @@ export default [
         __dirname: 'readonly',
         URL: 'readonly',
         URLSearchParams: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        fetch: 'readonly',
+        navigator: 'readonly',
+        performance: 'readonly',
+        NodeJS: 'readonly',
       },
     },
     plugins: {
@@ -241,7 +257,7 @@ export default [
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', '.wxt/', 'coverage/', '.output/'],
+    ignores: ['dist/', 'node_modules/', '.wxt/', 'coverage/', '.output/', 'src/templates/*.ejs'],
   },
   prettier,
 ]

@@ -1,5 +1,7 @@
 import { vi } from 'vitest'
 
+import '@testing-library/jest-dom/vitest'
+
 // Mock browser APIs
 const mockBrowser = {
   storage: {
@@ -38,3 +40,30 @@ const mockBrowser = {
 global.browser = mockBrowser
 // @ts-expect-error - Mocking global chrome API
 global.chrome = mockBrowser
+
+// Mock webextension-polyfill
+vi.mock('webextension-polyfill', () => ({
+  default: mockBrowser,
+}))
+
+// Mock crypto API
+Object.defineProperty(globalThis, 'crypto', {
+  value: {
+    subtle: {
+      generateKey: vi.fn(),
+      exportKey: vi.fn(),
+      importKey: vi.fn(),
+      encrypt: vi.fn(),
+      decrypt: vi.fn(),
+    },
+    getRandomValues: vi.fn((arr: Uint8Array) => {
+      for (let i = 0; i < arr.length; i++) {
+        arr[i] = Math.floor(Math.random() * 256)
+      }
+      return arr
+    }),
+  },
+})
+
+// Mock fetch
+global.fetch = vi.fn()

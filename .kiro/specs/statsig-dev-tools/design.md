@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Statsig Developer Tools extension is architected as a modern browser extension using React, TypeScript, and the WXT framework for cross-browser compatibility. The design emphasizes security, performance, and developer experience while providing a clean, intuitive interface for testing Statsig configurations.
+The Statsig DevTools extension is architected as a modern browser extension using React, TypeScript, and the WXT framework for cross-browser compatibility. The design emphasizes security, performance, and developer experience while providing a clean, intuitive interface for testing Statsig configurations.
 
 The extension follows a modular architecture with clear separation between the popup UI, background service worker, content scripts, and API integration layer. This design ensures maintainability, testability, and scalability while adhering to browser extension security best practices.
 
@@ -550,4 +550,4 @@ const statsigDomains = [
 - Provide screen reader compatibility
 - Use semantic HTML elements
 
-This design provides a solid foundation for implementing a secure, performant, and user-friendly Statsig Developer Tools extension that meets all the specified requirements while maintaining high code quality and cross-browser compatibility.
+This design provides a solid foundation for implementing a secure, performant, and user-friendly Statsig DevTools extension that meets all the specified requirements while maintaining high code quality and cross-browser compatibility.

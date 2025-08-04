@@ -52,9 +52,9 @@ export interface StatsigConfigurationItem {
  * Configuration rule interface
  */
 export interface ConfigurationRule {
-  name: string
-  passPercentage: number
-  conditions: RuleCondition[]
+  name?: string
+  passPercentage?: number
+  conditions?: RuleCondition[]
   returnValue?: unknown
   id?: string
   salt?: string
@@ -77,3 +77,24 @@ export interface RuleCondition {
  * Type for arrays of Statsig configurations
  */
 export type StatsigConfigurations = StatsigConfigurationItem[]
+
+/**
+ * Authentication state interface
+ */
+export interface AuthState {
+  isAuthenticated: boolean
+  consoleApiKey?: string
+  clientSdkKey?: string
+  isLoading: boolean
+  error?: string
+  projectName?: string
+}
+
+/**
+ * API validation response interface
+ */
+export interface ApiValidationResponse {
+  isValid: boolean
+  error?: string
+  projectName?: string
+}

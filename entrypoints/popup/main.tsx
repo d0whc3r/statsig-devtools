@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client'
 
 import App from './App.tsx'
 
-import '@/src/styles/globals.css'
 import './style.css'
+import '@/src/styles/globals.css'
 
 const rootElement = document.getElementById('root')
 if (!rootElement) {
