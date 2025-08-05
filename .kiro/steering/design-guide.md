@@ -3,6 +3,7 @@
 ## Design System Overview
 
 ### Design Philosophy
+
 - **Developer-First**: Optimized for developer and QA workflows
 - **Clarity**: Clear information hierarchy and visual feedback
 - **Efficiency**: Minimize clicks and cognitive load
@@ -10,6 +11,7 @@
 - **Accessibility**: WCAG 2.1 AA compliance throughout
 
 ### Visual Identity
+
 - **Professional**: Clean, technical aesthetic suitable for dev tools
 - **Trustworthy**: Reliable visual cues for critical operations
 - **Modern**: Contemporary design patterns and interactions
@@ -18,6 +20,7 @@
 ## Color System
 
 ### Primary Palette
+
 - **Primary Blue**: `#2563eb` - Actions, links, active states
 - **Success Green**: `#10b981` - Success states, positive feedback
 - **Warning Orange**: `#f59e0b` - Warnings, caution states
@@ -25,6 +28,7 @@
 - **Info Cyan**: `#06b6d4` - Information, neutral feedback
 
 ### Neutral Palette
+
 - **Gray 50**: `#f9fafb` - Light backgrounds
 - **Gray 100**: `#f3f4f6` - Subtle backgrounds
 - **Gray 200**: `#e5e7eb` - Borders, dividers
@@ -33,6 +37,7 @@
 - **Gray 900**: `#111827` - Primary text
 
 ### Semantic Colors
+
 - **Feature Gate**: Blue variants for feature flag indicators
 - **Experiment**: Purple variants for A/B test indicators
 - **Dynamic Config**: Teal variants for configuration indicators
@@ -41,11 +46,13 @@
 ## Typography
 
 ### Font Stack
+
 - **Primary**: System fonts for optimal performance
 - **Monospace**: `'SF Mono', 'Monaco', 'Cascadia Code', monospace` for code
 - **Fallback**: Web-safe fonts for compatibility
 
 ### Type Scale
+
 - **Heading 1**: 24px, font-weight 700 - Main page titles
 - **Heading 2**: 20px, font-weight 600 - Section headers
 - **Heading 3**: 18px, font-weight 600 - Subsection headers
@@ -56,18 +63,21 @@
 ## Layout System
 
 ### Grid System
+
 - **Base Unit**: 4px grid system for consistent spacing
 - **Spacing Scale**: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64px
 - **Container Widths**: Responsive containers for different view modes
 - **Breakpoints**: Mobile-first responsive design
 
 ### View Mode Adaptations
+
 - **Popup Mode**: 400x600px fixed dimensions, compact layout
 - **Side Panel**: 320-400px width, vertical scrolling
 - **Tab Mode**: Full viewport, desktop-optimized layout
 - **Responsive**: Adaptive components for all sizes
 
 ### Component Spacing
+
 - **Tight**: 4-8px for related elements
 - **Normal**: 12-16px for component spacing
 - **Loose**: 20-24px for section separation
@@ -76,6 +86,7 @@
 ## Component Design Patterns
 
 ### Interactive Elements
+
 - **Buttons**: Clear hierarchy (primary, secondary, ghost)
 - **Form Controls**: Consistent styling across inputs
 - **Toggle Switches**: Visual feedback for feature flag states
@@ -83,6 +94,7 @@
 - **Modal Dialogs**: Focused interactions with backdrop
 
 ### Data Display
+
 - **Configuration Lists**: Scannable with clear status indicators
 - **Detail Panels**: Hierarchical information display
 - **Status Badges**: Color-coded state indicators
@@ -90,6 +102,7 @@
 - **Empty States**: Helpful guidance when no data
 
 ### Navigation
+
 - **Tab Navigation**: Clear active states and keyboard support
 - **Breadcrumbs**: Context awareness in deep navigation
 - **Search Interface**: Prominent search with filters
@@ -98,6 +111,7 @@
 ## Interaction Design
 
 ### Micro-interactions
+
 - **Hover States**: Subtle feedback on interactive elements
 - **Loading States**: Skeleton screens and spinners
 - **Transitions**: Smooth 200-300ms transitions
@@ -105,6 +119,7 @@
 - **Success Feedback**: Confirmation of completed actions
 
 ### User Feedback
+
 - **Toast Notifications**: Non-blocking status messages
 - **Inline Validation**: Real-time form validation
 - **Error Messages**: Clear, actionable error descriptions
@@ -112,6 +127,7 @@
 - **Empty States**: Guidance for first-time users
 
 ### Accessibility Features
+
 - **Keyboard Navigation**: Full keyboard accessibility
 - **Screen Reader Support**: Proper ARIA labels and roles
 - **High Contrast**: Sufficient color contrast ratios
@@ -121,12 +137,14 @@
 ## Icon System
 
 ### Icon Style
+
 - **Outline Style**: Consistent 2px stroke weight
 - **24px Grid**: Icons designed on 24px grid system
 - **Scalable**: Vector icons that scale cleanly
 - **Semantic**: Icons that clearly represent their function
 
 ### Icon Categories
+
 - **Actions**: Play, pause, refresh, settings, delete
 - **Status**: Check, warning, error, info, loading
 - **Navigation**: Arrow, chevron, menu, close, back
@@ -134,6 +152,7 @@
 - **Interface**: Search, filter, sort, view, edit
 
 ### Usage Guidelines
+
 - **Consistent Size**: Use consistent icon sizes within contexts
 - **Proper Spacing**: Adequate spacing around icons
 - **Color Usage**: Use semantic colors for status icons
@@ -143,6 +162,7 @@
 ## Responsive Design
 
 ### Breakpoint Strategy
+
 - **Mobile First**: Design for smallest screen first
 - **Progressive Enhancement**: Add features for larger screens
 - **Flexible Layouts**: Use CSS Grid and Flexbox
@@ -150,12 +170,14 @@
 - **Touch Targets**: Minimum 44px touch targets
 
 ### View Mode Considerations
+
 - **Popup Constraints**: Fixed dimensions, no scrolling
 - **Side Panel**: Vertical scrolling, narrow width
 - **Tab Mode**: Full desktop experience
 - **Mobile Web**: Responsive web version considerations
 
 ### Performance Considerations
+
 - **Lazy Loading**: Load images and components on demand
 - **Critical CSS**: Inline critical styles for fast rendering
 - **Font Loading**: Optimize web font loading

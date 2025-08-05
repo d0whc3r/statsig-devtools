@@ -239,6 +239,7 @@ The extension manifest is automatically generated based on the target browser:
 - Storage operation testing
 
 ### E2E Tests
+
 - Complete user workflow testing with Playwright
 - Browser extension functionality testing
 - Cross-browser compatibility testing
