@@ -188,7 +188,7 @@ jobs:
           echo "  - Build: ${{ needs.build.result }}"
           echo "  - E2E Tests: ${{ needs.e2e-tests.result }}"
           echo "  - Release Artifacts: ${{ needs.release-artifacts.result }}"
-          
+
           # Check critical jobs
           if [ "${{ needs.quality-checks.result }}" != "success" ] || 
              [ "${{ needs.unit-tests.result }}" != "success" ] || 
@@ -196,11 +196,11 @@ jobs:
             echo "❌ Critical CI jobs failed"
             exit 1
           fi
-          
+
           # Check E2E tests if they ran
           if [ "${{ needs.e2e-tests.result }}" == "failure" ]; then
             echo "❌ E2E tests failed"
             exit 1
           fi
-          
+
           echo "✅ All CI jobs completed successfully"

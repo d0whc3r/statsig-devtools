@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'fs'
+import { join } from 'path'
+
 import { expect } from '@playwright/test'
 
 /**
@@ -13,9 +16,6 @@ export class ExtensionVerification {
    * Verify all extension files exist
    */
   static async verifyExtensionFilesExist(): Promise<void> {
-    const { readFileSync, existsSync } = await import('fs')
-    const { join } = await import('path')
-
     console.log('🔍 Verifying extension files exist...')
 
     for (const file of this.requiredFiles) {
@@ -29,9 +29,6 @@ export class ExtensionVerification {
    * Verify manifest.json structure and permissions
    */
   static async verifyManifestStructure(): Promise<void> {
-    const { readFileSync } = await import('fs')
-    const { join } = await import('path')
-
     console.log('🔍 Verifying manifest structure...')
 
     const manifestPath = join(this.extensionPath, 'manifest.json')
@@ -69,9 +66,6 @@ export class ExtensionVerification {
    * Verify HTML files have correct structure
    */
   static async verifyHtmlStructure(): Promise<void> {
-    const { readFileSync } = await import('fs')
-    const { join } = await import('path')
-
     console.log('🔍 Verifying HTML structure...')
 
     const htmlFiles = ['popup.html', 'sidepanel.html', 'tab.html']
@@ -101,9 +95,6 @@ export class ExtensionVerification {
    * Verify content scripts configuration
    */
   static async verifyContentScripts(): Promise<void> {
-    const { readFileSync } = await import('fs')
-    const { join } = await import('path')
-
     console.log('🔍 Verifying content scripts...')
 
     const manifestPath = join(this.extensionPath, 'manifest.json')
@@ -149,9 +140,6 @@ export class ExtensionVerification {
     permissions: string[]
     hostPermissions: string[]
   }> {
-    const { readFileSync } = await import('fs')
-    const { join } = await import('path')
-
     const manifestPath = join(this.extensionPath, 'manifest.json')
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'))
 
@@ -168,9 +156,6 @@ export class ExtensionVerification {
    * Verify Firefox extension build (if exists)
    */
   static async verifyFirefoxExtension(): Promise<boolean> {
-    const { existsSync, readFileSync } = await import('fs')
-    const { join } = await import('path')
-
     const firefoxPath = './.output/firefox-mv2'
     const firefoxManifestPath = join(firefoxPath, 'manifest.json')
 

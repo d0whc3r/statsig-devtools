@@ -82,7 +82,7 @@ runs:
             exit 1
           fi
         fi
-        
+
         if [ "${{ inputs.create-firefox-zip }}" == "true" ]; then
           FIREFOX_ZIP="${{ steps.paths.outputs.firefox-zip }}"
           if [ -f "$FIREFOX_ZIP" ]; then
