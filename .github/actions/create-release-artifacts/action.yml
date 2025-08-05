@@ -1,0 +1,111 @@
+name: 'Create Release Artifacts'
+description: 'Create ZIP packages for Chrome and Firefox store submission'
+
+inputs:
+  create-chrome-zip:
+    description: 'Create Chrome Web Store ZIP'
+    required: false
+    default: 'true'
+  create-firefox-zip:
+    description: 'Create Firefox Add-ons ZIP'
+    required: false
+    default: 'true'
+  version:
+    description: 'Version for artifact naming'
+    required: false
+    default: ''
+
+outputs:
+  chrome-zip-path:
+    description: 'Path to Chrome ZIP file'
+    value: ${{ steps.paths.outputs.chrome-zip }}
+  firefox-zip-path:
+    description: 'Path to Firefox ZIP file'
+    value: ${{ steps.paths.outputs.firefox-zip }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Get version from package.json
+      id: version
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.version }}" ]; then
+          VERSION="${{ inputs.version }}"
+        else
+          VERSION=$(node -p "require('./package.json').version")
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "📦 Version: $VERSION"
+
+    - name: Create Chrome Web Store ZIP
+      if: inputs.create-chrome-zip == 'true'
+      shell: bash
+      run: |
+        echo "📦 Creating Chrome Web Store ZIP..."
+        npm run zip
+        echo "✅ Chrome ZIP created"
+
+    - name: Create Firefox Add-ons ZIP
+      if: inputs.create-firefox-zip == 'true'
+      shell: bash
+      run: |
+        echo "🦊 Creating Firefox Add-ons ZIP..."
+        npm run zip:firefox
+        echo "✅ Firefox ZIP created"
+
+    - name: Set output paths
+      id: paths
+      shell: bash
+      run: |
+        VERSION="${{ steps.version.outputs.version }}"
+        if [ "${{ inputs.create-chrome-zip }}" == "true" ]; then
+          CHROME_ZIP=".output/chrome-mv3-$VERSION.zip"
+          echo "chrome-zip=$CHROME_ZIP" >> $GITHUB_OUTPUT
+        fi
+        if [ "${{ inputs.create-firefox-zip }}" == "true" ]; then
+          FIREFOX_ZIP=".output/firefox-mv2-$VERSION.zip"
+          echo "firefox-zip=$FIREFOX_ZIP" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Verify ZIP files
+      shell: bash
+      run: |
+        echo "📁 Verifying ZIP files..."
+        if [ "${{ inputs.create-chrome-zip }}" == "true" ]; then
+          CHROME_ZIP="${{ steps.paths.outputs.chrome-zip }}"
+          if [ -f "$CHROME_ZIP" ]; then
+            echo "✅ Chrome ZIP: $CHROME_ZIP ($(du -h "$CHROME_ZIP" | cut -f1))"
+            unzip -l "$CHROME_ZIP" | head -20
+          else
+            echo "❌ Chrome ZIP not found: $CHROME_ZIP"
+            exit 1
+          fi
+        fi
+        
+        if [ "${{ inputs.create-firefox-zip }}" == "true" ]; then
+          FIREFOX_ZIP="${{ steps.paths.outputs.firefox-zip }}"
+          if [ -f "$FIREFOX_ZIP" ]; then
+            echo "✅ Firefox ZIP: $FIREFOX_ZIP ($(du -h "$FIREFOX_ZIP" | cut -f1))"
+            unzip -l "$FIREFOX_ZIP" | head -20
+          else
+            echo "❌ Firefox ZIP not found: $FIREFOX_ZIP"
+            exit 1
+          fi
+        fi
+
+    - name: Upload release artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-packages-v${{ steps.version.outputs.version }}
+        path: |
+          .output/*.zip
+        retention-days: 90
+
+    - name: Release artifacts summary
+      shell: bash
+      run: |
+        echo "📦 Release Artifacts Summary:"
+        echo "  - Version: ${{ steps.version.outputs.version }}"
+        echo "  - Chrome ZIP: ${{ inputs.create-chrome-zip == 'true' && '✅ Created' || '⏭️ Skipped' }}"
+        echo "  - Firefox ZIP: ${{ inputs.create-firefox-zip == 'true' && '✅ Created' || '⏭️ Skipped' }}"

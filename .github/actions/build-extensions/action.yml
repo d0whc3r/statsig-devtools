@@ -1,0 +1,73 @@
+name: 'Build Extensions'
+description: 'Build Chrome and Firefox extensions'
+
+inputs:
+  build-chrome:
+    description: 'Build Chrome extension'
+    required: false
+    default: 'true'
+  build-firefox:
+    description: 'Build Firefox extension'
+    required: false
+    default: 'true'
+  upload-artifacts:
+    description: 'Upload build artifacts'
+    required: false
+    default: 'true'
+
+outputs:
+  chrome-build-path:
+    description: 'Path to Chrome build output'
+    value: '.output/chrome-mv3'
+  firefox-build-path:
+    description: 'Path to Firefox build output'
+    value: '.output/firefox-mv2'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Build Chrome extension (Manifest V3)
+      if: inputs.build-chrome == 'true'
+      shell: bash
+      run: |
+        echo "🏗️ Building Chrome extension (Manifest V3)..."
+        npm run build
+        echo "✅ Chrome extension built successfully"
+
+    - name: Build Firefox extension (Manifest V2)
+      if: inputs.build-firefox == 'true'
+      shell: bash
+      run: |
+        echo "🦊 Building Firefox extension (Manifest V2)..."
+        npm run build:firefox
+        echo "✅ Firefox extension built successfully"
+
+    - name: Verify build outputs
+      shell: bash
+      run: |
+        echo "📁 Verifying build outputs..."
+        if [ "${{ inputs.build-chrome }}" == "true" ] && [ -d ".output/chrome-mv3" ]; then
+          echo "✅ Chrome build found: .output/chrome-mv3"
+          ls -la .output/chrome-mv3/
+        fi
+        if [ "${{ inputs.build-firefox }}" == "true" ] && [ -d ".output/firefox-mv2" ]; then
+          echo "✅ Firefox build found: .output/firefox-mv2"
+          ls -la .output/firefox-mv2/
+        fi
+
+    - name: Upload build artifacts
+      if: inputs.upload-artifacts == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: extension-builds-${{ github.run_id }}
+        path: |
+          .output/
+          !.output/**/*.map
+        retention-days: 30
+
+    - name: Build summary
+      shell: bash
+      run: |
+        echo "🏗️ Build Summary:"
+        echo "  - Chrome (MV3): ${{ inputs.build-chrome == 'true' && '✅ Built' || '⏭️ Skipped' }}"
+        echo "  - Firefox (MV2): ${{ inputs.build-firefox == 'true' && '✅ Built' || '⏭️ Skipped' }}"

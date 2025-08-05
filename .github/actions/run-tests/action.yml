@@ -1,0 +1,97 @@
+name: 'Run Tests'
+description: 'Run unit tests with coverage and optional E2E tests'
+
+inputs:
+  run-unit-tests:
+    description: 'Run unit tests'
+    required: false
+    default: 'true'
+  run-e2e-tests:
+    description: 'Run E2E tests'
+    required: false
+    default: 'false'
+  coverage-threshold:
+    description: 'Coverage threshold percentage'
+    required: false
+    default: '90'
+  upload-coverage:
+    description: 'Upload coverage reports as artifacts'
+    required: false
+    default: 'true'
+
+outputs:
+  coverage-percentage:
+    description: 'Overall coverage percentage'
+    value: ${{ steps.coverage.outputs.percentage }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run unit tests with coverage
+      if: inputs.run-unit-tests == 'true'
+      shell: bash
+      run: |
+        echo "🧪 Running unit tests with coverage..."
+        npm run test:coverage
+        echo "✅ Unit tests completed"
+
+    - name: Extract coverage percentage
+      if: inputs.run-unit-tests == 'true'
+      id: coverage
+      shell: bash
+      run: |
+        if [ -f coverage/coverage-summary.json ]; then
+          COVERAGE=$(node -p "JSON.parse(require('fs').readFileSync('coverage/coverage-summary.json', 'utf8')).total.lines.pct")
+          echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
+          echo "📊 Coverage: $COVERAGE%"
+        else
+          echo "percentage=0" >> $GITHUB_OUTPUT
+          echo "⚠️ No coverage report found"
+        fi
+
+    - name: Upload coverage reports
+      if: inputs.run-unit-tests == 'true' && inputs.upload-coverage == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-reports-${{ github.run_id }}
+        path: |
+          coverage/
+          test-results/
+        retention-days: 30
+
+    - name: Build extensions for E2E tests
+      if: inputs.run-e2e-tests == 'true'
+      shell: bash
+      run: |
+        echo "🏗️ Building extensions for E2E tests..."
+        npm run build
+        npm run build:firefox
+        echo "✅ Extensions built for testing"
+
+    - name: Run E2E tests
+      if: inputs.run-e2e-tests == 'true'
+      shell: bash
+      run: |
+        echo "🎭 Running E2E tests..."
+        npm run test:e2e
+        echo "✅ E2E tests completed"
+
+    - name: Upload E2E test results
+      if: inputs.run-e2e-tests == 'true' && always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: e2e-test-results-${{ github.run_id }}
+        path: |
+          test-results/
+          playwright-report/
+        retention-days: 30
+
+    - name: Test summary
+      shell: bash
+      run: |
+        echo "🧪 Test Summary:"
+        echo "  - Unit Tests: ${{ inputs.run-unit-tests == 'true' && '✅ Completed' || '⏭️ Skipped' }}"
+        echo "  - E2E Tests: ${{ inputs.run-e2e-tests == 'true' && '✅ Completed' || '⏭️ Skipped' }}"
+        if [ "${{ inputs.run-unit-tests }}" == "true" ]; then
+          echo "  - Coverage: ${{ steps.coverage.outputs.percentage }}%"
+        fi

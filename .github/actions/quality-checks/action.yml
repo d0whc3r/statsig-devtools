@@ -1,0 +1,55 @@
+name: 'Quality Checks'
+description: 'Run linting, formatting, and type checking'
+
+inputs:
+  skip-lint:
+    description: 'Skip linting step'
+    required: false
+    default: 'false'
+  skip-format:
+    description: 'Skip format checking step'
+    required: false
+    default: 'false'
+  skip-type-check:
+    description: 'Skip type checking step'
+    required: false
+    default: 'false'
+  fail-fast:
+    description: 'Fail fast on first error'
+    required: false
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run ESLint
+      if: inputs.skip-lint != 'true'
+      shell: bash
+      run: |
+        echo "🔍 Running ESLint..."
+        npm run lint
+        echo "✅ ESLint passed"
+
+    - name: Check code formatting
+      if: inputs.skip-format != 'true'
+      shell: bash
+      run: |
+        echo "🎨 Checking code formatting..."
+        npm run format:check
+        echo "✅ Code formatting is correct"
+
+    - name: Run TypeScript type check
+      if: inputs.skip-type-check != 'true'
+      shell: bash
+      run: |
+        echo "🔧 Running TypeScript type check..."
+        npm run type-check
+        echo "✅ TypeScript type check passed"
+
+    - name: Quality checks summary
+      shell: bash
+      run: |
+        echo "📋 Quality Checks Summary:"
+        echo "  - ESLint: ${{ inputs.skip-lint != 'true' && '✅ Passed' || '⏭️ Skipped' }}"
+        echo "  - Format: ${{ inputs.skip-format != 'true' && '✅ Passed' || '⏭️ Skipped' }}"
+        echo "  - TypeScript: ${{ inputs.skip-type-check != 'true' && '✅ Passed' || '⏭️ Skipped' }}"

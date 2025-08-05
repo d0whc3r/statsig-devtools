@@ -1,0 +1,157 @@
+name: 'CI - Pull Request & Branch'
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches-ignore: [main]
+
+# Cancel previous runs for the same PR/branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  # Skip if PR is in draft mode
+  check-draft:
+    name: 'Check Draft Status'
+    runs-on: ubuntu-latest
+    outputs:
+      is-draft: ${{ steps.draft.outputs.is-draft }}
+    steps:
+      - name: Check if PR is draft
+        id: draft
+        run: |
+          if [ "${{ github.event.pull_request.draft }}" == "true" ]; then
+            echo "is-draft=true" >> $GITHUB_OUTPUT
+            echo "🚧 PR is in draft mode - skipping CI"
+          else
+            echo "is-draft=false" >> $GITHUB_OUTPUT
+            echo "✅ PR is ready for review - running CI"
+          fi
+
+  # Setup and dependency installation
+  setup:
+    name: 'Setup & Dependencies'
+    runs-on: ubuntu-latest
+    needs: check-draft
+    if: needs.check-draft.outputs.is-draft == 'false'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+  # Quality checks (lint, format, type-check)
+  quality-checks:
+    name: 'Quality Checks'
+    runs-on: ubuntu-latest
+    needs: [check-draft, setup]
+    if: needs.check-draft.outputs.is-draft == 'false'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Run quality checks
+        uses: ./.github/actions/quality-checks
+
+  # Unit tests with coverage
+  unit-tests:
+    name: 'Unit Tests'
+    runs-on: ubuntu-latest
+    needs: [check-draft, setup]
+    if: needs.check-draft.outputs.is-draft == 'false'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          run-unit-tests: 'true'
+          run-e2e-tests: 'false'
+          upload-coverage: 'true'
+
+  # Build extensions
+  build:
+    name: 'Build Extensions'
+    runs-on: ubuntu-latest
+    needs: [check-draft, quality-checks, unit-tests]
+    if: needs.check-draft.outputs.is-draft == 'false'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build extensions
+        uses: ./.github/actions/build-extensions
+        with:
+          build-chrome: 'true'
+          build-firefox: 'true'
+          upload-artifacts: 'true'
+
+  # E2E tests (optional, only on specific conditions)
+  e2e-tests:
+    name: 'E2E Tests'
+    runs-on: ubuntu-latest
+    needs: [check-draft, build]
+    if: |
+      needs.check-draft.outputs.is-draft == 'false' && 
+      (contains(github.event.pull_request.labels.*.name, 'e2e-tests') || 
+       contains(github.event.head_commit.message, '[e2e]'))
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox
+
+      - name: Run E2E tests
+        uses: ./.github/actions/run-tests
+        with:
+          run-unit-tests: 'false'
+          run-e2e-tests: 'true'
+
+  # Final status check
+  ci-success:
+    name: 'CI Success'
+    runs-on: ubuntu-latest
+    needs: [check-draft, quality-checks, unit-tests, build]
+    if: always() && needs.check-draft.outputs.is-draft == 'false'
+    steps:
+      - name: Check all jobs status
+        run: |
+          if [ "${{ needs.quality-checks.result }}" != "success" ] || 
+             [ "${{ needs.unit-tests.result }}" != "success" ] || 
+             [ "${{ needs.build.result }}" != "success" ]; then
+            echo "❌ One or more CI jobs failed"
+            exit 1
+          else
+            echo "✅ All CI jobs passed successfully"
+          fi
