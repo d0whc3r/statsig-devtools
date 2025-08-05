@@ -1,13 +1,23 @@
 #!/usr/bin/env sh
-# Run full check before pushing
 echo "🚀 Running pre-push checks..."
 
-# Run the complete check script
-echo "📋 Running complete project check..."
-npm run check
+# Run full project linting and formatting fixes
+echo "🔧 Running lint fixes on entire project..."
+npm run lint:fix
 
-# Build the extension to ensure it compiles correctly
-echo "🏗️  Building extension for Chrome..."
+echo "🎨 Running format fixes on entire project..."
+npm run format
+
+# Run TypeScript type checking
+echo "🔍 Running TypeScript type check..."
+npm run type-check
+
+# Run all tests
+echo "🧪 Running all tests..."
+npm run test
+
+# Build extensions to ensure they compile correctly
+echo "🏗️ Building extension for Chrome..."
 npm run build
 
 echo "🦊 Building extension for Firefox..."

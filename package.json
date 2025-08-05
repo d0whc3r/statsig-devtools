@@ -85,11 +85,11 @@
     "wxt": "^0.20.7"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "*.{ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{json,md,html,css}": [
+    "*.{json,md,html,css,yml,yaml}": [
       "prettier --write"
     ]
   }

@@ -27,6 +27,16 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    - name: Cache Vitest
+      if: inputs.run-unit-tests == 'true'
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules/.vitest
+        key: ${{ runner.os }}-vitest-${{ hashFiles('**/package-lock.json', 'vitest.config.ts') }}
+        restore-keys: |
+          ${{ runner.os }}-vitest-
+
     - name: Run unit tests with coverage
       if: inputs.run-unit-tests == 'true'
       shell: bash
@@ -58,6 +68,24 @@ runs:
           coverage/
           test-results/
         retention-days: 30
+
+    - name: Cache Playwright browsers
+      if: inputs.run-e2e-tests == 'true'
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
+
+    - name: Install Playwright browsers
+      if: inputs.run-e2e-tests == 'true'
+      shell: bash
+      run: |
+        echo "🎭 Installing Playwright browsers..."
+        npx playwright install --with-deps chromium firefox
+        echo "✅ Playwright browsers installed"
 
     - name: Build extensions for E2E tests
       if: inputs.run-e2e-tests == 'true'
