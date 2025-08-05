@@ -41,9 +41,21 @@ runs:
       shell: bash
       run: npm ci --prefer-offline --no-audit
 
+    - name: Run WXT prepare
+      shell: bash
+      run: |
+        echo "🔧 Running WXT prepare to generate required files..."
+        npm run postinstall
+        echo "✅ WXT prepare completed"
+
     - name: Verify installation
       shell: bash
       run: |
         echo "Node.js version: $(node --version)"
         echo "npm version: $(npm --version)"
         echo "Dependencies installed successfully"
+        if [ -f ".wxt/tsconfig.json" ]; then
+          echo "✅ WXT configuration files generated"
+        else
+          echo "⚠️ WXT configuration files not found"
+        fi

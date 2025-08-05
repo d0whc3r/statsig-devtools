@@ -7,7 +7,7 @@ export default defineConfig({
     name: 'Statsig DevTools',
     description:
       'Browser extension for testing and debugging Statsig feature flags, experiments, and dynamic configurations',
-    version: '1.0.0',
+    // Version is automatically read from package.json by WXT
 
     // Required permissions for Statsig functionality
     permissions: [

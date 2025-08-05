@@ -59,12 +59,13 @@ runs:
       shell: bash
       run: |
         VERSION="${{ steps.version.outputs.version }}"
+        EXTENSION_NAME=$(node -p "require('./package.json').name")
         if [ "${{ inputs.create-chrome-zip }}" == "true" ]; then
-          CHROME_ZIP=".output/chrome-mv3-$VERSION.zip"
+          CHROME_ZIP=".output/$EXTENSION_NAME-$VERSION-chrome.zip"
           echo "chrome-zip=$CHROME_ZIP" >> $GITHUB_OUTPUT
         fi
         if [ "${{ inputs.create-firefox-zip }}" == "true" ]; then
-          FIREFOX_ZIP=".output/firefox-mv2-$VERSION.zip"
+          FIREFOX_ZIP=".output/$EXTENSION_NAME-$VERSION-firefox.zip"
           echo "firefox-zip=$FIREFOX_ZIP" >> $GITHUB_OUTPUT
         fi
 

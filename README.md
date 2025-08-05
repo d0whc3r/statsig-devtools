@@ -286,9 +286,25 @@ The built extension packages are ready for submission to:
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
 3. Make your changes
 4. Run quality checks: `npm run check`
-5. Commit your changes: `git commit -m 'Add amazing feature'`
+5. Commit your changes using [Conventional Commits](https://conventionalcommits.org/):
+   ```bash
+   git commit -m "feat: add amazing feature"
+   git commit -m "fix: resolve popup issue"
+   git commit -m "docs: update README"
+   ```
 6. Push to the branch: `git push origin feature/amazing-feature`
 7. Open a Pull Request
+
+### 📦 Versioning
+
+This project uses **Semantic Release** for automatic versioning:
+
+- **Automatic versioning** based on commit messages
+- **Conventional Commits** determine version increment
+- **Automatic changelog** generation
+- **GitHub releases** with extension packages
+
+See [docs/VERSIONING.md](docs/VERSIONING.md) for detailed information.
 
 ### Code Standards
 
