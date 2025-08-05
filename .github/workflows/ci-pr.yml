@@ -111,29 +111,30 @@ jobs:
           build-firefox: 'true'
           upload-artifacts: 'true'
 
-  # E2E tests (optional, only on specific conditions)
-  e2e-tests:
-    name: 'E2E Tests'
-    runs-on: ubuntu-latest
-    needs: [check-draft, build]
-    if: |
-      needs.check-draft.outputs.is-draft == 'false' && 
-      (contains(github.event.pull_request.labels.*.name, 'e2e-tests') || 
-       contains(github.event.head_commit.message, '[e2e]'))
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js and dependencies
-        uses: ./.github/actions/setup-node-deps
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Run E2E tests
-        uses: ./.github/actions/run-tests
-        with:
-          run-unit-tests: 'false'
-          run-e2e-tests: 'true'
+  # E2E tests (disabled - requires complex CI setup with Xvfb, etc.)
+  # TODO: Enable when proper headless browser setup is configured
+  # e2e-tests:
+  #   name: 'E2E Tests'
+  #   runs-on: ubuntu-latest
+  #   needs: [check-draft, build]
+  #   if: |
+  #     needs.check-draft.outputs.is-draft == 'false' &&
+  #     (contains(github.event.pull_request.labels.*.name, 'e2e-tests') ||
+  #      contains(github.event.head_commit.message, '[e2e]'))
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Setup Node.js and dependencies
+  #       uses: ./.github/actions/setup-node-deps
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #
+  #     - name: Run E2E tests
+  #       uses: ./.github/actions/run-tests
+  #       with:
+  #         run-unit-tests: 'false'
+  #         run-e2e-tests: 'true'
 
   # Final status check
   ci-success:
