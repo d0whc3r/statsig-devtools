@@ -4,6 +4,37 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "author": {
+    "name": "d0whc3r",
+    "url": "https://github.com/d0whc3r"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/d0whc3r/statsig-devtools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/d0whc3r/statsig-devtools/issues"
+  },
+  "homepage": "https://github.com/d0whc3r/statsig-devtools#readme",
+  "license": "MIT",
+  "keywords": [
+    "statsig",
+    "feature-flags",
+    "experiments",
+    "a-b-testing",
+    "browser-extension",
+    "chrome-extension",
+    "firefox-extension",
+    "devtools",
+    "debugging",
+    "testing",
+    "react",
+    "typescript",
+    "wxt"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox --mv2",

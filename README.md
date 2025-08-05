@@ -1,6 +1,24 @@
 # Statsig DevTools
 
+[![CI/CD Pipeline](https://github.com/d0whc3r/statsig-devtools/actions/workflows/ci-main.yml/badge.svg)](https://github.com/d0whc3r/statsig-devtools/actions/workflows/ci-main.yml)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/releases/latest)
+[![GitHub issues](https://img.shields.io/github/issues/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/issues)
+[![GitHub license](https://img.shields.io/github/license/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/blob/main/LICENSE)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19-61dafb)](https://react.dev/)
+[![WXT](https://img.shields.io/badge/WXT-0.20.7-orange)](https://wxt.dev/)
+
 A powerful browser extension for testing and debugging Statsig feature flags, experiments, and dynamic configurations. Built with WXT, React, and TypeScript for cross-browser compatibility.
+
+## 📊 Project Status
+
+[![Code Quality](https://img.shields.io/badge/Code%20Quality-ESLint%20%2B%20Prettier-brightgreen)](https://github.com/d0whc3r/statsig-devtools/blob/main/.eslintrc.js)
+[![Test Coverage](https://img.shields.io/badge/Coverage-%3E90%25-brightgreen)](https://github.com/d0whc3r/statsig-devtools/actions)
+[![Semantic Release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Ready-4285f4)](https://chrome.google.com/webstore)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox%20Add--ons-Ready-ff6611)](https://addons.mozilla.org/)
 
 ## 🚀 Features
 
@@ -40,11 +58,18 @@ A powerful browser extension for testing and debugging Statsig feature flags, ex
 
 ## 📦 Installation
 
+### For Users
+
+[![Download for Chrome](https://img.shields.io/badge/Download-Chrome%20Extension-4285f4?style=for-the-badge&logo=googlechrome)](https://github.com/d0whc3r/statsig-devtools/releases/latest)
+[![Download for Firefox](https://img.shields.io/badge/Download-Firefox%20Add--on-ff6611?style=for-the-badge&logo=firefox)](https://github.com/d0whc3r/statsig-devtools/releases/latest)
+
+### For Developers
+
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
-   cd statsig-chrome
+   git clone https://github.com/d0whc3r/statsig-devtools.git
+   cd statsig-devtools
    ```
 
 2. **Install dependencies**
@@ -334,6 +359,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [React](https://react.dev/) - UI library
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - [Vitest](https://vitest.dev/) - Fast unit testing framework
+
+## 📈 Project Stats
+
+[![GitHub stars](https://img.shields.io/github/stars/d0whc3r/statsig-devtools?style=social)](https://github.com/d0whc3r/statsig-devtools/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/d0whc3r/statsig-devtools?style=social)](https://github.com/d0whc3r/statsig-devtools/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/d0whc3r/statsig-devtools?style=social)](https://github.com/d0whc3r/statsig-devtools/watchers)
+
+[![GitHub last commit](https://img.shields.io/github/last-commit/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/commits/main)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/graphs/commit-activity)
+[![GitHub contributors](https://img.shields.io/github/contributors/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/graphs/contributors)
 
 ## 📞 Support
 

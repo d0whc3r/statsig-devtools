@@ -65,6 +65,9 @@
       "@semantic-release/release-notes-generator",
       {
         "preset": "conventionalcommits",
+        "writerOpts": {
+          "commitPartial": "- {{subject}}{{#if hash}} ([{{hash}}]({{@root.host}}/{{@root.owner}}/{{@root.repository}}/commit/{{hash}})){{/if}}\n"
+        },
         "presetConfig": {
           "types": [
             {
