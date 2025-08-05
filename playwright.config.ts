@@ -40,18 +40,20 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         // Extension testing specific settings
         headless: false, // Extensions require non-headless mode
-        args: [
-          '--disable-extensions-except=./.output/chrome-mv3',
-          '--load-extension=./.output/chrome-mv3',
-          '--disable-web-security',
-          '--disable-features=VizDisplayCompositor',
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-background-timer-throttling',
-          '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding',
-        ],
+        launchOptions: {
+          args: [
+            '--disable-extensions-except=./.output/chrome-mv3',
+            '--load-extension=./.output/chrome-mv3',
+            '--disable-web-security',
+            '--disable-features=VizDisplayCompositor',
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-renderer-backgrounding',
+          ],
+        },
       },
     },
     {

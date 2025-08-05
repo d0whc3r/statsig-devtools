@@ -256,6 +256,53 @@ export default [
       'jsx-a11y/no-noninteractive-element-interactions': 'off',
     },
   },
+  // Playwright E2E test files configuration
+  {
+    files: ['e2e/**/*.{js,ts}', 'playwright.config.ts'],
+    languageOptions: {
+      globals: {
+        // Playwright globals
+        test: 'readonly',
+        expect: 'readonly',
+        describe: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        // Browser globals for E2E tests
+        page: 'readonly',
+        context: 'readonly',
+        browser: 'readonly',
+        chromium: 'readonly',
+        firefox: 'readonly',
+        webkit: 'readonly',
+        // Node.js globals for E2E setup
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        require: 'readonly',
+        module: 'readonly',
+        exports: 'readonly',
+      },
+    },
+    rules: {
+      // Relax rules for E2E tests
+      'no-console': 'off', // Console logging is useful for E2E debugging
+      'max-lines': 'off', // E2E tests can be longer
+      'max-lines-per-function': 'off', // E2E test functions can be longer
+      complexity: 'off', // E2E tests can be more complex
+      'max-depth': 'off', // E2E tests may have deeper nesting
+      '@typescript-eslint/no-explicit-any': 'off', // E2E tests may use any for flexibility
+      '@typescript-eslint/no-non-null-assertion': 'off', // E2E tests may use non-null assertions
+      'prefer-const': 'warn', // Prefer const but not strict in E2E
+      'no-unused-expressions': 'off', // E2E tests may have expressions for waiting
+      'no-await-in-loop': 'off', // E2E tests often need sequential async operations
+      '@typescript-eslint/no-unused-vars': 'off', // May have unused vars in E2E setup
+      'unused-imports/no-unused-vars': 'off', // May have unused imports for types
+      // Allow dynamic imports for E2E utilities
+      'import/no-dynamic-require': 'off',
+      '@typescript-eslint/no-var-requires': 'off',
+    },
+  },
   {
     ignores: ['dist/', 'node_modules/', '.wxt/', 'coverage/', '.output/', 'src/templates/*.ejs'],
   },

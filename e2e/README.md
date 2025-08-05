@@ -4,26 +4,30 @@ This directory contains focused end-to-end tests for the Statsig DevTools browse
 
 ## Overview
 
-The E2E tests verify essential user workflows and functionality:
+The E2E tests are organized by workflow and verify essential functionality:
 
-- Extension installation and build verification
-- Feature flag override workflows (localStorage)
-- User segmentation via cookies
-- Cross-tab synchronization
-- Extension interface accessibility
-- Authentication flows
-- API error handling
+- Extension build verification and installation readiness
+- User segmentation via cookies (primary workflow)
+- Feature flag overrides via localStorage
+- Extension interface accessibility (popup, sidepanel, tab)
+- API mocking and error handling
 
 ## Test Structure
 
-### Test Files
+### Test Files (Organized by Workflow)
 
-- `user-workflows.spec.ts` - Core user workflows and feature testing
+- `build-verification.spec.ts` - Extension build and installation verification
+- `user-segmentation.spec.ts` - Cookie-based user segmentation workflows
+- `feature-flags.spec.ts` - Feature flag override workflows
 - `extension-interfaces.spec.ts` - Extension UI and interface testing
+- `api-mocking.spec.ts` - API mocking and error handling
 
 ### Support Files
 
-- `utils/extension-helpers.ts` - Simplified helper functions
+- `fixtures/playwright-commands.ts` - Custom Playwright commands and utilities
+- `fixtures/test-pages.ts` - Reusable HTML test page templates
+- `fixtures/extension-verification.ts` - Extension verification utilities
+- `utils/extension-helpers.ts` - Legacy helper functions (simplified)
 - `global-setup.ts` - Global test setup (builds extension)
 - `global-teardown.ts` - Global test cleanup
 
