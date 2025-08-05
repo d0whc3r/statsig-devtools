@@ -3,7 +3,7 @@
 [![CI/CD Pipeline](https://github.com/d0whc3r/statsig-devtools/actions/workflows/ci-main.yml/badge.svg)](https://github.com/d0whc3r/statsig-devtools/actions/workflows/ci-main.yml)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/releases/latest)
 [![GitHub issues](https://img.shields.io/github/issues/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/issues)
-[![GitHub license](https://img.shields.io/github/license/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/blob/master/LICENSE)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb)](https://react.dev/)
@@ -13,7 +13,7 @@ A powerful browser extension for testing and debugging Statsig feature flags, ex
 
 ## 📊 Project Status
 
-[![Code Quality](https://img.shields.io/badge/Code%20Quality-ESLint%20%2B%20Prettier-brightgreen)](https://github.com/d0whc3r/statsig-devtools/blob/main/.eslintrc.js)
+[![Code Quality](https://img.shields.io/badge/Code%20Quality-ESLint%20%2B%20Prettier-brightgreen)](https://github.com/d0whc3r/statsig-devtools/blob/master/.eslintrc.js)
 [![Test Coverage](https://img.shields.io/badge/Coverage-%3E90%25-brightgreen)](https://github.com/d0whc3r/statsig-devtools/actions)
 [![Semantic Release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
@@ -366,7 +366,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [![GitHub forks](https://img.shields.io/github/forks/d0whc3r/statsig-devtools?style=social)](https://github.com/d0whc3r/statsig-devtools/network/members)
 [![GitHub watchers](https://img.shields.io/github/watchers/d0whc3r/statsig-devtools?style=social)](https://github.com/d0whc3r/statsig-devtools/watchers)
 
-[![GitHub last commit](https://img.shields.io/github/last-commit/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/commits/main)
+[![GitHub last commit](https://img.shields.io/github/last-commit/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/commits/master)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/graphs/commit-activity)
 [![GitHub contributors](https://img.shields.io/github/contributors/d0whc3r/statsig-devtools)](https://github.com/d0whc3r/statsig-devtools/graphs/contributors)
 
