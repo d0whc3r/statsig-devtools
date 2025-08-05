@@ -1,5 +1,5 @@
 /* Import global styles first */
-@import '../../src/styles/globals.css';
+@import '@/src/styles/globals.css';
 
 body {
   margin: 0;

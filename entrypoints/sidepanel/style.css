@@ -1,5 +1,5 @@
 /* Import global styles */
-@import '../../src/styles/globals.css';
+@import '@/src/styles/globals.css';
 
 /* Sidebar-specific styles - diseño del popup pero para panel lateral */
 body {

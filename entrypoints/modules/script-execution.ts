@@ -2,7 +2,7 @@
  * Script execution utilities for content script
  */
 
-import { BrowserDetection } from '../../src/utils/browser-api'
+import { BrowserDetection } from '@/src/utils/browser-api'
 
 import type { ScriptFunction } from '../types/content-types'
 

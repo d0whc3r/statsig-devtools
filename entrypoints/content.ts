@@ -1,6 +1,6 @@
 import { BrowserRuntime } from '@/src/utils/browser-api'
+import { logger } from '@/src/utils/logger'
 
-import { logger } from '../src/utils/logger'
 import {
   clearAllOverrides,
   getCookies,

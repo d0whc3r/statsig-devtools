@@ -2,11 +2,12 @@
  * Statsig-specific override injection functionality
  */
 
-import { logger } from '../../src/utils/logger'
+import { logger } from '@/src/utils/logger'
+
 import { executeScriptDirect } from './script-execution'
 
-import type { StorageOverride } from '../../src/services/statsig-integration'
 import type { StatsigSDK, StatsigWindow } from '../types/content-types'
+import type { StorageOverride } from '@/src/services/statsig-integration'
 
 /**
  * Inject Statsig-specific override logic with improved error handling and reliability

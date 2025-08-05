@@ -2,12 +2,13 @@
  * Storage operations for content script
  */
 
-import { logger } from '../../src/utils/logger'
+import { logger } from '@/src/utils/logger'
+
 import { executeScriptDirect, executeScriptWithResult } from './script-execution'
 import { injectStatsigOverride } from './statsig-injection'
 
-import type { StorageOverride } from '../../src/services/statsig-integration'
 import type { CookieData, StatsigWindow, StorageOperationResult } from '../types/content-types'
+import type { StorageOverride } from '@/src/services/statsig-integration'
 
 /**
  * Handle setting storage override
