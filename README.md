@@ -120,6 +120,15 @@ npm run test:coverage
 
 # Coverage with UI
 npm run test:coverage:ui
+
+# E2E tests
+npm run test:e2e
+
+# E2E tests with UI
+npm run test:e2e:ui
+
+# E2E tests in headed mode
+npm run test:e2e:headed
 ```
 
 ## 📁 Project Structure
@@ -228,6 +237,12 @@ The extension manifest is automatically generated based on the target browser:
 - End-to-end workflow testing
 - API integration testing
 - Storage operation testing
+
+### E2E Tests
+- Complete user workflow testing with Playwright
+- Browser extension functionality testing
+- Cross-browser compatibility testing
+- Mocked Statsig API responses (no real API keys needed)
 
 ### Coverage Requirements
 
