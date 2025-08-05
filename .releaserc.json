@@ -146,8 +146,14 @@
       {
         "assets": [
           {
-            "path": ".output/*.zip",
-            "label": "Extension packages"
+            "path": ".output/statsig-devtools-*-chrome.zip",
+            "name": "statsig-devtools-chrome-${nextRelease.version}.zip",
+            "label": "Chrome Extension (Manifest V3)"
+          },
+          {
+            "path": ".output/statsig-devtools-*-firefox.zip",
+            "name": "statsig-devtools-firefox-${nextRelease.version}.zip",
+            "label": "Firefox Extension (Manifest V2)"
           }
         ],
         "addReleases": "bottom"
