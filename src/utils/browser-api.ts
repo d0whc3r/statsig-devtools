@@ -84,6 +84,9 @@ export class BrowserTabs {
    */
   static async getActiveTab(): Promise<chrome.tabs.Tab | null> {
     try {
+      if (!browserAPI?.tabs?.query) {
+        throw new Error('Tabs API unavailable. Ensure the "tabs" permission is granted in the manifest.')
+      }
       const tabs = await browserAPI.tabs.query({ active: true, currentWindow: true })
       return (tabs[0] as chrome.tabs.Tab) ?? null
     } catch (error) {
@@ -99,6 +102,9 @@ export class BrowserTabs {
    */
   static async query(queryInfo: chrome.tabs.QueryInfo): Promise<chrome.tabs.Tab[]> {
     try {
+      if (!browserAPI?.tabs?.query) {
+        throw new Error('Tabs API unavailable. Ensure the "tabs" permission is granted in the manifest.')
+      }
       return (await browserAPI.tabs.query(queryInfo as any)) as chrome.tabs.Tab[]
     } catch (error) {
       logger.error('Failed to query tabs:', error)
@@ -114,6 +120,9 @@ export class BrowserTabs {
    */
   static async sendMessage(tabId: number, message: unknown): Promise<unknown> {
     try {
+      if (!browserAPI?.tabs?.sendMessage) {
+        throw new Error('Tabs API unavailable. Ensure the "tabs" permission is granted in the manifest.')
+      }
       return await browserAPI.tabs.sendMessage(tabId, message)
     } catch (error) {
       // Don't log as error since this is often expected (content script not available)

@@ -14,6 +14,7 @@ export default defineConfig({
       'storage', // For storing API keys and cached data
       'cookies', // For reading and setting cookies for testing
       'activeTab', // For accessing current tab information
+      'tabs', // Required to use browser.tabs APIs like query from extension pages
       'scripting', // For injecting content scripts (Manifest V3)
       'sidePanel', // For sidebar functionality
     ],

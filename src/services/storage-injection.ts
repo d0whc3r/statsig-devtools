@@ -76,6 +76,8 @@ export class StorageInjectionService {
     try {
       await this.sendMessageToContentScript({
         type: 'SET_STORAGE_OVERRIDE',
+        override,
+        // Keep backward compatibility with older consumers/tests that expect `payload`
         payload: override,
       })
 
@@ -460,7 +462,7 @@ export class StorageInjectionService {
         // Remove the override from the page
         await this.sendMessageToContentScript({
           type: 'REMOVE_STORAGE_OVERRIDE',
-          payload: overrideToRemove,
+          override: overrideToRemove,
         })
       }
 
@@ -496,7 +498,7 @@ export class StorageInjectionService {
         try {
           await this.sendMessageToContentScript({
             type: 'REMOVE_STORAGE_OVERRIDE',
-            payload: override,
+            override,
           })
         } catch (error) {
           logger.error('Failed to remove override from page:', error)
