@@ -9,6 +9,7 @@ interface OverrideManagerProps {
   onRemoveOverride: (overrideId: string) => void
   onClearAllOverrides: () => void
   className?: string
+  compact?: boolean
 }
 
 /**
@@ -19,6 +20,7 @@ export function OverrideManager({
   onRemoveOverride,
   onClearAllOverrides,
   className = '',
+  compact = false,
 }: OverrideManagerProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
@@ -124,11 +126,11 @@ export function OverrideManager({
   return (
     <div className={`rounded-lg border border-gray-200 bg-white ${className}`}>
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-200 p-4">
+      <div className={`flex items-center justify-between border-b border-gray-200 ${compact ? 'p-2' : 'p-4'}`}>
         <div className="flex items-center">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center text-sm font-medium text-gray-900 hover:text-gray-700"
+            className={`flex items-center ${compact ? 'text-xs' : 'text-sm'} font-medium text-gray-900 hover:text-gray-700`}
           >
             <svg
               className={`mr-2 h-4 w-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
@@ -145,7 +147,7 @@ export function OverrideManager({
         <div className="flex items-center space-x-2">
           <button
             onClick={handleClearAll}
-            className="text-xs text-red-600 underline hover:text-red-500"
+            className={`text-red-600 underline hover:text-red-500 ${compact ? 'text-xs' : 'text-xs'}`}
             disabled={overrides.length === 0}
           >
             Clear All
@@ -155,16 +157,16 @@ export function OverrideManager({
 
       {/* Override List */}
       {isExpanded && (
-        <div className="custom-scrollbar max-h-48 space-y-2 overflow-y-auto p-3">
+        <div className={`custom-scrollbar space-y-2 overflow-y-auto ${compact ? 'max-h-32 p-2' : 'max-h-48 p-3'}`}>
           {overrides.map((override, index) => {
             const overrideId = getOverrideId(override, index)
             return (
               <div
                 key={overrideId}
-                className="flex items-start justify-between rounded-md border border-gray-200 bg-gray-50 p-3 transition-colors hover:bg-gray-100"
+                className={`flex items-start justify-between rounded-md border border-gray-200 bg-gray-50 transition-colors hover:bg-gray-100 ${compact ? 'p-2' : 'p-3'}`}
               >
                 <div className="min-w-0 flex-1">
-                  <div className="mb-2 flex items-center space-x-2">
+                  <div className={`mb-2 flex items-center space-x-2 ${compact ? 'mb-1' : 'mb-2'}`}>
                     <span className="text-lg">{getOverrideIcon(override.type)}</span>
                     <span
                       className={`inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium ${getOverrideColor(override.type)}`}
@@ -173,7 +175,7 @@ export function OverrideManager({
                     </span>
                   </div>
 
-                  <div className="space-y-1 text-sm">
+                  <div className={`space-y-1 ${compact ? 'text-xs' : 'text-sm'}`}>
                     {/* Feature name if this is a Statsig override */}
                     {(override as StorageOverride & { featureName?: string }).featureName && (
                       <div className="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-900">
@@ -193,8 +195,8 @@ export function OverrideManager({
                     <div className="text-gray-600">
                       <span className="font-medium">Value:</span>{' '}
                       <span className="break-all">
-                        {typeof override.value === 'string' && override.value.length > 50
-                          ? `${override.value.substring(0, 50)}...`
+                        {typeof override.value === 'string' && override.value.length > (compact ? 30 : 50)
+                          ? `${override.value.substring(0, compact ? 30 : 50)}...`
                           : typeof override.value === 'string'
                             ? override.value
                             : JSON.stringify(override.value)}

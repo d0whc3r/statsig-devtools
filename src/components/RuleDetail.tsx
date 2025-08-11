@@ -11,6 +11,7 @@ interface RuleDetailProps {
   evaluationResult?: EvaluationResult
   onOverrideCreate?: (override: StorageOverride) => void
   compact?: boolean
+  allowOverrides?: boolean
 }
 
 /**
@@ -21,6 +22,7 @@ export const RuleDetail: React.FC<RuleDetailProps> = ({
   evaluationResult,
   onOverrideCreate,
   compact = false,
+  allowOverrides = true,
 }) => {
   const [showOverrideForm, setShowOverrideForm] = useState(false)
   const [overrideForm, setOverrideForm] = useState<Partial<StorageOverride>>({
@@ -116,53 +118,60 @@ export const RuleDetail: React.FC<RuleDetailProps> = ({
             )}
           </div>
 
-          {/* Action Button Row */}
-          <div className={compact ? 'mb-2' : 'mb-4'}>
-            <button
-              onClick={() => {
-                if (!showOverrideForm) {
-                  // Pre-fill form with suggested values
-                  setOverrideForm({
-                    type: 'localStorage',
-                    key: getSuggestedKey(),
-                    value: getSuggestedOverrideValue(),
-                  })
-                }
-                setShowOverrideForm(!showOverrideForm)
-              }}
-              className={` ${compact ? 'px-3 py-2 text-xs' : 'px-4 py-2'} ${
-                showOverrideForm
-                  ? 'scale-105 transform bg-gradient-to-r from-red-500 to-pink-600 text-white shadow-lg hover:from-red-600 hover:to-pink-700'
-                  : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md hover:from-blue-600 hover:to-purple-700 hover:shadow-lg'
-              } flex items-center gap-2 rounded-lg border-0 font-semibold transition-all duration-200 hover:scale-105 focus:ring-2 focus:ring-offset-2 focus:outline-none ${showOverrideForm ? 'focus:ring-red-500' : 'focus:ring-blue-500'} `}
-            >
-              {showOverrideForm ? (
-                <>
-                  <svg
-                    className={compact ? 'h-3 w-3' : 'h-4 w-4'}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  {compact ? 'Cancel' : 'Cancel Override'}
-                </>
-              ) : (
-                <>
-                  <svg
-                    className={compact ? 'h-3 w-3' : 'h-4 w-4'}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  {compact ? 'Override' : 'Create Override'}
-                </>
-              )}
-            </button>
-          </div>
+          {/* Action Button Row - Only show if overrides are allowed */}
+          {allowOverrides && (
+            <div className={compact ? 'mb-2' : 'mb-4'}>
+              <button
+                onClick={() => {
+                  if (!showOverrideForm) {
+                    // Pre-fill form with suggested values
+                    setOverrideForm({
+                      type: 'localStorage',
+                      key: getSuggestedKey(),
+                      value: getSuggestedOverrideValue(),
+                    })
+                  }
+                  setShowOverrideForm(!showOverrideForm)
+                }}
+                className={` ${compact ? 'px-3 py-2 text-xs' : 'px-4 py-2'} ${
+                  showOverrideForm
+                    ? 'scale-105 transform bg-gradient-to-r from-red-500 to-pink-600 text-white shadow-lg hover:from-red-600 hover:to-pink-700'
+                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md hover:from-blue-600 hover:to-purple-700 hover:shadow-lg'
+                } flex items-center gap-2 rounded-lg border-0 font-semibold transition-all duration-200 hover:scale-105 focus:ring-2 focus:ring-offset-2 focus:outline-none ${showOverrideForm ? 'focus:ring-red-500' : 'focus:ring-blue-500'} `}
+              >
+                {showOverrideForm ? (
+                  <>
+                    <svg
+                      className={compact ? 'h-3 w-3' : 'h-4 w-4'}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    {compact ? 'Cancel' : 'Cancel Override'}
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      className={compact ? 'h-3 w-3' : 'h-4 w-4'}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                      />
+                    </svg>
+                    {compact ? 'Override' : 'Create Override'}
+                  </>
+                )}
+              </button>
+            </div>
+          )}
 
           {/* Configuration Type and Status */}
           <div className="mb-4 flex items-center gap-3">
@@ -234,8 +243,8 @@ export const RuleDetail: React.FC<RuleDetailProps> = ({
           )}
         </div>
 
-        {/* Override Form */}
-        {showOverrideForm && (
+        {/* Override Form - Only show if overrides are allowed */}
+        {allowOverrides && showOverrideForm && (
           <RuleDetailOverrideForm
             configuration={configuration}
             overrideForm={overrideForm}

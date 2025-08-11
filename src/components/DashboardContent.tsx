@@ -78,7 +78,7 @@ interface LayoutProps {
   viewMode: 'popup' | 'sidebar' | 'tab'
 }
 
-// Single column layout for popup
+// Compact layout for popup with better space utilization
 function PopupLayout(props: LayoutProps) {
   const {
     authState,
@@ -94,8 +94,8 @@ function PopupLayout(props: LayoutProps) {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden bg-gray-50">
-      {/* Configuration List */}
-      <div className="border-light custom-scrollbar flex-1 overflow-y-auto bg-gray-50">
+      {/* Compact Configuration List - Takes most of the space */}
+      <div className="flex-1 overflow-y-auto bg-gray-50">
         <ConfigurationList
           configurations={configurations}
           evaluationResults={evaluationResults}
@@ -108,20 +108,23 @@ function PopupLayout(props: LayoutProps) {
         />
       </div>
 
-      {/* Rule Detail - Shows below when there's a selection */}
+      {/* Compact Rule Detail - Shows at bottom when there's a selection */}
       {selectedConfiguration && (
-        <ConfigurationDetailPanel
-          authState={authState}
-          configuration={selectedConfiguration}
-          compact
-          onClose={() => onConfigurationSelect(undefined)}
-        />
+        <div className="border-t border-gray-200 bg-white">
+          <ConfigurationDetailPanel
+            authState={authState}
+            configuration={selectedConfiguration}
+            compact
+            onClose={() => onConfigurationSelect(undefined)}
+            allowOverrides
+          />
+        </div>
       )}
     </div>
   )
 }
 
-// Single column layout for sidebar
+// Read-only layout for sidebar - no overrides allowed
 function SidebarLayout(props: LayoutProps) {
   const {
     authState,
@@ -138,7 +141,7 @@ function SidebarLayout(props: LayoutProps) {
   return (
     <div className="flex flex-1 flex-col overflow-hidden bg-gray-50">
       {/* Configuration List */}
-      <div className="border-light custom-scrollbar flex-1 overflow-y-auto bg-gray-50">
+      <div className="flex-1 overflow-y-auto bg-gray-50">
         <ConfigurationList
           configurations={configurations}
           evaluationResults={evaluationResults}
@@ -151,20 +154,23 @@ function SidebarLayout(props: LayoutProps) {
         />
       </div>
 
-      {/* Rule Detail - Shows below when there's a selection */}
+      {/* Read-only Rule Detail */}
       {selectedConfiguration && (
-        <ConfigurationDetailPanel
-          authState={authState}
-          configuration={selectedConfiguration}
-          compact
-          onClose={() => onConfigurationSelect(undefined)}
-        />
+        <div className="border-t border-gray-200 bg-white">
+          <ConfigurationDetailPanel
+            authState={authState}
+            configuration={selectedConfiguration}
+            compact
+            onClose={() => onConfigurationSelect(undefined)}
+            allowOverrides={false}
+          />
+        </div>
       )}
     </div>
   )
 }
 
-// Two column layout for tab
+// Two column layout for tab - read-only, no overrides allowed
 function TabLayout(props: LayoutProps) {
   const {
     authState,
@@ -181,7 +187,7 @@ function TabLayout(props: LayoutProps) {
   return (
     <div className="flex flex-1 overflow-hidden bg-gray-50">
       {/* Configuration List */}
-      <div className="border-light custom-scrollbar w-1/2 overflow-y-auto border-r bg-gray-50">
+      <div className="w-1/2 overflow-y-auto border-r border-gray-200 bg-gray-50">
         <ConfigurationList
           configurations={configurations}
           evaluationResults={evaluationResults}
@@ -194,13 +200,18 @@ function TabLayout(props: LayoutProps) {
         />
       </div>
 
-      {/* Rule Detail */}
-      <div className="bg-primary custom-scrollbar w-1/2 overflow-y-auto">
+      {/* Read-only Rule Detail */}
+      <div className="w-1/2 overflow-y-auto bg-white">
         {selectedConfiguration ? (
-          <ConfigurationDetailPanel authState={authState} configuration={selectedConfiguration} compact={false} />
+          <ConfigurationDetailPanel
+            authState={authState}
+            configuration={selectedConfiguration}
+            compact={false}
+            allowOverrides={false}
+          />
         ) : (
           <div className="flex h-full items-center justify-center p-8">
-            <div className="text-muted max-w-md text-center">
+            <div className="text-center text-gray-500">
               <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gray-100 p-6">
                 <svg className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -213,8 +224,7 @@ function TabLayout(props: LayoutProps) {
               </div>
               <h3 className="mb-2 text-lg font-medium">Select a Configuration</h3>
               <p className="text-sm">
-                Choose a feature gate, dynamic config, or experiment from the list to view its details and create
-                overrides.
+                Choose a feature gate, dynamic config, or experiment from the list to view its details.
               </p>
             </div>
           </div>

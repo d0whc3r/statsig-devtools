@@ -38,19 +38,20 @@ export const Dashboard = ({ authState, onLogout, isPopupMode = false, viewMode =
       {/* Header */}
       <DashboardHeader authState={authState} isPopupMode={isPopupMode} onLogout={onLogout} />
 
-      {/* Statistics/Info Bar */}
-      <PopupInfoBar authState={authState} viewMode={viewMode} />
+      {/* Statistics/Info Bar - Only show in popup mode */}
+      {viewMode === 'popup' && <PopupInfoBar authState={authState} viewMode={viewMode} />}
 
       {/* Main Content */}
       <DashboardContent authState={authState} viewMode={viewMode} />
 
-      {/* Override Manager - Show when there are active overrides */}
-      {activeOverrides.length > 0 && (
-        <div className="border-t border-gray-200 bg-white p-4">
+      {/* Override Manager - Only show in popup mode when there are active overrides */}
+      {viewMode === 'popup' && activeOverrides.length > 0 && (
+        <div className="border-t border-gray-200 bg-white p-3">
           <OverrideManager
             overrides={activeOverrides}
             onRemoveOverride={removeOverride}
             onClearAllOverrides={clearAllOverrides}
+            compact
           />
         </div>
       )}

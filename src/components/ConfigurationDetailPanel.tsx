@@ -10,6 +10,7 @@ interface ConfigurationDetailPanelProps {
   configuration: StatsigConfigurationItem
   compact?: boolean
   onClose?: () => void
+  allowOverrides?: boolean
 }
 
 export function ConfigurationDetailPanel({
@@ -17,11 +18,16 @@ export function ConfigurationDetailPanel({
   configuration,
   compact = false,
   onClose,
+  allowOverrides = true,
 }: ConfigurationDetailPanelProps) {
   const { evaluationResults } = useConfigurationEvaluation(authState, [configuration], [])
   const { createOverride } = useStorageOverrides()
 
   const handleOverrideCreate = async (override: StorageOverride) => {
+    if (!allowOverrides) {
+      return
+    }
+
     try {
       await createOverride(override)
     } catch {
@@ -49,6 +55,7 @@ export function ConfigurationDetailPanel({
           evaluationResult={evaluationResults.get(configuration.name)}
           onOverrideCreate={handleOverrideCreate}
           compact={compact}
+          allowOverrides={allowOverrides}
         />
       </div>
     </div>
