@@ -1,0 +1,135 @@
+name: 'Publish on Release'
+
+on:
+  release:
+    types: [published]
+
+env:
+  NODE_VERSION: '22'
+
+permissions:
+  contents: write
+
+jobs:
+  # Automatically publish to stores when a release is created
+  auto-publish:
+    name: 'Auto-Publish to Stores'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build extensions for release
+        uses: ./.github/actions/build-extensions
+        with:
+          build-chrome: 'true'
+          build-firefox: 'true'
+          upload-artifacts: 'false'
+
+      - name: Create release packages
+        uses: ./.github/actions/create-release-artifacts
+        with:
+          create-chrome-zip: 'true'
+          create-firefox-zip: 'true'
+          version: ${{ github.event.release.tag_name }}
+
+      - name: Publish to extension stores
+        uses: ./.github/actions/publish-to-stores
+        with:
+          publish-chrome: 'true'
+          publish-firefox: 'true'
+          dry-run: 'false'
+        env:
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_PUBLISH_TARGET: ${{ secrets.CHROME_PUBLISH_TARGET || 'default' }}
+          CHROME_SKIP_SUBMIT_REVIEW: ${{ secrets.CHROME_SKIP_SUBMIT_REVIEW || 'false' }}
+          FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+          FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+          FIREFOX_CHANNEL: ${{ secrets.FIREFOX_CHANNEL || 'listed' }}
+
+      - name: Update release with store links
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const release_id = context.payload.release.id;
+
+            // Get current release
+            const { data: release } = await github.rest.repos.getRelease({
+              owner,
+              repo,
+              release_id
+            });
+
+            // Add store links to release body
+            const storeLinks = `
+
+            ## 📦 Extension Store Links
+
+            - 🟦 **Chrome Web Store**: [Install Extension](https://chrome.google.com/webstore/detail/${{ secrets.CHROME_EXTENSION_ID }})
+            - 🟧 **Firefox Add-ons**: [Install Extension](https://addons.mozilla.org/addon/${{ secrets.FIREFOX_EXTENSION_ID }})
+
+            ---
+
+            *This release was automatically published to extension stores via GitHub Actions.*
+            `;
+
+            // Update release body
+            await github.rest.repos.updateRelease({
+              owner,
+              repo,
+              release_id,
+              body: release.body + storeLinks
+            });
+
+            console.log('✅ Release updated with store links');
+
+      - name: Create deployment status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+
+            // Create deployment
+            const { data: deployment } = await github.rest.repos.createDeployment({
+              owner,
+              repo,
+              ref: context.sha,
+              environment: 'production',
+              description: 'Publishing extension to stores',
+              auto_merge: false,
+              required_contexts: []
+            });
+
+            // Create deployment status
+            await github.rest.repos.createDeploymentStatus({
+              owner,
+              repo,
+              deployment_id: deployment.id,
+              state: 'success',
+              description: 'Successfully published to Chrome Web Store and Firefox Add-ons',
+              environment: 'production'
+            });
+
+            console.log('✅ Deployment status updated');
+
+      - name: Notify success
+        run: |
+          echo "🎉 Release ${{ github.event.release.tag_name }} published successfully!"
+          echo "📊 Publication Summary:"
+          echo "  ✅ Chrome Web Store: Published"
+          echo "  ✅ Firefox Add-ons: Published"
+          echo "  🔗 Release: ${{ github.event.release.html_url }}"
+          echo ""
+          echo "🔗 Store Links:"
+          echo "  - Chrome: https://chrome.google.com/webstore/detail/${{ secrets.CHROME_EXTENSION_ID }}"
+          echo "  - Firefox: https://addons.mozilla.org/addon/${{ secrets.FIREFOX_EXTENSION_ID }}"

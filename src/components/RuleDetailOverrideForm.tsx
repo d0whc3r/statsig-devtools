@@ -16,7 +16,7 @@ interface RuleDetailOverrideFormProps {
 /**
  * Override form component for RuleDetail
  */
-export const RuleDetailOverrideForm: React.FC<RuleDetailOverrideFormProps> = ({
+export function RuleDetailOverrideForm({
   configuration: _configuration,
   overrideForm,
   setOverrideForm,
@@ -24,7 +24,7 @@ export const RuleDetailOverrideForm: React.FC<RuleDetailOverrideFormProps> = ({
   onCancel,
   getSuggestedOverrideValue,
   getSuggestedKey,
-}) => {
+}: RuleDetailOverrideFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onSubmit()

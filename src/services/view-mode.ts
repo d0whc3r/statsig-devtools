@@ -57,22 +57,63 @@ class ViewModeService {
    */
   async switchToSidebar(): Promise<void> {
     try {
+      logger.info('Attempting to switch to sidebar mode...')
+
+      // Check if sidePanel API is available
+      if (!chrome.sidePanel) {
+        throw new Error('Chrome sidePanel API is not available. Please update Chrome to version 114 or later.')
+      }
+
       // Save preference
       await this.savePreferences({
         preferredMode: 'sidebar',
         lastUsed: Date.now(),
       })
 
-      // Open sidebar
+      // Get current window
       const currentWindow = await chrome.windows.getCurrent()
-      if (currentWindow.id) {
-        await chrome.sidePanel.open({ windowId: currentWindow.id })
+      logger.info('Current window:', currentWindow)
+
+      if (!currentWindow.id) {
+        logger.warn('Could not get current window ID, skipping sidebar opening')
+        return
       }
+
+      // Try to open sidebar via background script first (more reliable)
+      try {
+        const response = await chrome.runtime.sendMessage({ type: 'OPEN_SIDEPANEL' })
+        if (response?.success) {
+          logger.info('Sidebar opened successfully via background script')
+          return
+        }
+      } catch (backgroundError) {
+        logger.warn('Background script sidepanel opening failed, trying direct approach:', backgroundError)
+      }
+
+      // Fallback: Direct API call
+      logger.info(`Opening sidebar for window ${currentWindow.id}`)
+      await chrome.sidePanel.open({ windowId: currentWindow.id })
+
+      logger.info('Sidebar opened successfully via direct API')
 
       // Close popup if it's open (this will happen automatically when sidebar opens)
     } catch (error) {
       logger.error('Failed to switch to sidebar:', error)
-      throw new Error('Could not open sidebar. Make sure you have the latest Chrome version.')
+
+      // Provide more specific error messages
+      if (error instanceof Error) {
+        if (error.message.includes('sidePanel') || error.message.includes('Sidebar')) {
+          throw new Error('Sidebar feature is not available. Please update Chrome to version 114 or later.')
+        }
+        if (error.message.includes('permission')) {
+          throw new Error('Sidebar permission denied. Please check extension permissions.')
+        }
+        if (error.message.includes('Cannot access')) {
+          throw new Error('Cannot access sidebar API. Please reload the extension.')
+        }
+      }
+
+      throw new Error(`Could not open sidebar: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
@@ -162,9 +203,70 @@ class ViewModeService {
    * Check if sidebar is supported
    */
   isSidebarSupported(): boolean {
-    return (
-      typeof chrome !== 'undefined' && chrome.sidePanel !== undefined && typeof chrome.sidePanel.open === 'function'
-    )
+    try {
+      // Check if Chrome API is available
+      if (typeof chrome === 'undefined') {
+        logger.info('Chrome API not available')
+        return false
+      }
+
+      // Check if sidePanel API exists
+      if (!chrome.sidePanel) {
+        logger.info('Chrome sidePanel API not available - Chrome version may be too old')
+        return false
+      }
+
+      // Check if open method exists
+      if (typeof chrome.sidePanel.open !== 'function') {
+        logger.info('Chrome sidePanel.open method not available')
+        return false
+      }
+
+      // Additional check for permissions
+      const manifest = chrome.runtime.getManifest()
+      if (!manifest.permissions?.includes('sidePanel')) {
+        logger.info('sidePanel permission not found in manifest')
+        return false
+      }
+
+      logger.info('Sidebar is supported')
+      return true
+    } catch (error) {
+      logger.error('Error checking sidebar support:', error)
+      return false
+    }
+  }
+
+  /**
+   * Test sidebar functionality (for debugging)
+   */
+  async testSidebarAPI(): Promise<{ supported: boolean; error?: string; details?: any }> {
+    try {
+      const supported = this.isSidebarSupported()
+
+      if (!supported) {
+        return { supported: false, error: 'Sidebar API not supported' }
+      }
+
+      // Try to get current window
+      const currentWindow = await chrome.windows.getCurrent()
+
+      return {
+        supported: true,
+        details: {
+          chromeVersion: navigator.userAgent,
+          windowId: currentWindow.id,
+          manifestVersion: chrome.runtime.getManifest().manifest_version,
+          permissions: chrome.runtime.getManifest().permissions,
+        },
+      }
+    } catch (error) {
+      return {
+        supported: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        details: { error },
+      }
+    }
   }
 
   /**

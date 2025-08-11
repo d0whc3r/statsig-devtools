@@ -13,11 +13,11 @@ interface ConfigurationStatusIndicatorProps {
 /**
  * Status indicator component for configuration evaluation results
  */
-export const ConfigurationStatusIndicator: React.FC<ConfigurationStatusIndicatorProps> = ({
+export function ConfigurationStatusIndicator({
   result,
   size = 'md',
   showText = true,
-}) => {
+}: ConfigurationStatusIndicatorProps) {
   const iconSizeClass = {
     sm: 'h-3 w-3',
     md: 'h-4 w-4',

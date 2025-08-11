@@ -1,6 +1,8 @@
 import React from 'react'
 
+import { useActiveTab } from '../hooks/useActiveTab'
 import { useAuth } from '../hooks/useAuth'
+import { useDashboardHeader } from '../hooks/useDashboardHeader'
 import { AuthComponent } from './AuthComponent'
 import { Dashboard } from './Dashboard'
 import { ErrorBoundary } from './ErrorBoundary'
@@ -8,6 +10,7 @@ import { LoadingSpinner } from './LoadingSpinner'
 import { ViewModeToggle } from './ViewModeToggle'
 
 import type { ViewMode } from '../services/view-mode'
+import type { AuthState } from '../types'
 
 /**
  * Get container styles based on view mode
@@ -15,13 +18,16 @@ import type { ViewMode } from '../services/view-mode'
 const getContainerStyles = (viewMode: ViewMode) => {
   const isTabMode = viewMode === 'tab'
   const isPopupMode = viewMode === 'popup'
+  const isSidebarMode = viewMode === 'sidebar'
 
   return `flex flex-col ${
     isTabMode
       ? 'min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100'
       : isPopupMode
-        ? 'h-full bg-gray-50'
-        : 'h-screen bg-gray-50'
+        ? 'popup-layout bg-gray-50'
+        : isSidebarMode
+          ? 'h-screen bg-gray-50'
+          : 'h-screen bg-gray-50'
   }`
 }
 
@@ -105,21 +111,26 @@ export function AppLayout({ viewMode }: AppLayoutProps) {
         {/* Header */}
         <div className={getHeaderStyles(viewMode)}>
           <div className={`flex items-center ${viewMode === 'popup' ? 'gap-1' : 'gap-3'}`}>
-            <div className={getLogoStyles(viewMode)}>
-              <svg
-                className={`text-white ${viewMode === 'tab' ? 'h-6 w-6' : viewMode === 'popup' ? 'h-4 w-4' : 'h-5 w-5'}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                />
-              </svg>
-            </div>
+            {/* Show action buttons when authenticated, logo when not */}
+            {authState.isAuthenticated ? (
+              <HeaderActionButtons viewMode={viewMode} authState={authState} onLogout={handleLogout} />
+            ) : (
+              <div className={getLogoStyles(viewMode)}>
+                <svg
+                  className={`text-white ${viewMode === 'tab' ? 'h-6 w-6' : viewMode === 'popup' ? 'h-4 w-4' : 'h-5 w-5'}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+              </div>
+            )}
             {getTitleComponent(viewMode)}
           </div>
 
@@ -127,16 +138,30 @@ export function AppLayout({ viewMode }: AppLayoutProps) {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-hidden">
+        <div
+          className={
+            viewMode === 'popup'
+              ? 'popup-content'
+              : viewMode === 'sidebar'
+                ? 'flex-1' // Sidebar uses flex layout like tab mode
+                : viewMode === 'tab'
+                  ? 'flex-1'
+                  : 'flex-1 overflow-hidden'
+          }
+        >
           {authState.isAuthenticated ? (
-            <Dashboard authState={authState} onLogout={handleLogout} isPopupMode viewMode={viewMode} />
+            <Dashboard authState={authState} isPopupMode={viewMode === 'popup'} viewMode={viewMode} />
           ) : (
             <div
-              className={`flex items-center justify-center p-4 ${
-                viewMode === 'tab' ? 'min-h-[calc(100vh-80px)]' : 'h-full'
+              className={`${
+                viewMode === 'popup'
+                  ? 'flex flex-1 items-center justify-center overflow-hidden'
+                  : `flex items-center justify-center p-4 ${viewMode === 'tab' ? 'min-h-[calc(100vh-80px)]' : 'h-full'}`
               }`}
             >
-              <div className={`w-full ${viewMode === 'tab' ? 'max-w-2xl' : 'max-w-md'}`}>
+              <div
+                className={`w-full ${viewMode === 'tab' ? 'max-w-2xl' : 'max-w-md'} ${viewMode === 'popup' ? 'px-4' : ''}`}
+              >
                 <AuthComponent
                   onAuthenticated={handleAuthenticated}
                   initialError={authState.error}
@@ -148,5 +173,63 @@ export function AppLayout({ viewMode }: AppLayoutProps) {
         </div>
       </div>
     </ErrorBoundary>
+  )
+}
+
+/**
+ * Header action buttons component (refresh and logout)
+ */
+interface HeaderActionButtonsProps {
+  viewMode: ViewMode
+  authState: AuthState
+  onLogout: () => void
+}
+
+function HeaderActionButtons({ viewMode, authState, onLogout }: HeaderActionButtonsProps) {
+  const { isLoading, isEvaluating, refreshConfigurations } = useDashboardHeader(authState)
+  const { refreshTabInfo } = useActiveTab()
+
+  const isPopupMode = viewMode === 'popup'
+  const buttonSize = isPopupMode ? 'h-6 w-6' : 'h-7 w-7'
+  const iconSize = isPopupMode ? 'h-3 w-3' : 'h-3.5 w-3.5'
+
+  return (
+    <div className="flex items-center gap-1">
+      {/* Refresh Button */}
+      <button
+        onClick={() => {
+          refreshConfigurations()
+          refreshTabInfo()
+        }}
+        disabled={isLoading || isEvaluating}
+        className={`flex ${buttonSize} items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800 disabled:cursor-not-allowed disabled:opacity-50`}
+        title="Refresh configurations and tab info"
+      >
+        <svg className={`${iconSize}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+      </button>
+
+      {/* Logout Button */}
+      <button
+        onClick={onLogout}
+        className={`flex ${buttonSize} items-center justify-center rounded-md bg-red-100 text-red-600 transition-colors hover:bg-red-200 hover:text-red-800`}
+        title="Logout"
+      >
+        <svg className={`${iconSize}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+          />
+        </svg>
+      </button>
+    </div>
   )
 }

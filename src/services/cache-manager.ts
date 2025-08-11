@@ -70,6 +70,12 @@ export class CacheManager<T = unknown> {
   set(key: string, value: T, ttl?: number): void {
     const now = Date.now()
     const entryTtl = ttl ?? this.config.defaultTtl
+
+    // Don't store entries with zero or negative TTL
+    if (entryTtl <= 0) {
+      return
+    }
+
     const size = this.calculateSize(value)
 
     // Remove existing entry if it exists
@@ -110,7 +116,7 @@ export class CacheManager<T = unknown> {
     const now = Date.now()
 
     // Check if entry has expired
-    if (now - entry.timestamp > entry.ttl) {
+    if (now - entry.timestamp >= entry.ttl) {
       this.delete(key)
       this.stats.misses++
       return undefined
@@ -135,7 +141,7 @@ export class CacheManager<T = unknown> {
     }
 
     const now = Date.now()
-    if (now - entry.timestamp > entry.ttl) {
+    if (now - entry.timestamp >= entry.ttl) {
       this.delete(key)
       return false
     }
@@ -242,7 +248,7 @@ export class CacheManager<T = unknown> {
    */
   private evictLeastRecentlyUsed(): void {
     let oldestKey: string | undefined
-    let oldestTime = Date.now()
+    let oldestTime = Infinity
 
     for (const [key, entry] of this.cache.entries()) {
       if (entry.lastAccessed < oldestTime) {
@@ -264,7 +270,7 @@ export class CacheManager<T = unknown> {
     const expiredKeys: string[] = []
 
     for (const [key, entry] of this.cache.entries()) {
-      if (now - entry.timestamp > entry.ttl) {
+      if (now - entry.timestamp >= entry.ttl) {
         expiredKeys.push(key)
       }
     }
@@ -330,7 +336,7 @@ export class CacheManager<T = unknown> {
     for (const [key, entry] of this.cache.entries()) {
       // Only export non-expired entries
       const now = Date.now()
-      if (now - entry.timestamp <= entry.ttl) {
+      if (now - entry.timestamp < entry.ttl) {
         exported[key] = {
           data: entry.data,
           timestamp: entry.timestamp,
@@ -350,7 +356,7 @@ export class CacheManager<T = unknown> {
 
     Object.entries(data).forEach(([key, { data, timestamp, ttl }]) => {
       // Only import non-expired entries
-      if (now - timestamp <= ttl) {
+      if (now - timestamp < ttl) {
         const remainingTtl = ttl - (now - timestamp)
         this.set(key, data, remainingTtl)
       }

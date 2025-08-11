@@ -10,8 +10,8 @@ interface ActiveTabInfoProps {
 /**
  * Component to display active tab information and injection status
  */
-export const ActiveTabInfo: React.FC<ActiveTabInfoProps> = ({ className = '', compact = false }) => {
-  const { tabInfo, isLoading, refreshTabInfo } = useActiveTab()
+export function ActiveTabInfo({ className = '', compact = false }: ActiveTabInfoProps) {
+  const { tabInfo, isLoading } = useActiveTab()
 
   if (isLoading) {
     return (
@@ -82,20 +82,6 @@ export const ActiveTabInfo: React.FC<ActiveTabInfoProps> = ({ className = '', co
         <h3 className="flex items-center gap-2 text-sm font-medium text-gray-900">
           <span className="text-blue-600">🌐</span>
           Active Tab
-          <button
-            onClick={refreshTabInfo}
-            className="ml-auto text-xs text-blue-600 hover:text-blue-700"
-            title="Refresh tab info"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-          </button>
         </h3>
       </div>
 

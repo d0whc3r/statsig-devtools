@@ -13,7 +13,7 @@ interface OverrideFormProps {
 /**
  * Form component for creating storage overrides
  */
-export const OverrideForm: React.FC<OverrideFormProps> = ({ onSubmit, onCancel, initialValues }) => {
+export function OverrideForm({ onSubmit, onCancel, initialValues }: OverrideFormProps) {
   const { formData, errors, isSubmitting, updateField, submitForm, resetForm, isValid } = useOverrideForm({
     onSubmit,
     initialValues,

@@ -1,0 +1,28 @@
+{
+  "enabled": true,
+  "name": "Structure Steering Document Updater",
+  "description": "Monitors project structure and architecture files to trigger updates to the structure guide, ensuring file organization and architectural patterns remain current",
+  "version": "1",
+  "when": {
+    "type": "userTriggered",
+    "patterns": [
+      "src/**/*",
+      "config/**/*",
+      "scripts/**/*",
+      "e2e/**/*",
+      "chart/**/*",
+      "content/**/*",
+      "package.json",
+      "tsconfig*.json",
+      "*.config.js",
+      "*.config.ts",
+      "README.md",
+      "docker-compose.yaml",
+      "Dockerfile"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Project structure or architecture files have been modified. Please review and update the structure guide to ensure it reflects current project architecture and file organization found in the project.\n\n**What this document should cover:**\nProject architecture, directory organization, state management architecture, API communication patterns, and file organization principles.\n\n**Your task:**\n- Review the modified files and current project structure for architectural patterns\n- Update the guide to reflect what you find in the actual project organization\n- Include any new architectural patterns, organizational structures, or routing approaches discovered\n- Ensure directory examples match the current src/ structure\n- Focus on high-level architecture and structural decisions\n\n**Document boundaries:**\n- This covers architecture and structural organization (not implementation details or coding standards)\n- Reference other guides for specialized topics (coding conventions → best-practices, domain concepts → product guide)\n- Don't duplicate technical tool configurations from the tech guide\n\nFeel free to include any relevant new architectural patterns, organizational structures, or file organization approaches you discover that would help developers understand the project's structure."
+  }
+}

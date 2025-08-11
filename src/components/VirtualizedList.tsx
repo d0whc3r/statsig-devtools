@@ -164,7 +164,7 @@ interface AutoSizerProps {
   className?: string
 }
 
-export const AutoSizer: React.FC<AutoSizerProps> = ({ children, className = '' }) => {
+export function AutoSizer({ children, className = '' }: AutoSizerProps) {
   const [size, setSize] = useState({ width: 0, height: 0 })
   const containerRef = useRef<HTMLDivElement>(null)
 

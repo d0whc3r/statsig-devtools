@@ -160,8 +160,11 @@ export class UnifiedStatsigService {
     const inputValidation = this.validateApiKeyInput(apiKey)
     if (inputValidation) return inputValidation
 
+    // Trim the API key for validation
+    const trimmedApiKey = apiKey.trim()
+
     // Check if it's a Console API key
-    if (!apiKey.startsWith('console-')) {
+    if (!trimmedApiKey.startsWith('console-')) {
       return {
         isValid: false,
         error: 'Console API key required. Please use a key that starts with "console-"',
@@ -170,7 +173,7 @@ export class UnifiedStatsigService {
 
     try {
       // Validate Console API key
-      return await this.validateConsoleApiKey(apiKey)
+      return await this.validateConsoleApiKey(trimmedApiKey)
     } catch (error) {
       return this.handleValidationError(error)
     }

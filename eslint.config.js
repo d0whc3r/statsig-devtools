@@ -250,6 +250,7 @@ export default [
     files: ['**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}', '**/test/**/*'],
     rules: {
       'no-console': 'off',
+      'max-lines': 'off',
       'max-lines-per-function': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       'jsx-a11y/click-events-have-key-events': 'off',

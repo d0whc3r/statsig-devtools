@@ -1,0 +1,21 @@
+{
+  "enabled": true,
+  "name": "Design Guide Steering Document Updater",
+  "description": "Monitors UI components and theme files to trigger updates to the design guide, ensuring visual design patterns remain current",
+  "version": "1",
+  "when": {
+    "type": "userTriggered",
+    "patterns": [
+      "src/theme/**/*.ts",
+      "src/theme/**/*.tsx",
+      "src/components/**/*.tsx",
+      "src/components/**/*.ts",
+      "package.json",
+      "README.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "UI components or theme files have been modified. Please review and update the design guide to ensure it reflects current visual design patterns and project-specific customizations found in the project.\n\n**What this document should cover:**\nProject-specific customizations, visual design standards, component styling patterns, accessibility implementations, and UI/UX conventions.\n\n**Your task:**\n- Review the modified files and current theme/component implementations for design patterns\n- Update the guide to reflect what you find in the actual theme and component code\n- Include any new design patterns, UI conventions, or accessibility implementations discovered\n- Focus on project-specific customizations rather than repeating MUI documentation\n- Document patterns that help maintain visual consistency across the project\n\n**Document boundaries:**\n- This covers visual design and UI patterns (not implementation logic or coding standards)\n- Focus on project-specific customizations, reference MUI docs for general patterns\n- Don't duplicate technical setup details from the tech guide\n\nFeel free to include any relevant new design patterns, UI conventions, theme customizations, or accessibility implementations you discover that would help maintain consistent visual design."
+  }
+}

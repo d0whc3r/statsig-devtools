@@ -21,6 +21,7 @@ export const useConfigurationData = (authState: AuthState) => {
 
     if (!apiKey) {
       setError('API key not available')
+      setIsLoading(false)
       return
     }
 

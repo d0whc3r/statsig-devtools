@@ -1,0 +1,26 @@
+{
+  "enabled": true,
+  "name": "Best Practices Steering Document Updater",
+  "description": "Monitors code files to trigger updates to the best practices guide, ensuring coding standards and development conventions remain current",
+  "version": "1",
+  "when": {
+    "type": "userTriggered",
+    "patterns": [
+      "package.json",
+      "tsconfig*.json",
+      "eslint.config.js",
+      ".prettierrc",
+      "src/components/**/*.tsx",
+      "src/hooks/**/*.ts",
+      "src/utils/**/*.ts",
+      "src/api/**/*.ts",
+      "src/test/**/*.ts",
+      "src/test/**/*.tsx",
+      "README.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Code files have been modified. Please review and update the best practices guide to ensure it reflects current coding standards and development conventions found in the project.\n\n**What this document should cover:**\nCoding standards, TypeScript patterns, component organization, import conventions, code quality standards, development workflow, performance patterns, and security practices.\n\n**Your task:**\n- Review the modified files and current codebase for development patterns and conventions\n- Update the guide to reflect what you find in the actual implementation\n- Include any new coding patterns, performance optimizations, or security practices discovered\n- Ensure standards match current configurations (ESLint, TypeScript, etc.)\n- Focus on practical guidance that promotes consistent, high-quality development\n\n**Document boundaries:**\n- This covers development practices and coding standards (not domain concepts or testing)\n- Reference other guides for specialized topics (design patterns → design-guide, testing → testing guide)\n- Don't duplicate technical tool setup from the tech guide\n\nFeel free to include any relevant new development patterns, conventions, or best practices you discover in the codebase that would help maintain code quality and consistency."
+  }
+}

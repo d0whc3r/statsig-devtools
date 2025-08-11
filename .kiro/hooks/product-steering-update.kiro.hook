@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Product Steering Document Updater",
+  "description": "Monitors domain-related files to trigger updates to the product guide, ensuring vector database terminology and business rules remain accurate",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Domain-related files have been modified. Please review and update the product guide to ensure it reflects current business domain concepts and terminology found in the project.\n\n**What this document should cover:**\nProject terminology, business rules, error handling classifications, and domain-specific validation patterns.\n\n**Your task:**\n- Review the modified files and current codebase for domain concepts and business terminology\n- Update the guide to reflect what you find in the actual API, components, and business logic\n- Include any new domain concepts, error types, business rules, or validation patterns discovered\n- Ensure terminology is used consistently across the application\n- Focus on business concepts that help developers understand the domain\n\n**Document boundaries:**\n- This covers domain concepts and business terminology (not technical implementation details)\n- Reference other guides for implementation patterns (technical details → best-practices, UI patterns → design-guide)\n- Don't duplicate technical configurations from the tech guide\n\nFeel free to include any relevant new domain concepts, business rules, terminology, or validation patterns you discover that would help ensure consistent understanding of the business domain."
+  }
+}

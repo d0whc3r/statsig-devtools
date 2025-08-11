@@ -63,6 +63,36 @@ function setupMessageHandling(): void {
             return true
           }
 
+          // Handle sidepanel open requests
+          if (typedMessage.type === 'OPEN_SIDEPANEL') {
+            const handleSidepanel = async () => {
+              try {
+                // Get current window
+                const currentWindow = await browser.windows.getCurrent()
+                if (!currentWindow.id) {
+                  throw new Error('Could not get current window ID')
+                }
+
+                // Open sidepanel
+                if (browser.sidePanel && browser.sidePanel.open) {
+                  await browser.sidePanel.open({ windowId: currentWindow.id })
+                  sendResponse({ success: true })
+                } else {
+                  throw new Error('Sidepanel API not available')
+                }
+              } catch (error) {
+                logger.error('Failed to open sidepanel:', error)
+                sendResponse({
+                  success: false,
+                  error: error instanceof Error ? error.message : 'Unknown error',
+                })
+              }
+            }
+
+            handleSidepanel()
+            return true
+          }
+
           // Handle debug storage test requests
           if (typedMessage.type === 'DEBUG_STORAGE_TEST') {
             // Handle async operation
@@ -357,6 +387,38 @@ function logBrowserCompatibility(): void {
 }
 
 /**
+ * Setup sidepanel event handlers
+ */
+function setupSidepanelHandlers(): void {
+  // Handle when user opens sidepanel from Chrome's context menu
+  if (browser.sidePanel && browser.sidePanel.setPanelBehavior) {
+    // Set the sidepanel to NOT open on action click - we want popup to open instead
+    browser.sidePanel.setPanelBehavior({ openPanelOnActionClick: false }).catch((error) => {
+      logger.warn('Could not set sidepanel behavior:', error)
+    })
+  }
+
+  // Listen for keyboard commands
+  browser.commands.onCommand.addListener(async (command) => {
+    if (command === 'open-sidepanel') {
+      try {
+        logger.log('Open sidepanel command triggered')
+        const currentWindow = await browser.windows.getCurrent()
+        if (currentWindow.id && browser.sidePanel && browser.sidePanel.open) {
+          await browser.sidePanel.open({ windowId: currentWindow.id })
+          logger.log('Opened sidepanel from keyboard command')
+        }
+      } catch (error) {
+        logger.error('Failed to open sidepanel from command:', error)
+      }
+    }
+  })
+
+  // Note: We don't handle action clicks here because we want the popup to open by default
+  // The sidebar is only opened via context menu or keyboard shortcut
+}
+
+/**
  * Main background script entry point
  */
 export default defineBackground(() => {
@@ -364,4 +426,5 @@ export default defineBackground(() => {
   setupMessageHandling()
   setupLifecycleHandlers()
   setupTabMonitoring()
+  setupSidepanelHandlers()
 })

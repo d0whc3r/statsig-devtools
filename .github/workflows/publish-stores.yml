@@ -1,0 +1,273 @@
+name: 'Publish to Extension Stores'
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish-chrome:
+        description: 'Publish to Chrome Web Store'
+        required: false
+        default: true
+        type: boolean
+      publish-firefox:
+        description: 'Publish to Firefox Add-ons'
+        required: false
+        default: true
+        type: boolean
+      dry-run:
+        description: 'Perform a dry run (test configuration without publishing)'
+        required: false
+        default: false
+        type: boolean
+      skip-build:
+        description: 'Skip build step (use existing artifacts)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NODE_VERSION: '22'
+
+permissions:
+  contents: read
+
+jobs:
+  # Validate inputs and environment
+  validate:
+    name: 'Validate Configuration'
+    runs-on: ubuntu-latest
+    outputs:
+      should-publish-chrome: ${{ steps.validate.outputs.should-publish-chrome }}
+      should-publish-firefox: ${{ steps.validate.outputs.should-publish-firefox }}
+      is-dry-run: ${{ steps.validate.outputs.is-dry-run }}
+      skip-build: ${{ steps.validate.outputs.skip-build }}
+    steps:
+      - name: Validate inputs and secrets
+        id: validate
+        run: |
+          echo "🔍 Validating configuration..."
+
+          # Set outputs based on inputs
+          echo "should-publish-chrome=${{ github.event.inputs.publish-chrome }}" >> $GITHUB_OUTPUT
+          echo "should-publish-firefox=${{ github.event.inputs.publish-firefox }}" >> $GITHUB_OUTPUT
+          echo "is-dry-run=${{ github.event.inputs.dry-run }}" >> $GITHUB_OUTPUT
+          echo "skip-build=${{ github.event.inputs.skip-build }}" >> $GITHUB_OUTPUT
+
+          # Validate Chrome secrets if Chrome publishing is enabled
+          if [ "${{ github.event.inputs.publish-chrome }}" == "true" ]; then
+            echo "📋 Validating Chrome Web Store secrets..."
+            if [ -z "${{ secrets.CHROME_EXTENSION_ID }}" ] || \
+               [ -z "${{ secrets.CHROME_CLIENT_ID }}" ] || \
+               [ -z "${{ secrets.CHROME_CLIENT_SECRET }}" ]; then
+              echo "❌ Missing Chrome Web Store secrets"
+              echo "Required secrets: CHROME_EXTENSION_ID, CHROME_CLIENT_ID, CHROME_CLIENT_SECRET"
+              exit 1
+            fi
+            echo "✅ Chrome Web Store secrets validated"
+          fi
+
+          # Validate Firefox secrets if Firefox publishing is enabled
+          if [ "${{ github.event.inputs.publish-firefox }}" == "true" ]; then
+            echo "📋 Validating Firefox Add-ons secrets..."
+            if [ -z "${{ secrets.FIREFOX_EXTENSION_ID }}" ] || \
+               [ -z "${{ secrets.FIREFOX_JWT_ISSUER }}" ] || \
+               [ -z "${{ secrets.FIREFOX_JWT_SECRET }}" ]; then
+              echo "❌ Missing Firefox Add-ons secrets"
+              echo "Required secrets: FIREFOX_EXTENSION_ID, FIREFOX_JWT_ISSUER, FIREFOX_JWT_SECRET"
+              exit 1
+            fi
+            echo "✅ Firefox Add-ons secrets validated"
+          fi
+
+          # Check if at least one store is selected
+          if [ "${{ github.event.inputs.publish-chrome }}" != "true" ] && \
+             [ "${{ github.event.inputs.publish-firefox }}" != "true" ]; then
+            echo "❌ At least one store must be selected for publishing"
+            exit 1
+          fi
+
+          echo "✅ Configuration validation completed"
+
+  # Build extensions if not skipped
+  build:
+    name: 'Build Extensions'
+    runs-on: ubuntu-latest
+    needs: validate
+    if: needs.validate.outputs.skip-build != 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build extensions
+        uses: ./.github/actions/build-extensions
+        with:
+          build-chrome: ${{ needs.validate.outputs.should-publish-chrome }}
+          build-firefox: ${{ needs.validate.outputs.should-publish-firefox }}
+          upload-artifacts: 'false'
+
+      - name: Create release packages
+        uses: ./.github/actions/create-release-artifacts
+        with:
+          create-chrome-zip: ${{ needs.validate.outputs.should-publish-chrome }}
+          create-firefox-zip: ${{ needs.validate.outputs.should-publish-firefox }}
+
+      - name: Upload publishing artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-packages-${{ github.run_id }}
+          path: |
+            .output/*.zip
+          retention-days: 30
+
+  # Test submission configuration (dry run)
+  test-submission:
+    name: 'Test Submission Configuration'
+    runs-on: ubuntu-latest
+    needs: [validate, build]
+    if: |
+      always() &&
+      (needs.build.result == 'success' || needs.validate.outputs.skip-build == 'true') &&
+      needs.validate.outputs.is-dry-run == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download build artifacts
+        if: needs.validate.outputs.skip-build != 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: extension-packages-${{ github.run_id }}
+          path: .output/
+
+      - name: Test store submission configuration
+        uses: ./.github/actions/publish-to-stores
+        with:
+          publish-chrome: ${{ needs.validate.outputs.should-publish-chrome }}
+          publish-firefox: ${{ needs.validate.outputs.should-publish-firefox }}
+          dry-run: 'true'
+        env:
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_PUBLISH_TARGET: ${{ secrets.CHROME_PUBLISH_TARGET || 'default' }}
+          CHROME_SKIP_SUBMIT_REVIEW: ${{ secrets.CHROME_SKIP_SUBMIT_REVIEW || 'false' }}
+          FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+          FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+          FIREFOX_CHANNEL: ${{ secrets.FIREFOX_CHANNEL || 'listed' }}
+
+  # Publish to stores
+  publish:
+    name: 'Publish to Extension Stores'
+    runs-on: ubuntu-latest
+    needs: [validate, build]
+    if: |
+      always() &&
+      (needs.build.result == 'success' || needs.validate.outputs.skip-build == 'true') &&
+      needs.validate.outputs.is-dry-run != 'true'
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download build artifacts
+        if: needs.validate.outputs.skip-build != 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: extension-packages-${{ github.run_id }}
+          path: .output/
+
+      - name: Publish to extension stores
+        uses: ./.github/actions/publish-to-stores
+        with:
+          publish-chrome: ${{ needs.validate.outputs.should-publish-chrome }}
+          publish-firefox: ${{ needs.validate.outputs.should-publish-firefox }}
+          dry-run: 'false'
+        env:
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_PUBLISH_TARGET: ${{ secrets.CHROME_PUBLISH_TARGET || 'default' }}
+          CHROME_SKIP_SUBMIT_REVIEW: ${{ secrets.CHROME_SKIP_SUBMIT_REVIEW || 'false' }}
+          FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+          FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+          FIREFOX_CHANNEL: ${{ secrets.FIREFOX_CHANNEL || 'listed' }}
+
+  # Summary and cleanup
+  summary:
+    name: 'Publication Summary'
+    runs-on: ubuntu-latest
+    needs: [validate, build, test-submission, publish]
+    if: always()
+    steps:
+      - name: Publication summary
+        run: |
+          echo "📊 Publication Summary:"
+          echo "===================="
+
+          # Show configuration
+          echo "🔧 Configuration:"
+          echo "  - Chrome Web Store: ${{ needs.validate.outputs.should-publish-chrome }}"
+          echo "  - Firefox Add-ons: ${{ needs.validate.outputs.should-publish-firefox }}"
+          echo "  - Dry Run: ${{ needs.validate.outputs.is-dry-run }}"
+          echo "  - Skip Build: ${{ needs.validate.outputs.skip-build }}"
+          echo ""
+
+          # Show job results
+          echo "📋 Job Results:"
+          echo "  - Validation: ${{ needs.validate.result }}"
+          echo "  - Build: ${{ needs.build.result }}"
+          echo "  - Test Submission: ${{ needs.test-submission.result }}"
+          echo "  - Publish: ${{ needs.publish.result }}"
+          echo ""
+
+          # Determine overall status
+          if [ "${{ needs.validate.result }}" != "success" ]; then
+            echo "❌ Publication failed: Configuration validation failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.validate.outputs.skip-build }}" != "true" ] && [ "${{ needs.build.result }}" != "success" ]; then
+            echo "❌ Publication failed: Build failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.validate.outputs.is-dry-run }}" == "true" ]; then
+            if [ "${{ needs.test-submission.result }}" == "success" ]; then
+              echo "✅ Dry run completed successfully - Configuration is valid"
+            else
+              echo "❌ Dry run failed - Configuration issues detected"
+              exit 1
+            fi
+          else
+            if [ "${{ needs.publish.result }}" == "success" ]; then
+              echo "🎉 Publication completed successfully!"
+              
+              # Show what was published
+              if [ "${{ needs.validate.outputs.should-publish-chrome }}" == "true" ]; then
+                echo "  ✅ Chrome Web Store: Published"
+              fi
+              
+              if [ "${{ needs.validate.outputs.should-publish-firefox }}" == "true" ]; then
+                echo "  ✅ Firefox Add-ons: Published"
+              fi
+            else
+              echo "❌ Publication failed"
+              exit 1
+            fi
+          fi

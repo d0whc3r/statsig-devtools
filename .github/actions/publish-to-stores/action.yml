@@ -1,0 +1,234 @@
+name: 'Publish to Extension Stores'
+description: 'Publish extension to Chrome Web Store and/or Firefox Add-ons'
+
+inputs:
+  publish-chrome:
+    description: 'Publish to Chrome Web Store'
+    required: false
+    default: 'true'
+  publish-firefox:
+    description: 'Publish to Firefox Add-ons'
+    required: false
+    default: 'true'
+  dry-run:
+    description: 'Perform dry run without actual publishing'
+    required: false
+    default: 'false'
+  chrome-zip-path:
+    description: 'Path to Chrome ZIP file'
+    required: false
+    default: ''
+  firefox-zip-path:
+    description: 'Path to Firefox ZIP file'
+    required: false
+    default: ''
+  firefox-sources-zip-path:
+    description: 'Path to Firefox sources ZIP file'
+    required: false
+    default: ''
+
+outputs:
+  chrome-published:
+    description: 'Whether Chrome extension was published'
+    value: ${{ steps.publish-chrome.outputs.published }}
+  firefox-published:
+    description: 'Whether Firefox extension was published'
+    value: ${{ steps.publish-firefox.outputs.published }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Validate inputs
+      shell: bash
+      run: |
+        echo "🔍 Validating publishing configuration..."
+
+        # Check if at least one store is selected
+        if [ "${{ inputs.publish-chrome }}" != "true" ] && [ "${{ inputs.publish-firefox }}" != "true" ]; then
+          echo "❌ At least one store must be selected for publishing"
+          exit 1
+        fi
+
+        # Validate Chrome configuration
+        if [ "${{ inputs.publish-chrome }}" == "true" ]; then
+          if [ -z "$CHROME_EXTENSION_ID" ] || [ -z "$CHROME_CLIENT_ID" ] || [ -z "$CHROME_CLIENT_SECRET" ]; then
+            echo "❌ Missing Chrome Web Store environment variables"
+            echo "Required: CHROME_EXTENSION_ID, CHROME_CLIENT_ID, CHROME_CLIENT_SECRET"
+            exit 1
+          fi
+          echo "✅ Chrome Web Store configuration validated"
+        fi
+
+        # Validate Firefox configuration
+        if [ "${{ inputs.publish-firefox }}" == "true" ]; then
+          if [ -z "$FIREFOX_EXTENSION_ID" ] || [ -z "$FIREFOX_JWT_ISSUER" ] || [ -z "$FIREFOX_JWT_SECRET" ]; then
+            echo "❌ Missing Firefox Add-ons environment variables"
+            echo "Required: FIREFOX_EXTENSION_ID, FIREFOX_JWT_ISSUER, FIREFOX_JWT_SECRET"
+            exit 1
+          fi
+          echo "✅ Firefox Add-ons configuration validated"
+        fi
+
+        echo "✅ Configuration validation completed"
+
+    - name: Find ZIP files
+      id: find-zips
+      shell: bash
+      run: |
+        echo "🔍 Locating ZIP files..."
+
+        # Find Chrome ZIP
+        if [ "${{ inputs.publish-chrome }}" == "true" ]; then
+          if [ -n "${{ inputs.chrome-zip-path }}" ]; then
+            CHROME_ZIP="${{ inputs.chrome-zip-path }}"
+          else
+            CHROME_ZIP=$(find .output -name "*chrome*.zip" | head -1)
+          fi
+          
+          if [ -z "$CHROME_ZIP" ] || [ ! -f "$CHROME_ZIP" ]; then
+            echo "❌ Chrome ZIP file not found"
+            exit 1
+          fi
+          
+          echo "chrome-zip=$CHROME_ZIP" >> $GITHUB_OUTPUT
+          echo "✅ Chrome ZIP: $CHROME_ZIP"
+        fi
+
+        # Find Firefox ZIPs
+        if [ "${{ inputs.publish-firefox }}" == "true" ]; then
+          if [ -n "${{ inputs.firefox-zip-path }}" ]; then
+            FIREFOX_ZIP="${{ inputs.firefox-zip-path }}"
+          else
+            FIREFOX_ZIP=$(find .output -name "*firefox*.zip" | grep -v sources | head -1)
+          fi
+          
+          if [ -n "${{ inputs.firefox-sources-zip-path }}" ]; then
+            FIREFOX_SOURCES_ZIP="${{ inputs.firefox-sources-zip-path }}"
+          else
+            FIREFOX_SOURCES_ZIP=$(find .output -name "*sources*.zip" | head -1)
+          fi
+          
+          if [ -z "$FIREFOX_ZIP" ] || [ ! -f "$FIREFOX_ZIP" ]; then
+            echo "❌ Firefox ZIP file not found"
+            exit 1
+          fi
+          
+          if [ -z "$FIREFOX_SOURCES_ZIP" ] || [ ! -f "$FIREFOX_SOURCES_ZIP" ]; then
+            echo "❌ Firefox sources ZIP file not found"
+            exit 1
+          fi
+          
+          echo "firefox-zip=$FIREFOX_ZIP" >> $GITHUB_OUTPUT
+          echo "firefox-sources-zip=$FIREFOX_SOURCES_ZIP" >> $GITHUB_OUTPUT
+          echo "✅ Firefox ZIP: $FIREFOX_ZIP"
+          echo "✅ Firefox sources ZIP: $FIREFOX_SOURCES_ZIP"
+        fi
+
+    - name: Publish to Chrome Web Store
+      id: publish-chrome
+      if: inputs.publish-chrome == 'true'
+      shell: bash
+      run: |
+        CHROME_ZIP="${{ steps.find-zips.outputs.chrome-zip }}"
+        DRY_RUN_FLAG=""
+
+        if [ "${{ inputs.dry-run }}" == "true" ]; then
+          echo "🧪 Testing Chrome Web Store submission (dry run)..."
+          DRY_RUN_FLAG="--dry-run"
+        else
+          echo "🚀 Publishing to Chrome Web Store..."
+        fi
+
+        echo "📦 Chrome ZIP: $CHROME_ZIP"
+
+        # Submit to Chrome Web Store
+        if npx wxt submit $DRY_RUN_FLAG --chrome-zip "$CHROME_ZIP"; then
+          echo "published=true" >> $GITHUB_OUTPUT
+          if [ "${{ inputs.dry-run }}" == "true" ]; then
+            echo "✅ Chrome Web Store configuration test passed"
+          else
+            echo "✅ Successfully published to Chrome Web Store"
+          fi
+        else
+          echo "published=false" >> $GITHUB_OUTPUT
+          if [ "${{ inputs.dry-run }}" == "true" ]; then
+            echo "❌ Chrome Web Store configuration test failed"
+          else
+            echo "❌ Failed to publish to Chrome Web Store"
+          fi
+          exit 1
+        fi
+
+    - name: Publish to Firefox Add-ons
+      id: publish-firefox
+      if: inputs.publish-firefox == 'true'
+      shell: bash
+      run: |
+        FIREFOX_ZIP="${{ steps.find-zips.outputs.firefox-zip }}"
+        FIREFOX_SOURCES_ZIP="${{ steps.find-zips.outputs.firefox-sources-zip }}"
+        DRY_RUN_FLAG=""
+
+        if [ "${{ inputs.dry-run }}" == "true" ]; then
+          echo "🧪 Testing Firefox Add-ons submission (dry run)..."
+          DRY_RUN_FLAG="--dry-run"
+        else
+          echo "🚀 Publishing to Firefox Add-ons..."
+        fi
+
+        echo "📦 Firefox ZIP: $FIREFOX_ZIP"
+        echo "📦 Firefox sources ZIP: $FIREFOX_SOURCES_ZIP"
+
+        # Submit to Firefox Add-ons
+        if npx wxt submit $DRY_RUN_FLAG \
+          --firefox-zip "$FIREFOX_ZIP" \
+          --firefox-sources-zip "$FIREFOX_SOURCES_ZIP"; then
+          echo "published=true" >> $GITHUB_OUTPUT
+          if [ "${{ inputs.dry-run }}" == "true" ]; then
+            echo "✅ Firefox Add-ons configuration test passed"
+          else
+            echo "✅ Successfully published to Firefox Add-ons"
+          fi
+        else
+          echo "published=false" >> $GITHUB_OUTPUT
+          if [ "${{ inputs.dry-run }}" == "true" ]; then
+            echo "❌ Firefox Add-ons configuration test failed"
+          else
+            echo "❌ Failed to publish to Firefox Add-ons"
+          fi
+          exit 1
+        fi
+
+    - name: Publishing summary
+      shell: bash
+      run: |
+        echo "📊 Publishing Summary:"
+        echo "===================="
+
+        if [ "${{ inputs.dry-run }}" == "true" ]; then
+          echo "🧪 Mode: Dry Run (Configuration Test)"
+        else
+          echo "🚀 Mode: Live Publishing"
+        fi
+
+        echo ""
+        echo "📋 Results:"
+
+        if [ "${{ inputs.publish-chrome }}" == "true" ]; then
+          if [ "${{ steps.publish-chrome.outputs.published }}" == "true" ]; then
+            echo "  ✅ Chrome Web Store: Success"
+          else
+            echo "  ❌ Chrome Web Store: Failed"
+          fi
+        else
+          echo "  ⏭️ Chrome Web Store: Skipped"
+        fi
+
+        if [ "${{ inputs.publish-firefox }}" == "true" ]; then
+          if [ "${{ steps.publish-firefox.outputs.published }}" == "true" ]; then
+            echo "  ✅ Firefox Add-ons: Success"
+          else
+            echo "  ❌ Firefox Add-ons: Failed"
+          fi
+        else
+          echo "  ⏭️ Firefox Add-ons: Skipped"
+        fi

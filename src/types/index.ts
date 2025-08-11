@@ -31,6 +31,7 @@ export interface Experiment {
  * Base interface for all Statsig configuration items
  */
 export interface StatsigConfigurationItem {
+  id?: string
   name: string
   type: 'feature_gate' | 'dynamic_config' | 'experiment'
   enabled: boolean
@@ -63,12 +64,12 @@ export interface ConfigurationRule {
 }
 
 /**
- * Rule condition interface
+ * Rule condition interface based on Statsig SDK
  */
 export interface RuleCondition {
   type: string
   targetValue: unknown
-  operator: string
+  operator?: string
   field?: string
   additionalValues?: Record<string, unknown>
 }

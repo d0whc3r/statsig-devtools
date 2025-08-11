@@ -1,3 +1,4 @@
+import { BrowserRuntime } from '../utils/browser-api'
 import { errorHandler } from './error-handler'
 import { withRetry } from './retry-manager'
 import {
@@ -11,6 +12,18 @@ import {
 import { apiLogger, createFetchOptions, createRequestHeaders, formatEndpointUrl } from './statsig-api-utils'
 
 import type { ApiValidationResponse, StatsigConfigurationItem, StatsigConfigurations } from '../types'
+
+/**
+ * Get extension version from manifest
+ */
+function getExtensionVersion(): string {
+  try {
+    const manifest = BrowserRuntime.getManifest()
+    return manifest.version || '1.0.0'
+  } catch {
+    return '1.0.0'
+  }
+}
 
 /**
  * Cache for storing configuration data
@@ -136,7 +149,7 @@ export async function validateClientSdkKey(apiKey: string): Promise<ApiValidatio
       user: { userID: 'test-validation-user' },
       statsigMetadata: {
         sdkType: 'js-client',
-        sdkVersion: '1.0.0',
+        sdkVersion: getExtensionVersion(),
       },
     }
     const fetchOptions = createFetchOptions('POST', headers, body)
@@ -296,6 +309,7 @@ export async function getFeatureGates(apiKey: string): Promise<StatsigConfigurat
     const featureGates: StatsigConfigurationItem[] = response.data.map((gate) => {
       const gateData = gate as Record<string, unknown>
       return {
+        id: String(gateData.id || ''),
         name: String(gateData.name || ''),
         type: 'feature_gate' as const,
         enabled: Boolean(gateData.enabled ?? true),
@@ -344,6 +358,7 @@ export async function getExperiments(apiKey: string): Promise<StatsigConfigurati
     const experiments: StatsigConfigurationItem[] = response.data.map((experiment) => {
       const experimentData = experiment as Record<string, unknown>
       return {
+        id: String(experimentData.id || ''),
         name: String(experimentData.name || ''),
         type: 'experiment' as const,
         enabled: Boolean(experimentData.enabled ?? true),
@@ -392,6 +407,7 @@ export async function getDynamicConfigs(apiKey: string): Promise<StatsigConfigur
     const dynamicConfigs: StatsigConfigurationItem[] = response.data.map((config) => {
       const configData = config as Record<string, unknown>
       return {
+        id: String(configData.id || ''),
         name: String(configData.name || ''),
         type: 'dynamic_config' as const,
         enabled: Boolean(configData.enabled ?? true),

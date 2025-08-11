@@ -69,6 +69,17 @@ export default defineConfig({
       default_path: 'sidepanel/index.html',
     },
 
+    // Commands for keyboard shortcuts and context menu
+    commands: {
+      'open-sidepanel': {
+        suggested_key: {
+          default: 'Ctrl+Shift+S',
+          mac: 'Command+Shift+S',
+        },
+        description: 'Open Statsig DevTools sidebar',
+      },
+    },
+
     // Icons for the extension
     icons: {
       16: 'icon/16.png',

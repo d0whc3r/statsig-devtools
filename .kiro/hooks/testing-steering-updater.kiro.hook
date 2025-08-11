@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Testing Steering Document Updater",
+  "description": "Monitors test files, testing utilities, and related project files to trigger updates to the consolidated testing steering document, ensuring all testing patterns, conventions, and best practices remain accurate and up-to-date with current project state",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Testing-related files have been modified. Please review and update the testing steering document to ensure it reflects current testing practices and patterns found in the project.\n\n**What this document should cover:**\nTesting methodologies, component testing patterns, API mocking strategies, test organization, accessibility testing, and testing best practices.\n\n**Your task:**\n- Look through the modified files and current codebase for testing patterns and approaches\n- Update the testing guide to reflect what you find in the actual implementation\n- Include any new testing utilities, patterns, or methodologies discovered\n- Ensure examples match current project conventions\n- Focus on practical guidance that helps developers write effective tests\n\n**Document boundaries:**\n- This covers testing strategies and patterns (not general coding standards)\n- Reference other guides for non-testing topics\n- Don't duplicate technical setup details from the tech guide\n\nFeel free to include any relevant new testing approaches or patterns you discover in the codebase that would be valuable for developers to know about."
+  }
+}

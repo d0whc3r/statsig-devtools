@@ -1,4 +1,5 @@
 import { useDashboardHeader } from '../hooks/useDashboardHeader'
+import { ExtensionInfo } from './ExtensionInfo'
 import { LoadingSpinner } from './LoadingSpinner'
 
 import type { AuthState } from '../types'
@@ -6,13 +7,14 @@ import type { AuthState } from '../types'
 interface DashboardHeaderProps {
   authState: AuthState
   isPopupMode: boolean
-  onLogout: () => void
 }
 
-export function DashboardHeader({ authState, isPopupMode, onLogout }: DashboardHeaderProps) {
-  const { isLoading, isEvaluating, refreshConfigurations } = useDashboardHeader(authState)
+export function DashboardHeader({ authState, isPopupMode }: DashboardHeaderProps) {
+  const { isEvaluating } = useDashboardHeader(authState)
+
   return (
     <div className={`header-professional ${isPopupMode ? 'px-4 py-2' : 'px-6 py-4'}`}>
+      {/* Main header content */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           {!isPopupMode && (
@@ -27,7 +29,10 @@ export function DashboardHeader({ authState, isPopupMode, onLogout }: DashboardH
                   />
                 </svg>
               </div>
-              <h1 className="text-primary text-xl font-bold">Statsig Developer Tools</h1>
+              <div>
+                <h1 className="text-primary text-xl font-bold">Statsig Developer Tools</h1>
+                <ExtensionInfo compact className="mt-0.5" />
+              </div>
             </div>
           )}
           {isEvaluating && (
@@ -36,30 +41,6 @@ export function DashboardHeader({ authState, isPopupMode, onLogout }: DashboardH
               <span className="text-sm font-medium text-blue-700">Evaluating...</span>
             </div>
           )}
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={refreshConfigurations}
-            disabled={isLoading || isEvaluating}
-            className="btn-icon btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-            Refresh
-          </button>
-          <button
-            onClick={onLogout}
-            className="text-muted hover:text-secondary rounded-md px-3 py-2 text-sm transition-colors hover:bg-gray-100"
-          >
-            Logout
-          </button>
         </div>
       </div>
     </div>

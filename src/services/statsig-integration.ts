@@ -1,9 +1,22 @@
+import { BrowserRuntime } from '../utils/browser-api'
 import { logger } from '../utils/logger'
 
 import type { StatsigConfigurationItem } from '../types'
 import type { StatsigUser } from '@statsig/js-client'
 
 import { LogLevel, StatsigClient } from '@statsig/js-client'
+
+/**
+ * Get extension version from manifest
+ */
+function getExtensionVersion(): string {
+  try {
+    const manifest = BrowserRuntime.getManifest()
+    return manifest.version || '1.0.0'
+  } catch {
+    return '1.0.0'
+  }
+}
 
 /**
  * Interface for secondary exposures
@@ -320,7 +333,7 @@ export class StatsigIntegrationService {
       userAgent: navigator.userAgent,
       country: undefined,
       locale: navigator.language,
-      appVersion: '1.0.0',
+      appVersion: getExtensionVersion(),
       custom: {},
       privateAttributes: {},
     }

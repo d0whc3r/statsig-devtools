@@ -17,13 +17,13 @@ interface RuleDetailProps {
 /**
  * Rule detail component for displaying configuration rules and evaluation results
  */
-export const RuleDetail: React.FC<RuleDetailProps> = ({
+export function RuleDetail({
   configuration,
   evaluationResult,
   onOverrideCreate,
   compact = false,
   allowOverrides = true,
-}) => {
+}: RuleDetailProps) {
   const [showOverrideForm, setShowOverrideForm] = useState(false)
   const [overrideForm, setOverrideForm] = useState<Partial<StorageOverride>>({
     type: 'localStorage',
@@ -103,75 +103,67 @@ export const RuleDetail: React.FC<RuleDetailProps> = ({
       <div className={compact ? 'p-3' : 'p-4'}>
         {/* Configuration Header */}
         <div className={compact ? 'mb-3' : 'mb-6'}>
-          {/* Title and Description */}
+          {/* Title and Description with inline Override Button */}
           <div className={compact ? 'mb-2' : 'mb-4'}>
-            <h2
-              className={compact ? 'mb-1 text-lg font-semibold text-gray-900' : 'mb-2 text-2xl font-bold text-gray-900'}
-            >
-              {configuration.name}
-            </h2>
-            {!compact && (
-              <p className="text-sm text-gray-600">
-                Configuration ID:{' '}
-                <span className="rounded bg-gray-100 px-2 py-1 font-mono text-gray-800">{configuration.name}</span>
-              </p>
-            )}
-          </div>
-
-          {/* Action Button Row - Only show if overrides are allowed */}
-          {allowOverrides && (
-            <div className={compact ? 'mb-2' : 'mb-4'}>
-              <button
-                onClick={() => {
-                  if (!showOverrideForm) {
-                    // Pre-fill form with suggested values
-                    setOverrideForm({
-                      type: 'localStorage',
-                      key: getSuggestedKey(),
-                      value: getSuggestedOverrideValue(),
-                    })
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <h2
+                  className={
+                    compact ? 'mb-1 text-lg font-semibold text-gray-900' : 'mb-2 text-2xl font-bold text-gray-900'
                   }
-                  setShowOverrideForm(!showOverrideForm)
-                }}
-                className={` ${compact ? 'px-3 py-2 text-xs' : 'px-4 py-2'} ${
-                  showOverrideForm
-                    ? 'scale-105 transform bg-gradient-to-r from-red-500 to-pink-600 text-white shadow-lg hover:from-red-600 hover:to-pink-700'
-                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md hover:from-blue-600 hover:to-purple-700 hover:shadow-lg'
-                } flex items-center gap-2 rounded-lg border-0 font-semibold transition-all duration-200 hover:scale-105 focus:ring-2 focus:ring-offset-2 focus:outline-none ${showOverrideForm ? 'focus:ring-red-500' : 'focus:ring-blue-500'} `}
-              >
-                {showOverrideForm ? (
-                  <>
-                    <svg
-                      className={compact ? 'h-3 w-3' : 'h-4 w-4'}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    {compact ? 'Cancel' : 'Cancel Override'}
-                  </>
-                ) : (
-                  <>
-                    <svg
-                      className={compact ? 'h-3 w-3' : 'h-4 w-4'}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
-                    {compact ? 'Override' : 'Create Override'}
-                  </>
+                >
+                  {configuration.id || configuration.name}
+                </h2>
+                {/* Show the name as subtitle if we're displaying the ID as title */}
+                {configuration.id && configuration.id !== configuration.name && (
+                  <p className={`text-gray-600 ${compact ? 'text-xs' : 'text-sm'}`}>{configuration.name}</p>
                 )}
-              </button>
+              </div>
+
+              {/* Inline Override Button - Only show if overrides are allowed (popup mode only) */}
+              {allowOverrides && (
+                <button
+                  onClick={() => {
+                    if (!showOverrideForm) {
+                      // Pre-fill form with suggested values
+                      setOverrideForm({
+                        type: 'localStorage',
+                        key: getSuggestedKey(),
+                        value: getSuggestedOverrideValue(),
+                      })
+                    }
+                    setShowOverrideForm(!showOverrideForm)
+                  }}
+                  className={`${compact ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'} ${
+                    showOverrideForm
+                      ? 'bg-red-500 text-white hover:bg-red-600'
+                      : 'bg-blue-500 text-white hover:bg-blue-600'
+                  } flex items-center gap-1.5 rounded-md font-medium transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none ${showOverrideForm ? 'focus:ring-red-500' : 'focus:ring-blue-500'} flex-shrink-0`}
+                >
+                  {showOverrideForm ? (
+                    <>
+                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      Cancel
+                    </>
+                  ) : (
+                    <>
+                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                        />
+                      </svg>
+                      Override
+                    </>
+                  )}
+                </button>
+              )}
             </div>
-          )}
+          </div>
 
           {/* Configuration Type and Status */}
           <div className="mb-4 flex items-center gap-3">
@@ -243,7 +235,7 @@ export const RuleDetail: React.FC<RuleDetailProps> = ({
           )}
         </div>
 
-        {/* Override Form - Only show if overrides are allowed */}
+        {/* Override Form - Only show if overrides are allowed (popup mode only) */}
         {allowOverrides && showOverrideForm && (
           <RuleDetailOverrideForm
             configuration={configuration}

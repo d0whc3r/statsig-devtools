@@ -1,3 +1,8 @@
+---
+inclusion: fileMatch
+fileMatchPattern: ['components/**/*.tsx']
+---
+
 # Design Guide Steering Document
 
 ## Design System Overview

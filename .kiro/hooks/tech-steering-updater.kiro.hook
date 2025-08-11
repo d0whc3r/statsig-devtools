@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "name": "Tech Steering Document Updater",
+  "description": "Monitors package.json, config files, and build tools to trigger updates to the tech guide, ensuring technology stack and configurations remain current",
+  "version": "1",
+  "when": {
+    "type": "userTriggered",
+    "patterns": [
+      "package.json",
+      "tsconfig*.json",
+      "eslint.config.js",
+      "vite.config.ts",
+      "webpack.config.js",
+      "config/**/*",
+      "scripts/**/*",
+      "README.md",
+      ".env*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Technology stack or configuration files have been modified. Please review and update the tech guide to ensure it reflects current technical stack and tool configurations found in the project.\n\n**What this document should cover:**\nTechnology stack versions, build and development tools, testing framework configurations, code quality tools, deployment setup, and performance optimizations.\n\n**Your task:**\n- Review the modified files and current configurations for technical stack information\n- Update the guide to reflect what you find in package.json, config files, and build scripts\n- Include any new tools, technologies, or configuration changes discovered\n- Ensure version numbers and setup instructions match the actual implementation\n- Focus on technical configurations that guide development environment setup and deployment\n\n**Document boundaries:**\n- This covers technical configurations and tool setup (not usage patterns or development conventions)\n- Reference other guides for specialized topics (development practices → best-practices, testing methodologies → testing guide)\n- Don't duplicate architectural patterns from the structure guide\n\nFeel free to include any relevant new technologies, updated configurations, build optimizations, or infrastructure changes you discover that would help developers understand and maintain the technical environment."
+  }
+}
