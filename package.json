@@ -2,7 +2,7 @@
   "name": "statsig-devtools",
   "description": "Browser extension for testing and debugging Statsig feature flags, experiments, and dynamic configurations",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.1.0",
   "type": "module",
   "author": {
     "name": "d0whc3r",

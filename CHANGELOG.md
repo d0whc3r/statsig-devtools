@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0](https://github.com/d0whc3r/statsig-devtools/compare/v1.0.1...v1.1.0) (2025-08-12)
+
+### 🚀 Features
+
+- add eslint for testing-library ([ac6e1e4ada18b33f97ec5449986820808450bc9a](https://github.com/d0whc3r/statsig-devtools/commit/ac6e1e4ada18b33f97ec5449986820808450bc9a))
+- update refactor ([91cb460141467b17b459f93e49f4d9e2895fdc6d](https://github.com/d0whc3r/statsig-devtools/commit/91cb460141467b17b459f93e49f4d9e2895fdc6d))
+- working ([1512412f55b1234f60f9bf47ade8fb5fadf3f80d](https://github.com/d0whc3r/statsig-devtools/commit/1512412f55b1234f60f9bf47ade8fb5fadf3f80d))
+
+### 🐛 Bug Fixes
+
+- harden tab access and content-script messaging ([9a57a603ac3dfe61ea21f3b038ab7fbadc343cf7](https://github.com/d0whc3r/statsig-devtools/commit/9a57a603ac3dfe61ea21f3b038ab7fbadc343cf7))
+- update working popup/tab/sidebar ([398196dbd260fd76704c90100fac2a0516212f79](https://github.com/d0whc3r/statsig-devtools/commit/398196dbd260fd76704c90100fac2a0516212f79))
+
 ## [1.0.1](https://github.com/d0whc3r/statsig-devtools/compare/v1.0.0...v1.0.1) (2025-08-11)
 
 ### 🐛 Bug Fixes
