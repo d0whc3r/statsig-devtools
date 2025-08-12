@@ -21,7 +21,7 @@ export function NotificationActions({ actions, onActionClick }: NotificationActi
         <button
           key={index}
           onClick={() => onActionClick(action)}
-          className={`rounded px-2 py-1 text-xs font-medium transition-colors ${
+          className={`cursor-pointer rounded px-2 py-1 text-xs font-medium transition-colors ${
             action.primary ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >

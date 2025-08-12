@@ -40,8 +40,8 @@ export const getButtonStyle = (targetMode: ViewMode, isLoading: boolean, current
   const interactionStyle = isLoading
     ? 'opacity-75 cursor-not-allowed'
     : isPopup
-      ? 'hover:scale-102 active:scale-95'
-      : 'hover:scale-105 active:scale-95'
+      ? 'cursor-pointer hover:scale-102 active:scale-95'
+      : 'cursor-pointer hover:scale-105 active:scale-95'
   const disabledStyle = 'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none'
 
   return `${baseStyle} ${colorStyle} ${interactionStyle} ${disabledStyle}`

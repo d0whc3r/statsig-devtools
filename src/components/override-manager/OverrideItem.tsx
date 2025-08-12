@@ -71,7 +71,7 @@ export function OverrideItem({ override, index, compact, onRemove }: OverrideIte
 
       <button
         onClick={handleRemove}
-        className="ml-3 flex-shrink-0 rounded-md p-1 text-red-600 transition-colors hover:bg-red-50 hover:text-red-500"
+        className="ml-3 flex-shrink-0 cursor-pointer rounded-md p-1 text-red-600 transition-colors hover:bg-red-50 hover:text-red-500"
         title="Remove override"
       >
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

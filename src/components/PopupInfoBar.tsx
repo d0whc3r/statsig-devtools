@@ -3,16 +3,19 @@ import { useStorageOverrides } from '../hooks/useStorageOverrides'
 import { ActiveTabInfo } from './ActiveTabInfo'
 import { DashboardStatistics } from './DashboardStatistics'
 
+import type { StorageOverride } from '../services/statsig-integration'
 import type { AuthState } from '../types'
 
 interface PopupInfoBarProps {
   authState: AuthState
   viewMode: 'popup' | 'sidebar' | 'tab'
+  activeOverrides?: StorageOverride[]
 }
 
-export function PopupInfoBar({ authState, viewMode }: PopupInfoBarProps) {
+export function PopupInfoBar({ authState, viewMode, activeOverrides: overridesFromProps }: PopupInfoBarProps) {
   const { statistics } = useDashboardStatistics(authState)
   const { activeOverrides } = useStorageOverrides()
+  const overridesToDisplay = overridesFromProps ?? activeOverrides
 
   // For tab mode, show the full dashboard statistics
   if (viewMode === 'tab') {
@@ -27,9 +30,9 @@ export function PopupInfoBar({ authState, viewMode }: PopupInfoBarProps) {
           <span className="font-medium">Gates: {statistics.configurationsByType.feature_gate || 0}</span>
           <span className="font-medium">Configs: {statistics.configurationsByType.dynamic_config || 0}</span>
           <span className="font-medium">Experiments: {statistics.configurationsByType.experiment || 0}</span>
-          {activeOverrides.length > 0 && (
+          {overridesToDisplay.length > 0 && (
             <span className={`font-bold ${viewMode === 'sidebar' ? 'text-blue-700' : 'text-blue-600'}`}>
-              Overrides: {activeOverrides.length}
+              Overrides: {overridesToDisplay.length}
             </span>
           )}
         </div>

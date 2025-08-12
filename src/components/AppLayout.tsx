@@ -169,7 +169,7 @@ function HeaderActionButtons({ viewMode, authState, onLogout }: HeaderActionButt
           refreshTabInfo()
         }}
         disabled={isLoading || isEvaluating}
-        className={`flex ${buttonSize} items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800 disabled:cursor-not-allowed disabled:opacity-50`}
+        className={`flex ${buttonSize} cursor-pointer items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800 disabled:cursor-not-allowed disabled:opacity-50`}
         title="Refresh configurations and tab info"
       >
         <svg className={`${iconSize}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -185,7 +185,7 @@ function HeaderActionButtons({ viewMode, authState, onLogout }: HeaderActionButt
       {/* Logout Button */}
       <button
         onClick={onLogout}
-        className={`flex ${buttonSize} items-center justify-center rounded-md bg-red-100 text-red-600 transition-colors hover:bg-red-200 hover:text-red-800`}
+        className={`flex ${buttonSize} cursor-pointer items-center justify-center rounded-md bg-red-100 text-red-600 transition-colors hover:bg-red-200 hover:text-red-800`}
         title="Logout"
       >
         <svg className={`${iconSize}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">

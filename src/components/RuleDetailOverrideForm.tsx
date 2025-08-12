@@ -71,7 +71,7 @@ export function RuleDetailOverrideForm({
             <button
               type="button"
               onClick={() => setOverrideForm({ ...overrideForm, key: getSuggestedKey() })}
-              className="rounded bg-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-300"
+              className="cursor-pointer rounded bg-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-300"
             >
               Suggest
             </button>
@@ -94,7 +94,7 @@ export function RuleDetailOverrideForm({
             <button
               type="button"
               onClick={() => setOverrideForm({ ...overrideForm, value: getSuggestedOverrideValue() })}
-              className="rounded bg-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-300"
+              className="cursor-pointer rounded bg-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-300"
             >
               Suggest
             </button>
@@ -143,7 +143,7 @@ export function RuleDetailOverrideForm({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded bg-gray-200 px-3 py-1 text-xs text-gray-700 hover:bg-gray-300"
+            className="cursor-pointer rounded bg-gray-200 px-3 py-1 text-xs text-gray-700 hover:bg-gray-300"
           >
             Cancel
           </button>

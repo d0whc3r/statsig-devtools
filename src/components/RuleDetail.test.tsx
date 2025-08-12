@@ -139,7 +139,7 @@ describe('RuleDetail', () => {
       )
 
       expect(container.querySelector('.status-badge-success')).toBeInTheDocument()
-      expect(screen.getByText('Current Value:')).toBeInTheDocument()
+      expect(screen.getByText('Value:')).toBeInTheDocument()
       expect(screen.getByText('Rule ID:')).toBeInTheDocument()
     })
 

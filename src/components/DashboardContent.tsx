@@ -1,3 +1,4 @@
+import { useActiveTab } from '../hooks/useActiveTab'
 import { useConfigurationData } from '../hooks/useConfigurationData'
 import { useConfigurationEvaluation } from '../hooks/useConfigurationEvaluation'
 import { useConfigurationSelection } from '../hooks/useConfigurationSelection'
@@ -15,7 +16,9 @@ interface DashboardContentProps {
 
 export function DashboardContent({ authState, viewMode }: DashboardContentProps) {
   const { configurations, isLoading, error } = useConfigurationData(authState)
-  const { activeOverrides } = useStorageOverrides()
+  const { tabInfo } = useActiveTab()
+  const domainForFiltering = viewMode !== 'tab' ? (tabInfo.domain ?? undefined) : undefined
+  const { activeOverrides } = useStorageOverrides(domainForFiltering)
   const { evaluationResults } = useConfigurationEvaluation(authState, configurations, activeOverrides)
   const { selectedConfiguration, handleConfigurationSelect } = useConfigurationSelection()
 

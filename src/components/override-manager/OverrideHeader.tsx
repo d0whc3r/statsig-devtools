@@ -15,7 +15,7 @@ export function OverrideHeader({
       <div className="flex items-center">
         <button
           onClick={onToggleExpanded}
-          className={`flex items-center ${compact ? 'text-xs' : 'text-sm'} font-medium text-gray-900 hover:text-gray-700`}
+          className={`flex cursor-pointer items-center ${compact ? 'text-xs' : 'text-sm'} font-medium text-gray-900 hover:text-gray-700`}
         >
           <svg
             className={`mr-2 h-4 w-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
@@ -32,7 +32,7 @@ export function OverrideHeader({
       <div className="flex items-center space-x-2">
         <button
           onClick={onClearAll}
-          className={`text-red-600 underline hover:text-red-500 ${compact ? 'text-xs' : 'text-xs'}`}
+          className={`cursor-pointer text-red-600 underline hover:text-red-500 ${compact ? 'text-xs' : 'text-xs'}`}
           disabled={overrideCount === 0}
         >
           Clear All

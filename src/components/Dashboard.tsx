@@ -21,8 +21,8 @@ interface DashboardProps {
  */
 export function Dashboard({ authState, isPopupMode = false, viewMode = 'popup' }: DashboardProps) {
   const { isLoading, refreshConfigurations } = useConfigurationData(authState)
-  const { activeOverrides, removeOverride, clearAllOverrides } = useStorageOverrides()
-  const { refreshTabInfo } = useActiveTab()
+  const { tabInfo, refreshTabInfo } = useActiveTab()
+  const { activeOverrides, removeOverride, clearAllOverrides } = useStorageOverrides(tabInfo.domain ?? undefined)
 
   // Enable auto-refresh only for sidebar mode
   useSidebarAutoRefresh(refreshConfigurations, refreshTabInfo, viewMode === 'sidebar')
@@ -46,7 +46,9 @@ export function Dashboard({ authState, isPopupMode = false, viewMode = 'popup' }
       <div className={`flex-shrink-0 ${viewMode === 'sidebar' ? 'px-4' : ''}`}>
         <DashboardHeader authState={authState} isPopupMode={isPopupMode} />
         {/* Statistics/Info Bar - Show in popup and sidebar modes */}
-        {(viewMode === 'popup' || viewMode === 'sidebar') && <PopupInfoBar authState={authState} viewMode={viewMode} />}
+        {(viewMode === 'popup' || viewMode === 'sidebar') && (
+          <PopupInfoBar authState={authState} viewMode={viewMode} activeOverrides={activeOverrides} />
+        )}
       </div>
 
       {/* Main Content - Scrollable area */}

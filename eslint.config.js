@@ -4,6 +4,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import testingLibrary from 'eslint-plugin-testing-library'
 import unusedImports from 'eslint-plugin-unused-imports'
 
 import js from '@eslint/js'
@@ -55,6 +56,7 @@ export default [
       react,
       'react-hooks': reactHooks,
       'simple-import-sort': simpleImportSort,
+      'testing-library': testingLibrary,
       'unused-imports': unusedImports,
     },
     rules: {
@@ -248,7 +250,11 @@ export default [
   // Test files configuration
   {
     files: ['**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}', '**/test/**/*'],
+    plugins: {
+      'testing-library': testingLibrary,
+    },
     rules: {
+      ...testingLibrary.configs['flat/react']?.rules,
       'no-console': 'off',
       'max-lines': 'off',
       'max-lines-per-function': 'off',

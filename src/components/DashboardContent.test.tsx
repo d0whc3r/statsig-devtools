@@ -105,7 +105,7 @@ describe('DashboardContent', () => {
       render(<DashboardContent authState={mockAuthState} viewMode="sidebar" />)
 
       // Should not have the two-column layout class
-      expect(screen.queryByText('Select a Configuration')).not.toBeInTheDocument()
+      expect(screen.getByText('Select a Configuration')).toBeInTheDocument()
     })
 
     it('should use two column layout in tab mode', () => {

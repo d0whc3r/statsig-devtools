@@ -67,7 +67,7 @@ export function ConfigurationSearchAndFilters({
         {hasActiveFilters && (
           <button
             onClick={onClearFilters}
-            className="flex-shrink-0 rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200"
+            className="flex-shrink-0 cursor-pointer rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200"
           >
             Clear
           </button>

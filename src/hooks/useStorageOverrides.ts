@@ -12,7 +12,8 @@ import type { StorageOverride } from '../services/statsig-integration'
  */
 export const useStorageOverrides = (domainOverride?: string) => {
   const [allOverrides, setAllOverrides] = useState<StorageOverride[]>([])
-  const { tabInfo } = useActiveTab()
+  // Accessing the hook ensures listeners are set up elsewhere; we don't need the value here
+  useActiveTab()
 
   /**
    * Load active overrides from storage
@@ -78,14 +79,13 @@ export const useStorageOverrides = (domainOverride?: string) => {
     loadActiveOverrides()
   }, [loadActiveOverrides])
 
-  // Refresh overrides when domain changes (sidebar open while switching tabs)
+  // Refresh overrides when domain changes (only when filtering by domain)
   useEffect(() => {
-    // Only react when domain is available
-    const effectiveDomain = domainOverride ?? tabInfo.domain
-    if (effectiveDomain) {
+    if (!domainOverride) return
+    if (domainOverride) {
       loadActiveOverrides()
     }
-  }, [domainOverride, tabInfo.domain, loadActiveOverrides])
+  }, [domainOverride, loadActiveOverrides])
 
   /**
    * Sync across components/windows: listen to storage changes
@@ -122,7 +122,12 @@ export const useStorageOverrides = (domainOverride?: string) => {
    * - Storage overrides: show when no domain (applies to current origin context)
    */
   const overridesForCurrentTab = useMemo(() => {
-    const currentDomain = (domainOverride ?? tabInfo.domain) || ''
+    // If no domain filter requested, return all overrides to preserve existing behavior
+    if (!domainOverride) {
+      return allOverrides
+    }
+
+    const currentDomain = domainOverride
     if (!currentDomain) return []
 
     const matchesDomain = (overrideDomain?: string): boolean => {
@@ -136,13 +141,11 @@ export const useStorageOverrides = (domainOverride?: string) => {
     }
 
     return allOverrides.filter((ov) => {
-      // Always require domain match when present
       if (ov.domain) return matchesDomain(ov.domain)
-
-      // For legacy overrides without domain, hide them to avoid cross-domain leakage
+      // For legacy overrides without domain, hide them when filtering by domain
       return false
     })
-  }, [allOverrides, domainOverride, tabInfo.domain])
+  }, [allOverrides, domainOverride])
 
   return {
     allOverrides,

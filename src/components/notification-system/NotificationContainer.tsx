@@ -26,7 +26,7 @@ export function NotificationContainer({ notifications, onDismiss, onClearAll }: 
 
       {notifications.length > 1 && (
         <div className="flex justify-end">
-          <button onClick={onClearAll} className="text-xs text-gray-500 underline hover:text-gray-700">
+          <button onClick={onClearAll} className="cursor-pointer text-xs text-gray-500 underline hover:text-gray-700">
             Clear all
           </button>
         </div>

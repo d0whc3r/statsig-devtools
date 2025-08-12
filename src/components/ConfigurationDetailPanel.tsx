@@ -47,7 +47,11 @@ export function ConfigurationDetailPanel({
         <div className="border-b bg-gray-100 px-4 py-2">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-medium text-gray-900">{configuration.name}</h3>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600" title="Close details">
+            <button
+              onClick={onClose}
+              className="cursor-pointer text-gray-400 hover:text-gray-600 focus:outline-none"
+              title="Close details"
+            >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -91,20 +95,18 @@ export function ConfigurationDetailPanel({
                     key={`${overrideId}:${idx}`}
                     className="flex items-center justify-between rounded border bg-gray-50 px-2 py-1 text-xs"
                   >
-                    <div className="min-w-0">
-                      <span className="mr-2 rounded border px-1.5 py-0.5 font-medium text-gray-700">{ov.type}</span>
-                      <span className="font-medium text-gray-800">{ov.key}</span>
-                      <span className="mx-1 text-gray-500">=</span>
-                      <span className="break-all text-gray-700">{String(ov.value)}</span>
-                      {(ov as StorageOverride & { domain?: string }).domain && (
-                        <span className="ml-2 rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-600">
-                          {(ov as StorageOverride & { domain?: string }).domain}
-                        </span>
-                      )}
+                    <div className="flex min-w-0 flex-col gap-1">
+                      <div className="flex flex-row items-center gap-1">
+                        <span className="rounded border px-1 font-medium text-gray-700">{ov.type}</span>
+                        <span className="font-medium text-gray-800">{ov.key}</span>
+                        <span className="text-gray-500">=</span>
+                        <span className="break-all text-gray-700">{String(ov.value)}</span>
+                      </div>
+                      {ov.domain && <span className="rounded text-[10px] text-gray-600">{ov.domain}</span>}
                     </div>
                     {allowOverrides && (
                       <button
-                        className="ml-2 rounded p-1 text-red-600 transition-colors hover:bg-red-50 hover:text-red-500"
+                        className="ml-2 cursor-pointer rounded p-1 text-red-600 transition-colors hover:bg-red-50 hover:text-red-500"
                         title="Remove override"
                         onClick={() => removeOverride(overrideId)}
                       >
