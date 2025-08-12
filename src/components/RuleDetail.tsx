@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import { useRuleOverrideSuggestions } from '../hooks/useRuleOverrideSuggestions'
+import { formatValue } from '../utils/configuration-formatters'
 import { EvaluationResultCard } from './EvaluationResultCard'
 import { RuleHeader } from './rule-detail/RuleHeader'
 import { RuleConditions } from './RuleConditions'
@@ -71,28 +72,9 @@ export function RuleDetail({
     })
   }
 
-  /**
-   * Format target value for display
-   */
-  const formatTargetValue = (value: unknown): string => {
-    if (value === null || value === undefined) {
-      return 'null'
-    }
-    if (typeof value === 'string') {
-      return `"${value}"`
-    }
-    if (Array.isArray(value)) {
-      return `[${value.map((v) => formatTargetValue(v)).join(', ')}]`
-    }
-    if (typeof value === 'object') {
-      return JSON.stringify(value, null, 2)
-    }
-    return String(value)
-  }
-
   return (
     <div className="h-full">
-      <div className={compact ? 'p-3' : 'p-4'}>
+      <div className={compact ? 'p-2' : 'p-3'}>
         {/* Configuration Header */}
         <RuleHeader
           configuration={configuration}
@@ -123,16 +105,18 @@ export function RuleDetail({
         )}
 
         {/* Rules Section */}
-        <div className={compact ? 'mt-3' : 'mt-6'}>
+        <div className={compact ? 'mt-2' : 'mt-3'}>
           <RuleConditions rules={configuration.rules || []} compact={compact} />
         </div>
 
         {/* Default Value */}
         {configuration.defaultValue !== undefined && (
-          <div className="mt-6">
+          <div className={`${compact ? 'mt-2 mb-2' : 'mt-3 mb-3'}`}>
             <h3 className="mb-2 text-sm font-medium text-gray-900">Default Value</h3>
-            <div className="rounded-md bg-gray-50 p-3">
-              <span className="font-mono text-sm text-gray-900">{formatTargetValue(configuration.defaultValue)}</span>
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+              <pre className="overflow-x-auto font-mono text-sm break-words whitespace-pre-wrap text-slate-900">
+                <code>{formatValue(configuration.defaultValue)}</code>
+              </pre>
             </div>
           </div>
         )}

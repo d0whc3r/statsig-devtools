@@ -34,6 +34,7 @@ export function DashboardContent({ authState, viewMode }: DashboardContentProps)
         error={error}
         onConfigurationSelect={handleConfigurationSelect}
         viewMode={viewMode}
+        domain={domainForFiltering}
       />
     )
   }
@@ -50,6 +51,7 @@ export function DashboardContent({ authState, viewMode }: DashboardContentProps)
         error={error}
         onConfigurationSelect={handleConfigurationSelect}
         viewMode={viewMode}
+        domain={domainForFiltering}
       />
     )
   }
@@ -65,6 +67,7 @@ export function DashboardContent({ authState, viewMode }: DashboardContentProps)
       error={error}
       onConfigurationSelect={handleConfigurationSelect}
       viewMode={viewMode}
+      domain={domainForFiltering}
     />
   )
 }
@@ -79,6 +82,7 @@ interface LayoutProps {
   error: string | undefined
   onConfigurationSelect: (config: StatsigConfigurationItem | undefined) => void
   viewMode: 'popup' | 'sidebar' | 'tab'
+  domain?: string
 }
 
 // Compact layout for popup with better space utilization
@@ -93,6 +97,7 @@ function PopupLayout(props: LayoutProps) {
     error,
     onConfigurationSelect,
     viewMode,
+    domain,
   } = props
 
   return (
@@ -113,13 +118,14 @@ function PopupLayout(props: LayoutProps) {
 
       {/* Compact Rule Detail - Shows at bottom when there's a selection */}
       {selectedConfiguration && (
-        <div className="flex-shrink-0 border-t border-gray-200 bg-white">
+        <div className="relative z-40 h-full flex-shrink-0 border-t border-gray-200 bg-white shadow-lg">
           <ConfigurationDetailPanel
             authState={authState}
             configuration={selectedConfiguration}
             compact
             onClose={() => onConfigurationSelect(undefined)}
             allowOverrides
+            domain={domain}
           />
         </div>
       )}
@@ -139,6 +145,7 @@ function SidebarLayout(props: LayoutProps) {
     error,
     onConfigurationSelect,
     viewMode,
+    domain,
   } = props
 
   return (
@@ -152,22 +159,21 @@ function SidebarLayout(props: LayoutProps) {
         </div>
       </div>
 
-      {/* Configuration Detail Panel - Fixed when selected */}
-      {selectedConfiguration && (
-        <div className="flex-shrink-0 border-b border-gray-200 bg-white">
+      {/* Configuration Detail Panel - Full height when selected */}
+      {selectedConfiguration ? (
+        <div className="min-h-0 flex-1 overflow-y-auto bg-white">
           <ConfigurationDetailPanel
             authState={authState}
             configuration={selectedConfiguration}
-            compact
+            compact={false}
             onClose={() => onConfigurationSelect(undefined)}
             allowOverrides
+            domain={domain}
           />
         </div>
-      )}
-
-      {/* Configuration List - Scrollable area */}
-      <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50">
-        {!selectedConfiguration && (
+      ) : (
+        /* Configuration List - Scrollable area when no selection */
+        <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50">
           <div className="flex items-center justify-center p-4">
             <div className="text-center text-gray-500">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
@@ -184,19 +190,19 @@ function SidebarLayout(props: LayoutProps) {
               <p className="text-xs text-gray-400">Choose a feature from the list below to view details</p>
             </div>
           </div>
-        )}
 
-        <ConfigurationList
-          configurations={configurations}
-          evaluationResults={evaluationResults}
-          activeOverrides={activeOverrides}
-          onConfigurationSelect={onConfigurationSelect}
-          selectedConfiguration={selectedConfiguration}
-          isLoading={isLoading}
-          error={error}
-          viewMode={viewMode}
-        />
-      </div>
+          <ConfigurationList
+            configurations={configurations}
+            evaluationResults={evaluationResults}
+            activeOverrides={activeOverrides}
+            onConfigurationSelect={onConfigurationSelect}
+            selectedConfiguration={selectedConfiguration}
+            isLoading={isLoading}
+            error={error}
+            viewMode={viewMode}
+          />
+        </div>
+      )}
     </div>
   )
 }
@@ -213,6 +219,7 @@ function TabLayout(props: LayoutProps) {
     error,
     onConfigurationSelect,
     viewMode,
+    domain,
   } = props
 
   return (
@@ -245,6 +252,7 @@ function TabLayout(props: LayoutProps) {
               configuration={selectedConfiguration}
               compact={false}
               allowOverrides={false}
+              domain={domain}
             />
           ) : (
             <div className="flex h-full items-center justify-center p-8">

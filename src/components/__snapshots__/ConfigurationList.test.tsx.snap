@@ -1,0 +1,84 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ConfigurationList > should match snapshot with default state 1`] = `
+<div>
+  <div
+    class="flex h-full flex-col"
+  >
+    <div
+      class="relative z-30"
+    >
+      <div
+        data-testid="search-filters"
+      >
+        Search: 
+        , Total: 
+        2
+        , Filtered: 
+        2
+      </div>
+    </div>
+    <div
+      class="custom-scrollbar min-h-0 flex-1 overflow-y-auto"
+    >
+      <div
+        class="py-2"
+      >
+        <button
+          class=""
+          data-testid="config-item-test_gate"
+        >
+          test_gate
+        </button>
+        <button
+          class=""
+          data-testid="config-item-test_config"
+        >
+          test_config
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ConfigurationList > should match snapshot with error state 1`] = `
+<div>
+  <div
+    data-testid="error-state"
+  >
+    Failed to load configurations
+  </div>
+</div>
+`;
+
+exports[`ConfigurationList > should match snapshot with loading state 1`] = `
+<div>
+  <div
+    class="flex h-full flex-col"
+  >
+    <div
+      class="relative z-30"
+    >
+      <div
+        data-testid="search-filters"
+      >
+        Search: 
+        , Total: 
+        2
+        , Filtered: 
+        2
+      </div>
+    </div>
+    <div
+      class="custom-scrollbar min-h-0 flex-1 overflow-y-auto"
+    >
+      <div
+        data-testid="loading-state"
+      >
+        Loading...
+      </div>
+    </div>
+  </div>
+</div>
+`;

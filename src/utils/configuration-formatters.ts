@@ -100,13 +100,13 @@ export const formatValue = (value: unknown): string => {
  */
 export const getTypeBadgeClass = (type: string): string => {
   const classMap: Record<string, string> = {
-    feature_gate: 'type-badge type-badge-feature-gate',
-    experiment: 'type-badge type-badge-experiment',
-    dynamic_config: 'type-badge type-badge-dynamic-config',
-    autotune: 'type-badge bg-orange-100 text-orange-800',
-    layer: 'type-badge bg-indigo-100 text-indigo-800',
+    feature_gate: 'badge-feature-gate',
+    experiment: 'badge-experiment',
+    dynamic_config: 'badge-dynamic-config',
+    autotune: 'bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 border-orange-200',
+    layer: 'bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 border-indigo-200',
   }
-  return classMap[type] || 'type-badge bg-gray-100 text-gray-800'
+  return classMap[type] || 'bg-gradient-to-r from-gray-100 to-slate-100 text-gray-700 border-gray-200'
 }
 
 /**

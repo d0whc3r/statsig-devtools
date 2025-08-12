@@ -33,6 +33,24 @@ describe('ErrorBoundary', () => {
     consoleErrorSpy.mockRestore()
   })
 
+  it('should match snapshot with normal operation', () => {
+    const { container } = render(
+      <ErrorBoundary>
+        <div>Child component</div>
+      </ErrorBoundary>,
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  it('should match snapshot with error state', () => {
+    const { container } = render(
+      <ErrorBoundary>
+        <ThrowError shouldThrow />
+      </ErrorBoundary>,
+    )
+    expect(container).toMatchSnapshot()
+  })
+
   describe('normal operation', () => {
     it('should render children when no error occurs', () => {
       render(

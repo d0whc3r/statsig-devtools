@@ -109,6 +109,41 @@ describe('ConfigurationList', () => {
     })
   })
 
+  it('should match snapshot with default state', () => {
+    const { container } = render(
+      <ConfigurationList
+        configurations={mockConfigurations}
+        evaluationResults={mockEvaluationResults}
+        onConfigurationSelect={mockOnConfigurationSelect}
+      />,
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  it('should match snapshot with loading state', () => {
+    const { container } = render(
+      <ConfigurationList
+        configurations={mockConfigurations}
+        evaluationResults={mockEvaluationResults}
+        onConfigurationSelect={mockOnConfigurationSelect}
+        isLoading
+      />,
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  it('should match snapshot with error state', () => {
+    const { container } = render(
+      <ConfigurationList
+        configurations={mockConfigurations}
+        evaluationResults={mockEvaluationResults}
+        onConfigurationSelect={mockOnConfigurationSelect}
+        error="Failed to load configurations"
+      />,
+    )
+    expect(container).toMatchSnapshot()
+  })
+
   it('renders loading state when isLoading is true', () => {
     render(
       <ConfigurationList

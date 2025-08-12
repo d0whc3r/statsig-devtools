@@ -10,7 +10,7 @@ import { act, renderHook } from '@testing-library/react'
 
 // Mock useDebouncedSearch hook
 vi.mock('../components/VirtualizedList', () => ({
-  useDebouncedSearch: vi.fn((initialValue: string, _delay: number) => [initialValue, vi.fn()]),
+  useDebouncedSearch: vi.fn((initialValue: string, _delay: number) => [initialValue, vi.fn(), initialValue]),
 }))
 
 describe('useConfigurationFilters', () => {

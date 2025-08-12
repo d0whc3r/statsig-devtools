@@ -49,12 +49,14 @@ export const ConfigurationItem = React.memo(
               <h3 className="truncate text-sm font-semibold text-gray-900">{config.name}</h3>
             </div>
 
-            <div className="mb-2 flex flex-wrap items-center gap-1">
-              <span className={`${getTypeBadgeClass(config.type)} text-xs`}>{formatTypeName(config.type)}</span>
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className={`badge-professional ${getTypeBadgeClass(config.type)}`}>
+                {formatTypeName(config.type)}
+              </span>
 
               {!config.enabled && (
-                <span className="type-badge bg-gray-100 text-xs text-gray-800">
-                  <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <span className="badge-professional border-gray-200 bg-gradient-to-r from-gray-100 to-slate-100 text-gray-700">
+                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -67,8 +69,8 @@ export const ConfigurationItem = React.memo(
               )}
 
               {hasOverrides && (
-                <span className="type-badge border border-orange-200 bg-orange-100 text-xs text-orange-800">
-                  <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <span className="badge-professional border-orange-200 bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700">
+                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -82,20 +84,32 @@ export const ConfigurationItem = React.memo(
             </div>
 
             {result && (
-              <div className="rounded-md bg-gray-50 px-2 py-1.5 text-xs text-gray-600">
+              <div className="rounded-lg border border-slate-200 bg-gradient-to-r from-slate-50 to-gray-50 px-3 py-2 text-sm">
                 {config.type === 'feature_gate' && (
-                  <span className="font-medium">
-                    <span className={result.value ? 'text-green-700' : 'text-red-700'}>
-                      {formatValue(result.value)}
+                  <div className="flex items-center gap-2">
+                    <div className={`h-2 w-2 rounded-full ${result.value ? 'bg-green-500' : 'bg-red-500'}`} />
+                    <span className="font-semibold text-slate-700">
+                      Status:{' '}
+                      <span className={result.value ? 'text-green-700' : 'text-red-700'}>
+                        {formatValue(result.value)}
+                      </span>
                     </span>
-                  </span>
+                  </div>
                 )}
                 {config.type === 'experiment' && result.groupName && (
-                  <span className="font-medium">
-                    Group: <span className="text-purple-700">{result.groupName}</span>
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-purple-500" />
+                    <span className="font-semibold text-slate-700">
+                      Group: <span className="text-purple-700">{result.groupName}</span>
+                    </span>
+                  </div>
                 )}
-                {config.type === 'dynamic_config' && <span className="font-medium text-green-700">Ready</span>}
+                {config.type === 'dynamic_config' && (
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-green-500" />
+                    <span className="font-semibold text-green-700">Configuration Ready</span>
+                  </div>
+                )}
               </div>
             )}
           </div>

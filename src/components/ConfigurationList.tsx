@@ -61,18 +61,20 @@ export const ConfigurationList = React.memo(
     return (
       <div className="flex h-full flex-col">
         {/* Search and Filter Controls */}
-        <ConfigurationSearchAndFilters
-          searchQuery={searchQuery}
-          filterType={filterType}
-          filterStatus={filterStatus}
-          onSearchChange={handleSearchChange}
-          onFilterTypeChange={setFilterType}
-          onFilterStatusChange={setFilterStatus}
-          onClearFilters={clearFilters}
-          hasActiveFilters={hasActiveFilters}
-          totalConfigurations={configurations.length}
-          filteredCount={filteredConfigurations.length}
-        />
+        <div className="relative z-30">
+          <ConfigurationSearchAndFilters
+            searchQuery={searchQuery}
+            filterType={filterType}
+            filterStatus={filterStatus}
+            onSearchChange={handleSearchChange}
+            onFilterTypeChange={setFilterType}
+            onFilterStatusChange={setFilterStatus}
+            onClearFilters={clearFilters}
+            hasActiveFilters={hasActiveFilters}
+            totalConfigurations={configurations.length}
+            filteredCount={filteredConfigurations.length}
+          />
+        </div>
 
         {/* Configuration List */}
         <div

@@ -1,0 +1,167 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DashboardContent > should match snapshot with popup view mode 1`] = `
+<div>
+  <div
+    class="flex h-full flex-col bg-gray-50"
+  >
+    <div
+      class="min-h-0 flex-1 bg-gray-50"
+    >
+      <div
+        data-testid="configuration-list"
+        data-view-mode="popup"
+      >
+        Configuration List
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DashboardContent > should match snapshot with sidebar view mode 1`] = `
+<div>
+  <div
+    class="flex h-full flex-col bg-gray-50"
+  >
+    <div
+      class="flex-shrink-0 border-b border-green-200 bg-green-50 px-3 py-2"
+    >
+      <div
+        class="flex items-center gap-2 text-xs text-green-800"
+      >
+        <div
+          class="h-2 w-2 animate-pulse rounded-full bg-green-500"
+        />
+        <span
+          class="font-medium"
+        >
+          Interactive mode
+        </span>
+        <span
+          class="hidden text-green-600 sm:inline"
+        >
+          - Full override capabilities
+        </span>
+      </div>
+    </div>
+    <div
+      class="min-h-0 flex-1 overflow-y-auto bg-gray-50"
+    >
+      <div
+        class="flex items-center justify-center p-4"
+      >
+        <div
+          class="text-center text-gray-500"
+        >
+          <div
+            class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100"
+          >
+            <svg
+              class="h-8 w-8 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+              />
+            </svg>
+          </div>
+          <h3
+            class="mb-1 text-sm font-medium"
+          >
+            Select a Configuration
+          </h3>
+          <p
+            class="text-xs text-gray-400"
+          >
+            Choose a feature from the list below to view details
+          </p>
+        </div>
+      </div>
+      <div
+        data-testid="configuration-list"
+        data-view-mode="sidebar"
+      >
+        Configuration List
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DashboardContent > should match snapshot with tab view mode 1`] = `
+<div>
+  <div
+    class="flex flex-1 flex-col bg-gray-50"
+  >
+    <div
+      class="hidden"
+    >
+      <span>
+        Read-only mode
+      </span>
+      <span>
+        - Use popup mode to create and manage overrides
+      </span>
+    </div>
+    <div
+      class="flex min-h-0 flex-1"
+    >
+      <div
+        class="w-1/2 overflow-y-auto border-r border-gray-200 bg-gray-50"
+      >
+        <div
+          data-testid="configuration-list"
+          data-view-mode="tab"
+        >
+          Configuration List
+        </div>
+      </div>
+      <div
+        class="w-1/2 overflow-y-auto bg-white"
+      >
+        <div
+          class="flex h-full items-center justify-center p-8"
+        >
+          <div
+            class="text-center text-gray-500"
+          >
+            <div
+              class="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gray-100 p-6"
+            >
+              <svg
+                class="h-12 w-12 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </div>
+            <h3
+              class="mb-2 text-lg font-medium"
+            >
+              Select a Configuration
+            </h3>
+            <p
+              class="text-sm"
+            >
+              Choose a feature gate, dynamic config, or experiment from the list to view its details.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

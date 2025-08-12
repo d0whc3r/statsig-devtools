@@ -1,0 +1,33 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ErrorBoundary > should match snapshot with error state 1`] = `
+<div>
+  <div
+    class="rounded-md border border-red-200 bg-red-50 p-4"
+  >
+    <h2
+      class="mb-2 text-lg font-semibold text-red-800"
+    >
+      Something went wrong
+    </h2>
+    <p
+      class="text-sm text-red-600"
+    >
+      Test error message
+    </p>
+    <button
+      class="mt-3 rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
+    >
+      Try again
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ErrorBoundary > should match snapshot with normal operation 1`] = `
+<div>
+  <div>
+    Child component
+  </div>
+</div>
+`;

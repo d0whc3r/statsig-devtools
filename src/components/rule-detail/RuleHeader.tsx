@@ -18,12 +18,14 @@ export function RuleHeader({
   onOverrideButtonClick,
 }: RuleHeaderProps) {
   return (
-    <div className={compact ? 'mb-3' : 'mb-6'}>
-      <div className={compact ? 'mb-2' : 'mb-4'}>
+    <div className={compact ? 'mb-2' : 'mb-4'}>
+      <div className={compact ? 'mb-1' : 'mb-2'}>
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0 flex-1">
             <h2
-              className={compact ? 'mb-1 text-lg font-semibold text-gray-900' : 'mb-2 text-2xl font-bold text-gray-900'}
+              className={
+                compact ? 'mb-1 text-base font-semibold text-gray-900' : 'mb-2 text-lg font-bold text-gray-900'
+              }
             >
               {configuration.id || configuration.name}
             </h2>
@@ -61,7 +63,7 @@ export function RuleHeader({
         </div>
       </div>
 
-      <div className="mb-4 flex items-center gap-3">
+      <div className={`${compact ? 'mb-2' : 'mb-3'} flex flex-wrap items-center gap-2`}>
         <span
           className={`type-badge ${
             configuration.type === 'feature_gate'

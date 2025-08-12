@@ -16,7 +16,7 @@ export const useConfigurationFilters = (
   configurations: StatsigConfigurationItem[],
   evaluationResults: Map<string, EvaluationResult>,
 ) => {
-  const [searchQuery, setSearchQuery] = useDebouncedSearch('', 300)
+  const [debouncedSearchQuery, setSearchQuery, immediateSearchQuery] = useDebouncedSearch('', 300)
   const [filterType, setFilterType] = useState<FilterType>('all')
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all')
 
@@ -46,16 +46,20 @@ export const useConfigurationFilters = (
   )
 
   /**
-   * Filter configurations by search query
+   * Filter configurations by search query (searches both name and ID)
    */
   const filterBySearch = useCallback(
     (configs: StatsigConfigurationItem[]) => {
-      if (!searchQuery.trim()) return configs
+      if (!debouncedSearchQuery.trim()) return configs
 
-      const query = searchQuery.toLowerCase().trim()
-      return configs.filter((config) => config.name.toLowerCase().includes(query))
+      const query = debouncedSearchQuery.toLowerCase().trim()
+      return configs.filter((config) => {
+        const nameMatch = config.name.toLowerCase().includes(query)
+        const idMatch = config.id ? config.id.toLowerCase().includes(query) : false
+        return nameMatch || idMatch
+      })
     },
-    [searchQuery],
+    [debouncedSearchQuery],
   )
 
   /**
@@ -92,12 +96,12 @@ export const useConfigurationFilters = (
    * Check if any filters are active
    */
   const hasActiveFilters = useMemo(
-    () => searchQuery.trim() !== '' || filterType !== 'all' || filterStatus !== 'all',
-    [searchQuery, filterType, filterStatus],
+    () => immediateSearchQuery.trim() !== '' || filterType !== 'all' || filterStatus !== 'all',
+    [immediateSearchQuery, filterType, filterStatus],
   )
 
   return {
-    searchQuery,
+    searchQuery: immediateSearchQuery,
     filterType,
     filterStatus,
     filteredConfigurations,

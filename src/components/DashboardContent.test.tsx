@@ -60,6 +60,21 @@ describe('DashboardContent', () => {
     error: undefined,
   }
 
+  it('should match snapshot with popup view mode', () => {
+    const { container } = render(<DashboardContent authState={mockAuthState} viewMode="popup" />)
+    expect(container).toMatchSnapshot()
+  })
+
+  it('should match snapshot with tab view mode', () => {
+    const { container } = render(<DashboardContent authState={mockAuthState} viewMode="tab" />)
+    expect(container).toMatchSnapshot()
+  })
+
+  it('should match snapshot with sidebar view mode', () => {
+    const { container } = render(<DashboardContent authState={mockAuthState} viewMode="sidebar" />)
+    expect(container).toMatchSnapshot()
+  })
+
   describe('View Mode Restrictions', () => {
     it('should allow overrides in popup mode', () => {
       render(<DashboardContent authState={mockAuthState} viewMode="popup" />)

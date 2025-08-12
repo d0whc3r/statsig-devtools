@@ -31,7 +31,7 @@ export default function AuthComponent({ authState, isPopupMode }: DashboardHeade
                 </svg>
               </div>
               <div>
-                <h1 className="text-primary text-xl font-bold">Statsig Developer Tools</h1>
+                <h1 className="text-primary text-lg font-bold">Statsig Developer Tools</h1>
                 <ExtensionInfo compact className="mt-0.5" />
               </div>
             </div>

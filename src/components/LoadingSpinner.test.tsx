@@ -5,6 +5,11 @@ import { LoadingSpinner } from './LoadingSpinner'
 import { render, screen, within } from '@testing-library/react'
 
 describe('LoadingSpinner', () => {
+  it('should match snapshot with default props', () => {
+    const { container } = render(<LoadingSpinner />)
+    expect(container).toMatchSnapshot()
+  })
+
   describe('basic rendering', () => {
     it('should render spinner with default props', () => {
       render(<LoadingSpinner />)
@@ -16,7 +21,7 @@ describe('LoadingSpinner', () => {
       // Check for spinner element using within
       const spinner = within(container).getByRole('generic')
       expect(spinner).toBeInTheDocument()
-      expect(spinner).toHaveClass('animate-spin', 'rounded-full', 'border-2', 'border-gray-300', 'border-t-blue-600')
+      expect(spinner).toHaveClass('animate-spin', 'rounded-full', 'border-2', 'border-slate-200')
     })
 
     it('should not render message when not provided', () => {
@@ -68,7 +73,7 @@ describe('LoadingSpinner', () => {
 
       const message = screen.getByText(testMessage)
       expect(message).toBeInTheDocument()
-      expect(message).toHaveClass('mt-2', 'text-sm', 'text-gray-600')
+      expect(message).toHaveClass('mt-3', 'text-sm', 'font-medium', 'text-slate-600')
     })
 
     it('should render long message correctly', () => {
@@ -77,7 +82,7 @@ describe('LoadingSpinner', () => {
 
       const message = screen.getByText(longMessage)
       expect(message).toBeInTheDocument()
-      expect(message).toHaveClass('mt-2', 'text-sm', 'text-gray-600')
+      expect(message).toHaveClass('mt-3', 'text-sm', 'font-medium', 'text-slate-600')
     })
 
     it('should render empty string message', () => {
@@ -192,7 +197,7 @@ describe('LoadingSpinner', () => {
 
       const container = screen.getByTestId('loading-spinner')
       const spinner = within(container).getByRole('generic')
-      expect(spinner).toHaveClass('animate-spin', 'rounded-full', 'border-2', 'border-gray-300', 'border-t-blue-600')
+      expect(spinner).toHaveClass('animate-spin', 'rounded-full', 'border-2', 'border-slate-200')
     })
 
     it('should maintain animation classes across different sizes', () => {
@@ -200,13 +205,13 @@ describe('LoadingSpinner', () => {
 
       let container = screen.getByTestId('loading-spinner')
       let spinner = within(container).getByRole('generic')
-      expect(spinner).toHaveClass('animate-spin', 'border-2', 'border-gray-300', 'border-t-blue-600')
+      expect(spinner).toHaveClass('animate-spin', 'border-2', 'border-slate-200')
 
       rerender(<LoadingSpinner size="lg" />)
 
       container = screen.getByTestId('loading-spinner')
       spinner = within(container).getByRole('generic')
-      expect(spinner).toHaveClass('animate-spin', 'border-2', 'border-gray-300', 'border-t-blue-600')
+      expect(spinner).toHaveClass('animate-spin', 'border-2', 'border-slate-200')
     })
   })
 

@@ -90,13 +90,15 @@ describe('configuration-formatters', () => {
 
   describe('getTypeBadgeClass', () => {
     it('returns correct classes for known types', () => {
-      expect(getTypeBadgeClass('feature_gate')).toBe('type-badge type-badge-feature-gate')
-      expect(getTypeBadgeClass('experiment')).toBe('type-badge type-badge-experiment')
-      expect(getTypeBadgeClass('dynamic_config')).toBe('type-badge type-badge-dynamic-config')
+      expect(getTypeBadgeClass('feature_gate')).toBe('badge-feature-gate')
+      expect(getTypeBadgeClass('experiment')).toBe('badge-experiment')
+      expect(getTypeBadgeClass('dynamic_config')).toBe('badge-dynamic-config')
     })
 
     it('returns default class for unknown types', () => {
-      expect(getTypeBadgeClass('unknown')).toBe('type-badge bg-gray-100 text-gray-800')
+      expect(getTypeBadgeClass('unknown')).toBe(
+        'bg-gradient-to-r from-gray-100 to-slate-100 text-gray-700 border-gray-200',
+      )
     })
   })
 

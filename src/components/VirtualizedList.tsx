@@ -257,6 +257,10 @@ export function OptimizedList<T extends VirtualListItem>({
 /**
  * Debounced search hook for performance
  */
+/**
+ * Hook for debounced search with immediate input response
+ * Returns both immediate value for input display and debounced value for filtering
+ */
 export function useDebouncedSearch(initialValue: string = '', delay: number = 300) {
   const [value, setValue] = useState(initialValue)
   const [debouncedValue, setDebouncedValue] = useState(initialValue)
@@ -271,5 +275,5 @@ export function useDebouncedSearch(initialValue: string = '', delay: number = 30
     }
   }, [value, delay])
 
-  return [debouncedValue, setValue] as const
+  return [debouncedValue, setValue, value] as const
 }

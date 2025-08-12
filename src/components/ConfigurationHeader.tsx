@@ -17,7 +17,7 @@ export function ConfigurationHeader({ configuration, onCreateOverride }: Configu
     <div className="mb-6">
       {/* Title and Description */}
       <div className="mb-4">
-        <h2 className="mb-2 text-2xl font-bold text-gray-900">{configuration.name}</h2>
+        <h2 className="mb-2 text-xl font-bold text-gray-900">{configuration.name}</h2>
         <p className="text-sm text-gray-600">
           Configuration ID:{' '}
           <span className="rounded bg-gray-100 px-2 py-1 font-mono text-gray-800">{configuration.name}</span>

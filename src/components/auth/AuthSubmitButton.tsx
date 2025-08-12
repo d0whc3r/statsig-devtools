@@ -27,15 +27,15 @@ export function AuthSubmitButton({ isLoading, disabled, viewMode }: AuthSubmitBu
    */
   const getButtonStyles = () => {
     const baseStyles =
-      'relative z-10 flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 font-medium text-white shadow-lg transition-all duration-200 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50'
+      'btn-primary relative z-10 flex w-full items-center justify-center rounded-lg font-semibold focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50'
 
     switch (viewMode) {
       case 'tab':
-        return `${baseStyles} px-8 py-4 text-lg font-semibold`
+        return `${baseStyles} px-8 py-4 text-lg`
       case 'popup':
-        return `${baseStyles} px-3 py-1.5 text-xs`
+        return `${baseStyles} px-4 py-2.5 text-sm`
       default:
-        return `${baseStyles} px-4 py-2 text-sm`
+        return `${baseStyles} px-6 py-3 text-base`
     }
   }
 

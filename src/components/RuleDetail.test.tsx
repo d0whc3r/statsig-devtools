@@ -175,7 +175,7 @@ describe('RuleDetail', () => {
       )
 
       expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Default Value')
-      expect(screen.getByText('"test-default"')).toBeInTheDocument()
+      expect(screen.getByText('test-default')).toBeInTheDocument()
     })
 
     it('should show configuration ID as title when available', () => {

@@ -22,12 +22,12 @@ const getContainerStyles = (viewMode: ViewMode) => {
 
   return `flex flex-col ${
     isTabMode
-      ? 'min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100'
+      ? 'min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'
       : isPopupMode
-        ? 'popup-layout bg-gray-50'
+        ? 'popup-layout bg-gradient-to-br from-slate-50 to-gray-100'
         : isSidebarMode
-          ? 'h-screen bg-gray-50 overflow-hidden'
-          : 'h-screen bg-gray-50'
+          ? 'h-screen bg-gradient-to-br from-slate-50 to-gray-100 overflow-hidden'
+          : 'h-screen bg-gradient-to-br from-slate-50 to-gray-100'
   }`
 }
 
@@ -37,8 +37,8 @@ const getContainerStyles = (viewMode: ViewMode) => {
 const getHeaderStyles = (viewMode: ViewMode) => {
   const isTabMode = viewMode === 'tab'
   const isPopupMode = viewMode === 'popup'
-  return `bg-white border-b border-gray-200 flex items-center justify-between shadow-sm ${
-    isTabMode ? 'px-8 py-4' : isPopupMode ? 'px-2 py-2' : 'px-4 py-3'
+  return `header-professional flex items-center justify-between ${
+    isTabMode ? 'px-8 py-4' : isPopupMode ? 'px-3 py-2.5' : 'px-4 py-3'
   }`
 }
 
@@ -48,8 +48,8 @@ const getHeaderStyles = (viewMode: ViewMode) => {
 const getLogoStyles = (viewMode: ViewMode) => {
   const isTabMode = viewMode === 'tab'
   const isPopupMode = viewMode === 'popup'
-  return `bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center ${
-    isTabMode ? 'h-10 w-10' : isPopupMode ? 'h-6 w-6' : 'h-8 w-8'
+  return `logo-professional flex items-center justify-center ${
+    isTabMode ? 'h-10 w-10' : isPopupMode ? 'h-7 w-7' : 'h-8 w-8'
   }`
 }
 
@@ -102,7 +102,11 @@ export function AppLayout({ viewMode }: AppLayoutProps) {
               </div>
             )}
             {/* Avoid double title: show compact title only in popup, rely on DashboardHeader elsewhere */}
-            {viewMode === 'popup' && <span className="text-xs font-semibold text-gray-900">Statsig Tools</span>}
+            {viewMode === 'popup' && (
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-sm font-bold text-transparent">
+                Statsig DevTools
+              </span>
+            )}
           </div>
 
           <ViewModeToggle currentMode={viewMode} />
@@ -161,7 +165,7 @@ function HeaderActionButtons({ viewMode, authState, onLogout }: HeaderActionButt
   const iconSize = isPopupMode ? 'h-3 w-3' : 'h-3.5 w-3.5'
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-2">
       {/* Refresh Button */}
       <button
         onClick={() => {
@@ -169,7 +173,7 @@ function HeaderActionButtons({ viewMode, authState, onLogout }: HeaderActionButt
           refreshTabInfo()
         }}
         disabled={isLoading || isEvaluating}
-        className={`flex ${buttonSize} cursor-pointer items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800 disabled:cursor-not-allowed disabled:opacity-50`}
+        className={`icon-button-professional ${buttonSize} text-slate-600 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50`}
         title="Refresh configurations and tab info"
       >
         <svg className={`${iconSize}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -185,7 +189,7 @@ function HeaderActionButtons({ viewMode, authState, onLogout }: HeaderActionButt
       {/* Logout Button */}
       <button
         onClick={onLogout}
-        className={`flex ${buttonSize} cursor-pointer items-center justify-center rounded-md bg-red-100 text-red-600 transition-colors hover:bg-red-200 hover:text-red-800`}
+        className={`icon-button-professional ${buttonSize} text-slate-600 hover:border-red-200 hover:text-red-600`}
         title="Logout"
       >
         <svg className={`${iconSize}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -13,14 +13,14 @@ export function DashboardHeader({ authState, isPopupMode }: DashboardHeaderProps
   const { isEvaluating } = useDashboardHeader(authState)
 
   return (
-    <div className={`header-professional ${isPopupMode ? 'px-4 py-2' : 'px-6 py-4'}`}>
+    <div className={`${isPopupMode ? 'px-4 py-3' : 'px-6 py-5'}`}>
       {/* Main header content */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           {!isPopupMode && (
-            <div className="flex items-center gap-3">
-              <div className="from-statsig-500 to-statsig-700 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br">
-                <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex items-center gap-4">
+              <div className="logo-professional flex h-10 w-10 items-center justify-center">
+                <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -30,15 +30,17 @@ export function DashboardHeader({ authState, isPopupMode }: DashboardHeaderProps
                 </svg>
               </div>
               <div>
-                <h1 className="text-primary text-xl font-bold">Statsig Developer Tools</h1>
-                <ExtensionInfo compact className="mt-0.5" />
+                <h1 className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-lg font-bold text-transparent">
+                  Statsig Developer Tools
+                </h1>
+                <ExtensionInfo compact className="mt-1" />
               </div>
             </div>
           )}
           {isEvaluating && (
-            <div className="flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5">
+            <div className="flex items-center gap-3 rounded-full border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-4 py-2 shadow-sm">
               <LoadingSpinner size="sm" />
-              <span className="text-sm font-medium text-blue-700">Evaluating...</span>
+              <span className="text-sm font-semibold text-blue-700">Evaluating configurations...</span>
             </div>
           )}
         </div>

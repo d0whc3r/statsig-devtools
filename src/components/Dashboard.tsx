@@ -17,6 +17,56 @@ interface DashboardProps {
 }
 
 /**
+ * Get dashboard container styles based on view mode
+ */
+const getDashboardContainerStyles = (viewMode: string) => {
+  const baseStyles = 'flex flex-col'
+  const viewModeStyles = {
+    sidebar: 'h-full',
+    tab: 'min-h-full',
+    popup: 'h-full',
+  }
+  return `${baseStyles} ${viewModeStyles[viewMode as keyof typeof viewModeStyles] || viewModeStyles.popup}`
+}
+
+/**
+ * Get header container styles based on view mode
+ */
+const getHeaderContainerStyles = (viewMode: string) => `flex-shrink-0 ${viewMode === 'sidebar' ? 'px-4' : ''}`
+
+/**
+ * Get main content styles based on view mode
+ */
+const getMainContentStyles = (viewMode: string) => {
+  const baseStyles = 'flex-1'
+  const viewModeStyles = {
+    sidebar: 'overflow-hidden px-4',
+    tab: '',
+    popup: 'overflow-hidden',
+  }
+  return `${baseStyles} ${viewModeStyles[viewMode as keyof typeof viewModeStyles] || viewModeStyles.popup}`
+}
+
+/**
+ * Get override manager styles based on view mode
+ */
+const getOverrideManagerStyles = (viewMode: string) => {
+  const baseStyles = 'flex-shrink-0 border-t border-gray-200 bg-white'
+  return `${baseStyles} ${viewMode === 'sidebar' ? 'px-4 py-3' : 'p-3'}`
+}
+
+/**
+ * Check if info bar should be shown
+ */
+const shouldShowInfoBar = (viewMode: string) => viewMode === 'popup' || viewMode === 'sidebar'
+
+/**
+ * Check if override manager should be shown
+ */
+const shouldShowOverrideManager = (viewMode: string, hasOverrides: boolean) =>
+  (viewMode === 'popup' || viewMode === 'sidebar') && hasOverrides
+
+/**
  * Main dashboard component that orchestrates the configuration management
  */
 export function Dashboard({ authState, isPopupMode = false, viewMode = 'popup' }: DashboardProps) {
@@ -32,37 +82,31 @@ export function Dashboard({ authState, isPopupMode = false, viewMode = 'popup' }
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
           <LoadingSpinner size="lg" />
-          <p className="mt-2 text-sm text-gray-600">Loading dashboard...</p>
+          <p className="mt-3 text-sm font-medium text-slate-600">Loading dashboard...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div
-      className={`flex flex-col ${viewMode === 'sidebar' ? 'h-full' : viewMode === 'tab' ? 'min-h-full' : 'h-full'}`}
-    >
+    <div className={getDashboardContainerStyles(viewMode)}>
       {/* Header - Fixed at top */}
-      <div className={`flex-shrink-0 ${viewMode === 'sidebar' ? 'px-4' : ''}`}>
+      <div className={getHeaderContainerStyles(viewMode)}>
         <DashboardHeader authState={authState} isPopupMode={isPopupMode} />
         {/* Statistics/Info Bar - Show in popup and sidebar modes */}
-        {(viewMode === 'popup' || viewMode === 'sidebar') && (
+        {shouldShowInfoBar(viewMode) && (
           <PopupInfoBar authState={authState} viewMode={viewMode} activeOverrides={activeOverrides} />
         )}
       </div>
 
       {/* Main Content - Scrollable area */}
-      <div
-        className={`flex-1 ${viewMode === 'sidebar' ? 'overflow-hidden px-4' : viewMode === 'tab' ? '' : 'overflow-hidden'}`}
-      >
+      <div className={getMainContentStyles(viewMode)}>
         <DashboardContent authState={authState} viewMode={viewMode} />
       </div>
 
       {/* Override Manager - Fixed at bottom for both popup and sidebar */}
-      {(viewMode === 'popup' || viewMode === 'sidebar') && activeOverrides.length > 0 && (
-        <div
-          className={`flex-shrink-0 border-t border-gray-200 bg-white ${viewMode === 'sidebar' ? 'px-4 py-3' : 'p-3'}`}
-        >
+      {shouldShowOverrideManager(viewMode, activeOverrides.length > 0) && (
+        <div className={getOverrideManagerStyles(viewMode)}>
           <OverrideManager
             overrides={activeOverrides}
             onRemoveOverride={removeOverride}

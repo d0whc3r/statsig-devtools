@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { ConfigurationSearchAndFilters } from './ConfigurationSearchAndFilters'
+import { ConfigurationSearchAndFilters } from './configuration-list/ConfigurationSearchAndFilters'
 
 import { fireEvent, render, screen } from '@testing-library/react'
 
@@ -17,6 +17,11 @@ describe('ConfigurationSearchAndFilters', () => {
     totalConfigurations: 10,
     filteredCount: 10,
   }
+
+  it('should match snapshot with default props', () => {
+    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} />)
+    expect(container).toMatchSnapshot()
+  })
 
   it('should render search input with correct placeholder', () => {
     render(<ConfigurationSearchAndFilters {...defaultProps} />)
@@ -113,5 +118,66 @@ describe('ConfigurationSearchAndFilters', () => {
 
     const statusSelect = screen.getByDisplayValue(/Passed$/)
     expect(statusSelect).toBeInTheDocument()
+  })
+
+  // Additional tests for better branch coverage
+  it('should handle all filter type options', () => {
+    const filterTypes = ['all', 'feature_gate', 'dynamic_config', 'experiment'] as const
+
+    filterTypes.forEach((filterType) => {
+      const { unmount } = render(<ConfigurationSearchAndFilters {...defaultProps} filterType={filterType} />)
+
+      // Use a more specific selector to avoid conflicts
+      const selects = screen.getAllByRole('combobox')
+      const typeSelect = selects[0] // First select is always the type filter
+
+      if (filterType === 'all') {
+        expect(typeSelect).toHaveDisplayValue('All Types')
+      } else if (filterType === 'feature_gate') {
+        expect(typeSelect).toHaveDisplayValue('🚪 Gates')
+      } else if (filterType === 'dynamic_config') {
+        expect(typeSelect).toHaveDisplayValue('⚙️ Configs')
+      } else if (filterType === 'experiment') {
+        expect(typeSelect).toHaveDisplayValue('🧪 Experiments')
+      }
+
+      unmount()
+    })
+  })
+
+  it('should handle all filter status options', () => {
+    const filterStatuses = ['all', 'passed', 'failed'] as const
+
+    filterStatuses.forEach((filterStatus) => {
+      const { unmount } = render(<ConfigurationSearchAndFilters {...defaultProps} filterStatus={filterStatus} />)
+
+      // Use a more specific selector to avoid conflicts
+      const selects = screen.getAllByRole('combobox')
+      const statusSelect = selects[1] // Second select is always the status filter
+
+      if (filterStatus === 'all') {
+        expect(statusSelect).toHaveDisplayValue('All Status')
+      } else if (filterStatus === 'passed') {
+        expect(statusSelect).toHaveDisplayValue('✅ Passed')
+      } else if (filterStatus === 'failed') {
+        expect(statusSelect).toHaveDisplayValue('❌ Failed')
+      }
+
+      unmount()
+    })
+  })
+
+  it('should handle empty search query', () => {
+    render(<ConfigurationSearchAndFilters {...defaultProps} searchQuery="" />)
+
+    const searchInput = screen.getByPlaceholderText('Search...')
+    expect(searchInput).toHaveValue('')
+  })
+
+  it('should handle special characters in search query', () => {
+    render(<ConfigurationSearchAndFilters {...defaultProps} searchQuery="test@#$%^&*()" />)
+
+    const searchInput = screen.getByDisplayValue('test@#$%^&*()')
+    expect(searchInput).toBeInTheDocument()
   })
 })

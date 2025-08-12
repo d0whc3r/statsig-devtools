@@ -50,6 +50,11 @@ describe('ConfigurationStatusIndicator', () => {
     })
   })
 
+  it('should match snapshot with default props', () => {
+    const { container } = render(<ConfigurationStatusIndicator />)
+    expect(container).toMatchSnapshot()
+  })
+
   describe('basic rendering', () => {
     it('should render with default props', () => {
       render(<ConfigurationStatusIndicator />)
