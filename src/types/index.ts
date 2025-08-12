@@ -47,6 +47,11 @@ export interface StatsigConfigurationItem {
   lastModifierID?: string
   createdTime?: number
   lastModifiedTime?: number
+  groups?: Array<{
+    name: string
+    size: number
+    parameterValues?: Record<string, unknown>
+  }>
 }
 
 /**

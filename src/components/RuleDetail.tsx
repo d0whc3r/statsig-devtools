@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { useRuleOverrideSuggestions } from '../hooks/useRuleOverrideSuggestions'
 import { formatValue } from '../utils/configuration-formatters'
 import { EvaluationResultCard } from './EvaluationResultCard'
+import { ExperimentVisualization } from './ExperimentVisualization'
 import { RuleHeader } from './rule-detail/RuleHeader'
 import { RuleConditions } from './RuleConditions'
 import { RuleDetailOverrideForm } from './RuleDetailOverrideForm'
@@ -108,6 +109,17 @@ export function RuleDetail({
         <div className={compact ? 'mt-2' : 'mt-3'}>
           <RuleConditions rules={configuration.rules || []} compact={compact} />
         </div>
+
+        {/* Experiment Visualization - Only show for experiments */}
+        {configuration.type === 'experiment' && configuration.groups && configuration.groups.length > 0 && (
+          <div className={`${compact ? 'mt-2 mb-2' : 'mt-3 mb-3'}`}>
+            <ExperimentVisualization
+              configuration={configuration}
+              evaluationResult={evaluationResult}
+              compact={compact}
+            />
+          </div>
+        )}
 
         {/* Default Value */}
         {configuration.defaultValue !== undefined && (

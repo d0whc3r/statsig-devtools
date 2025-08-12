@@ -379,6 +379,11 @@ export async function getExperiments(apiKey: string): Promise<StatsigConfigurati
         lastModifierID: experimentData.lastModifierID as string,
         createdTime: experimentData.createdTime as number,
         lastModifiedTime: experimentData.lastModifiedTime as number,
+        groups: ((experimentData.groups as Array<Record<string, unknown>>) || []).map((group) => ({
+          name: String(group.name || ''),
+          size: Number(group.size || 0),
+          parameterValues: group.parameterValues as Record<string, unknown> | undefined,
+        })),
       }
     })
 

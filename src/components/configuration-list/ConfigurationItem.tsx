@@ -96,12 +96,35 @@ export const ConfigurationItem = React.memo(
                     </span>
                   </div>
                 )}
-                {config.type === 'experiment' && result.groupName && (
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-purple-500" />
-                    <span className="font-semibold text-slate-700">
-                      Group: <span className="text-purple-700">{result.groupName}</span>
-                    </span>
+                {config.type === 'experiment' && (
+                  <div className="space-y-2">
+                    {result.groupName && (
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-purple-500" />
+                        <span className="font-semibold text-slate-700">
+                          Group: <span className="text-purple-700">{result.groupName}</span>
+                        </span>
+                      </div>
+                    )}
+                    {config.groups && config.groups.length > 0 && (
+                      <div className="space-y-1">
+                        <div className="text-xs font-medium text-slate-600">Variants:</div>
+                        <div className="flex flex-wrap gap-1">
+                          {config.groups.map((group) => (
+                            <span
+                              key={group.name}
+                              className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                                result.groupName === group.name
+                                  ? 'bg-purple-100 text-purple-800 ring-1 ring-purple-600'
+                                  : 'bg-gray-100 text-gray-700'
+                              }`}
+                            >
+                              {group.name} ({group.size}%)
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
                 {config.type === 'dynamic_config' && (
