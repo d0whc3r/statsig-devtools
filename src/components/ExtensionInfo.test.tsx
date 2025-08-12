@@ -1,9 +1,9 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { useExtensionInfo } from '../hooks/useExtensionInfo'
 import { ExtensionInfo } from './ExtensionInfo'
 
-import { cleanup, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 
 // Mock the hook
 vi.mock('../hooks/useExtensionInfo')
@@ -11,10 +11,6 @@ vi.mock('../hooks/useExtensionInfo')
 const mockUseExtensionInfo = vi.mocked(useExtensionInfo)
 
 describe('ExtensionInfo', () => {
-  afterEach(() => {
-    cleanup()
-  })
-
   it('should render nothing when loading', () => {
     mockUseExtensionInfo.mockReturnValue({
       extensionInfo: null,

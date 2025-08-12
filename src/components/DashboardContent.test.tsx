@@ -1,10 +1,10 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { DashboardContent } from './DashboardContent'
 
 import type { AuthState } from '../types'
 
-import { cleanup, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 
 // Mock hooks
 vi.mock('../hooks/useConfigurationData', () => ({
@@ -59,14 +59,6 @@ describe('DashboardContent', () => {
     projectName: 'test-project',
     error: undefined,
   }
-
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  afterEach(() => {
-    cleanup()
-  })
 
   describe('View Mode Restrictions', () => {
     it('should allow overrides in popup mode', () => {

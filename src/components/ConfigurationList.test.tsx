@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as configListModule from './configuration-list'
 import { ConfigurationList } from './ConfigurationList'
@@ -6,7 +6,7 @@ import { ConfigurationList } from './ConfigurationList'
 import type { EvaluationResult, StorageOverride } from '../services/statsig-integration'
 import type { StatsigConfigurationItem } from '../types'
 
-import { cleanup, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 
 // Mock the configuration-list components
 vi.mock('./configuration-list', () => ({
@@ -90,8 +90,6 @@ describe('ConfigurationList', () => {
   const mockOnConfigurationSelect = vi.fn()
 
   beforeEach(() => {
-    vi.clearAllMocks()
-
     // Default mock implementations
     mockUseConfigurationFilters.mockReturnValue({
       searchQuery: '',
@@ -109,10 +107,6 @@ describe('ConfigurationList', () => {
       hasOverrides: vi.fn().mockReturnValue(false),
       getOverrideCount: vi.fn().mockReturnValue(0),
     })
-  })
-
-  afterEach(() => {
-    cleanup()
   })
 
   it('renders loading state when isLoading is true', () => {

@@ -18,7 +18,7 @@ export interface StatsigRule {
   id?: string
   salt?: string
   idType?: string
-  environment?: string[] | null
+  environments?: string[] | null
 }
 
 /**

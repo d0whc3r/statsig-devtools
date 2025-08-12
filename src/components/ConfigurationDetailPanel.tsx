@@ -59,7 +59,9 @@ export function ConfigurationDetailPanel({
           </div>
         </div>
       )}
-      <div className={`custom-scrollbar overflow-y-auto ${compact ? 'max-h-80' : 'max-h-[60vh]'}`}>
+      <div
+        className={`custom-scrollbar ${compact ? 'max-h-80 overflow-y-auto' : allowOverrides ? 'max-h-[60vh] overflow-y-auto' : 'overflow-y-auto'}`}
+      >
         <RuleDetail
           configuration={configuration}
           evaluationResult={evaluationResults.get(configuration.name)}

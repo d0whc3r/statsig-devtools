@@ -1,17 +1,13 @@
 import React from 'react'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { RuleConditions } from './RuleConditions'
 
 import type { ConfigurationRule } from '../types'
 
-import { cleanup, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 
 describe('RuleConditions', () => {
-  beforeEach(() => {
-    cleanup()
-  })
-
   const mockRuleWithMetadata: ConfigurationRule = {
     name: 'Test Rule',
     passPercentage: 50,
@@ -154,7 +150,7 @@ describe('RuleConditions', () => {
         id: 'rule-with-env',
         name: 'Rule with Environment',
         passPercentage: 100,
-        environment: ['production'],
+        environments: ['production'],
         conditions: [
           {
             type: 'user_id',
@@ -166,7 +162,7 @@ describe('RuleConditions', () => {
 
       render(<RuleConditions rules={[mockRuleWithEnvironment]} />)
 
-      expect(screen.getByText('production')).toBeInTheDocument()
+      expect(screen.getByText('Env: production')).toBeInTheDocument()
     })
 
     it('should display multiple environments badge when rule has multiple environments', () => {
@@ -174,7 +170,7 @@ describe('RuleConditions', () => {
         id: 'rule-with-multi-env',
         name: 'Rule with Multiple Environments',
         passPercentage: 100,
-        environment: ['production', 'staging', 'development'],
+        environments: ['production', 'staging', 'development'],
         conditions: [
           {
             type: 'user_id',
@@ -186,7 +182,7 @@ describe('RuleConditions', () => {
 
       render(<RuleConditions rules={[mockRuleWithMultipleEnvironments]} />)
 
-      expect(screen.getByText('3 environments')).toBeInTheDocument()
+      expect(screen.getByText('Envs: production, staging, development')).toBeInTheDocument()
     })
   })
 
@@ -237,13 +233,6 @@ describe('RuleConditions', () => {
       expect(container.textContent).toContain('Rules (2)')
       expect(container.textContent).toContain('Basic Rule')
       expect(container.textContent).toContain('Test Rule')
-    })
-
-    it('should show evaluation order hint', () => {
-      const multipleRules = [mockRuleBasic, mockRuleWithMetadata]
-      const { container } = render(<RuleConditions rules={multipleRules} />)
-
-      expect(container.textContent).toContain('Evaluated top to bottom')
     })
   })
 })

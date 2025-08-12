@@ -38,8 +38,6 @@ describe('useConfigurationData', () => {
   }
 
   beforeEach(() => {
-    vi.clearAllMocks()
-
     // Default mock implementations
     mockUnifiedStatsigService.isReady.mockReturnValue(true)
     mockUnifiedStatsigService.initialize.mockResolvedValue(undefined)

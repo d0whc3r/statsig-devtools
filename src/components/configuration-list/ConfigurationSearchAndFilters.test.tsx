@@ -1,8 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { ConfigurationSearchAndFilters } from './ConfigurationSearchAndFilters'
 
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 
 describe('ConfigurationSearchAndFilters', () => {
   const defaultProps = {
@@ -18,57 +18,46 @@ describe('ConfigurationSearchAndFilters', () => {
     filteredCount: 10,
   }
 
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
   it('should render search input with correct placeholder', () => {
-    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} />)
+    render(<ConfigurationSearchAndFilters {...defaultProps} />)
 
-    const searchInput = container.querySelector('input[placeholder="Search..."]')
+    const searchInput = screen.getByPlaceholderText('Search...')
     expect(searchInput).toBeInTheDocument()
   })
 
   it('should render filter dropdowns', () => {
-    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} />)
+    render(<ConfigurationSearchAndFilters {...defaultProps} />)
 
-    const selects = container.querySelectorAll('select')
+    const selects = screen.getAllByRole('combobox')
     expect(selects).toHaveLength(2)
   })
 
   it('should call onSearchChange when typing in search input', () => {
-    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} />)
+    render(<ConfigurationSearchAndFilters {...defaultProps} />)
 
-    const searchInput = container.querySelector('input[placeholder="Search..."]')
-    expect(searchInput).toBeInTheDocument()
+    const searchInput = screen.getByPlaceholderText('Search...')
+    fireEvent.change(searchInput, { target: { value: 'test search' } })
 
-    if (searchInput) {
-      fireEvent.change(searchInput, { target: { value: 'test search' } })
-      expect(defaultProps.onSearchChange).toHaveBeenCalled()
-    }
+    expect(defaultProps.onSearchChange).toHaveBeenCalled()
   })
 
   it('should display search value in input', () => {
-    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} searchQuery="test value" />)
+    render(<ConfigurationSearchAndFilters {...defaultProps} searchQuery="test value" />)
 
-    const searchInput = container.querySelector('input[placeholder="Search..."]') as HTMLInputElement
+    const searchInput = screen.getByDisplayValue('test value')
     expect(searchInput).toBeInTheDocument()
-    expect(searchInput?.value).toBe('test value')
   })
 
   it('should display configuration count', () => {
-    const { container } = render(
-      <ConfigurationSearchAndFilters {...defaultProps} totalConfigurations={25} filteredCount={15} />,
-    )
+    render(<ConfigurationSearchAndFilters {...defaultProps} totalConfigurations={25} filteredCount={15} />)
 
-    const countText = container.textContent
-    expect(countText).toContain('15 of 25')
+    expect(screen.getByText('15 of 25')).toBeInTheDocument()
   })
 
   it('should handle filter type changes', () => {
-    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} />)
+    render(<ConfigurationSearchAndFilters {...defaultProps} />)
 
-    const selects = container.querySelectorAll('select')
+    const selects = screen.getAllByRole('combobox')
     const typeSelect = selects[0] // First select should be type filter
 
     fireEvent.change(typeSelect, { target: { value: 'feature_gate' } })
@@ -77,9 +66,9 @@ describe('ConfigurationSearchAndFilters', () => {
   })
 
   it('should handle filter status changes', () => {
-    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} />)
+    render(<ConfigurationSearchAndFilters {...defaultProps} />)
 
-    const selects = container.querySelectorAll('select')
+    const selects = screen.getAllByRole('combobox')
     const statusSelect = selects[1] // Second select should be status filter
 
     fireEvent.change(statusSelect, { target: { value: 'passed' } })
@@ -88,45 +77,39 @@ describe('ConfigurationSearchAndFilters', () => {
   })
 
   it('should render clear button when hasActiveFilters is true', () => {
-    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} hasActiveFilters />)
+    render(<ConfigurationSearchAndFilters {...defaultProps} hasActiveFilters />)
 
-    const clearButton = container.querySelector('button')
+    const clearButton = screen.getByRole('button', { name: /clear/i })
     expect(clearButton).toBeInTheDocument()
-    expect(clearButton?.textContent).toBe('Clear')
   })
 
   it('should not render clear button when hasActiveFilters is false', () => {
-    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} />)
+    render(<ConfigurationSearchAndFilters {...defaultProps} />)
 
-    const clearButton = container.querySelector('button')
+    const clearButton = screen.queryByRole('button', { name: /clear/i })
     expect(clearButton).not.toBeInTheDocument()
   })
 
   it('should call onClearFilters when clicking clear button', () => {
-    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} hasActiveFilters />)
+    render(<ConfigurationSearchAndFilters {...defaultProps} hasActiveFilters />)
 
-    const clearButton = container.querySelector('button')
-    expect(clearButton).toBeInTheDocument()
+    const clearButton = screen.getByRole('button', { name: /clear/i })
+    fireEvent.click(clearButton)
 
-    if (clearButton) {
-      fireEvent.click(clearButton)
-      expect(defaultProps.onClearFilters).toHaveBeenCalled()
-    }
+    expect(defaultProps.onClearFilters).toHaveBeenCalled()
   })
 
   it('should display correct filter type value', () => {
-    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} filterType="feature_gate" />)
+    render(<ConfigurationSearchAndFilters {...defaultProps} filterType="feature_gate" />)
 
-    const selects = container.querySelectorAll('select')
-    const typeSelect = selects[0] as HTMLSelectElement
-    expect(typeSelect.value).toBe('feature_gate')
+    const typeSelect = screen.getByDisplayValue('Gates')
+    expect(typeSelect).toBeInTheDocument()
   })
 
   it('should display correct filter status value', () => {
-    const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} filterStatus="passed" />)
+    render(<ConfigurationSearchAndFilters {...defaultProps} filterStatus="passed" />)
 
-    const selects = container.querySelectorAll('select')
-    const statusSelect = selects[1] as HTMLSelectElement
-    expect(statusSelect.value).toBe('passed')
+    const statusSelect = screen.getByDisplayValue('Passed')
+    expect(statusSelect).toBeInTheDocument()
   })
 })

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { useActiveTab } from '../hooks/useActiveTab'
 import { storageInjectionService } from '../services/storage-injection'
@@ -15,10 +15,6 @@ vi.mock('../services/storage-injection', () => ({
 }))
 
 describe('useActiveTab', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
   it('should load tab information on mount', async () => {
     // Mock successful responses
     vi.mocked(storageInjectionService.getCurrentTabUrl).mockResolvedValue('https://example.com')
@@ -114,8 +110,8 @@ describe('useActiveTab', () => {
     // Wait for the refresh to complete and verify new data
     await waitFor(() => {
       expect(result.current.tabInfo.url).toBe('https://newsite.com')
-      expect(result.current.tabInfo.domain).toBe('newsite.com')
     })
+    expect(result.current.tabInfo.domain).toBe('newsite.com')
 
     // Should not be loading after completion
     expect(result.current.isLoading).toBe(false)

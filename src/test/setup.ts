@@ -1,6 +1,17 @@
-import { vi } from 'vitest'
+import { afterEach, beforeEach, vi } from 'vitest'
 
 import '@testing-library/jest-dom/vitest'
+// eslint-disable-next-line testing-library/no-manual-cleanup
+import { cleanup } from '@testing-library/react'
+
+beforeEach(() => {
+  vi.clearAllMocks()
+})
+
+// Global cleanup after each test
+afterEach(() => {
+  cleanup()
+})
 
 // Mock browser APIs
 const mockBrowser = {

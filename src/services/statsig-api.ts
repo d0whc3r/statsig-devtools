@@ -308,6 +308,7 @@ export async function getFeatureGates(apiKey: string): Promise<StatsigConfigurat
 
     const featureGates: StatsigConfigurationItem[] = response.data.map((gate) => {
       const gateData = gate as Record<string, unknown>
+
       return {
         id: String(gateData.id || ''),
         name: String(gateData.name || ''),
@@ -316,9 +317,6 @@ export async function getFeatureGates(apiKey: string): Promise<StatsigConfigurat
         rules: ((gateData.rules as StatsigRule[]) || []).map((rule) => ({
           ...rule,
           name: rule.name || 'Unnamed Rule',
-          passPercentage: rule.passPercentage || 0,
-          conditions: rule.conditions || [],
-          environment: rule.environment || null,
         })),
         defaultValue: gateData.defaultValue ?? false,
         salt: gateData.salt as string,
@@ -368,7 +366,7 @@ export async function getExperiments(apiKey: string): Promise<StatsigConfigurati
           name: rule.name || 'Unnamed Rule',
           passPercentage: rule.passPercentage || 0,
           conditions: rule.conditions || [],
-          environment: rule.environment || null,
+          environments: rule.environments || null,
         })),
         defaultValue: experimentData.defaultValue,
         salt: experimentData.salt as string,
@@ -418,7 +416,7 @@ export async function getDynamicConfigs(apiKey: string): Promise<StatsigConfigur
           name: rule.name || 'Unnamed Rule',
           passPercentage: rule.passPercentage || 0,
           conditions: rule.conditions || [],
-          environment: rule.environment || null,
+          environments: rule.environments || null,
         })),
         defaultValue: configData.defaultValue || {},
         salt: configData.salt as string,

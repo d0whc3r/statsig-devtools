@@ -66,8 +66,6 @@ describe('useConfigurationEvaluation', () => {
   const mockUser = { userID: 'test-user' }
 
   beforeEach(() => {
-    vi.clearAllMocks()
-
     // Default mock implementations
     mockStatsigIntegration.isReady.mockReturnValue(false)
     mockStatsigIntegration.initialize.mockResolvedValue(undefined)

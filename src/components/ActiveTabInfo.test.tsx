@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import * as useActiveTabModule from '../hooks/useActiveTab'
 import { ActiveTabInfo } from './ActiveTabInfo'
@@ -11,10 +11,6 @@ vi.mock('../hooks/useActiveTab')
 const mockUseActiveTab = vi.mocked(useActiveTabModule.useActiveTab)
 
 describe('ActiveTabInfo', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
   it('renders loading state', () => {
     mockUseActiveTab.mockReturnValue({
       tabInfo: {

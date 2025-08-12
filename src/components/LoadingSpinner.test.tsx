@@ -1,13 +1,10 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { LoadingSpinner } from './LoadingSpinner'
 
-import { cleanup, render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 
 describe('LoadingSpinner', () => {
-  afterEach(() => {
-    cleanup()
-  })
   describe('basic rendering', () => {
     it('should render spinner with default props', () => {
       render(<LoadingSpinner />)
@@ -16,8 +13,8 @@ describe('LoadingSpinner', () => {
       expect(container).toBeInTheDocument()
       expect(container).toHaveClass('flex', 'flex-col', 'items-center', 'justify-center')
 
-      // Check for spinner element (div with animation classes)
-      const spinner = container.querySelector('div[class*="animate-spin"]')
+      // Check for spinner element using within
+      const spinner = within(container).getByRole('generic')
       expect(spinner).toBeInTheDocument()
       expect(spinner).toHaveClass('animate-spin', 'rounded-full', 'border-2', 'border-gray-300', 'border-t-blue-600')
     })
@@ -34,28 +31,32 @@ describe('LoadingSpinner', () => {
     it('should render small spinner correctly', () => {
       render(<LoadingSpinner size="sm" />)
 
-      const spinner = screen.getByTestId('loading-spinner').querySelector('div[class*="animate-spin"]')
+      const container = screen.getByTestId('loading-spinner')
+      const spinner = within(container).getByRole('generic')
       expect(spinner).toHaveClass('w-4', 'h-4')
     })
 
     it('should render medium spinner correctly (default)', () => {
       render(<LoadingSpinner size="md" />)
 
-      const spinner = screen.getByTestId('loading-spinner').querySelector('div[class*="animate-spin"]')
+      const container = screen.getByTestId('loading-spinner')
+      const spinner = within(container).getByRole('generic')
       expect(spinner).toHaveClass('w-8', 'h-8')
     })
 
     it('should render large spinner correctly', () => {
       render(<LoadingSpinner size="lg" />)
 
-      const spinner = screen.getByTestId('loading-spinner').querySelector('div[class*="animate-spin"]')
+      const container = screen.getByTestId('loading-spinner')
+      const spinner = within(container).getByRole('generic')
       expect(spinner).toHaveClass('w-12', 'h-12')
     })
 
     it('should default to medium size when size prop is not provided', () => {
       render(<LoadingSpinner />)
 
-      const spinner = screen.getByTestId('loading-spinner').querySelector('div[class*="animate-spin"]')
+      const container = screen.getByTestId('loading-spinner')
+      const spinner = within(container).getByRole('generic')
       expect(spinner).toHaveClass('w-8', 'h-8')
     })
   })
@@ -83,9 +84,7 @@ describe('LoadingSpinner', () => {
       render(<LoadingSpinner message="" />)
 
       // Empty string should not render a paragraph element
-      const container = screen.getByTestId('loading-spinner')
-      const messageElement = container.querySelector('p')
-      expect(messageElement).not.toBeInTheDocument()
+      expect(screen.queryByRole('paragraph')).not.toBeInTheDocument()
     })
 
     it('should handle special characters in message', () => {
@@ -144,7 +143,7 @@ describe('LoadingSpinner', () => {
       const container = screen.getByTestId('loading-spinner')
       expect(container).toHaveClass('my-spinner-class', 'flex', 'flex-col', 'items-center', 'justify-center')
 
-      const spinner = container.querySelector('div[class*="animate-spin"]')
+      const spinner = within(container).getByRole('generic')
       expect(spinner).toHaveClass('w-12', 'h-12')
 
       const message = screen.getByText('Loading large content...')
@@ -157,7 +156,7 @@ describe('LoadingSpinner', () => {
       const container = screen.getByTestId('loading-spinner')
       expect(container).toHaveClass('compact')
 
-      const spinner = container.querySelector('div[class*="animate-spin"]')
+      const spinner = within(container).getByRole('generic')
       expect(spinner).toHaveClass('w-4', 'h-4')
 
       const message = screen.getByText('Small loading...')
@@ -191,19 +190,22 @@ describe('LoadingSpinner', () => {
     it('should have correct animation and styling classes', () => {
       render(<LoadingSpinner />)
 
-      const spinner = screen.getByTestId('loading-spinner').querySelector('div[class*="animate-spin"]')
+      const container = screen.getByTestId('loading-spinner')
+      const spinner = within(container).getByRole('generic')
       expect(spinner).toHaveClass('animate-spin', 'rounded-full', 'border-2', 'border-gray-300', 'border-t-blue-600')
     })
 
     it('should maintain animation classes across different sizes', () => {
       const { rerender } = render(<LoadingSpinner size="sm" />)
 
-      let spinner = screen.getByTestId('loading-spinner').querySelector('div[class*="animate-spin"]')
+      let container = screen.getByTestId('loading-spinner')
+      let spinner = within(container).getByRole('generic')
       expect(spinner).toHaveClass('animate-spin', 'border-2', 'border-gray-300', 'border-t-blue-600')
 
       rerender(<LoadingSpinner size="lg" />)
 
-      spinner = screen.getByTestId('loading-spinner').querySelector('div[class*="animate-spin"]')
+      container = screen.getByTestId('loading-spinner')
+      spinner = within(container).getByRole('generic')
       expect(spinner).toHaveClass('animate-spin', 'border-2', 'border-gray-300', 'border-t-blue-600')
     })
   })
@@ -223,7 +225,7 @@ describe('LoadingSpinner', () => {
       expect(container).toHaveClass('flex', 'flex-col', 'items-center', 'justify-center')
 
       // Should default to medium size
-      const spinner = container.querySelector('div[class*="animate-spin"]')
+      const spinner = within(container).getByRole('generic')
       expect(spinner).toHaveClass('w-8', 'h-8')
     })
 
@@ -233,8 +235,7 @@ describe('LoadingSpinner', () => {
       const container = screen.getByTestId('loading-spinner')
       expect(container).toBeInTheDocument()
 
-      const messageElement = container.querySelector('p')
-      expect(messageElement).not.toBeInTheDocument()
+      expect(screen.queryByRole('paragraph')).not.toBeInTheDocument()
     })
   })
 })

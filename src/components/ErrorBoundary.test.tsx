@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ErrorBoundary } from './ErrorBoundary'
 
-import { cleanup, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 
 // Component that throws an error for testing
@@ -31,7 +31,6 @@ describe('ErrorBoundary', () => {
 
   afterEach(() => {
     consoleErrorSpy.mockRestore()
-    cleanup()
   })
 
   describe('normal operation', () => {
@@ -250,6 +249,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>,
       )
 
+      // eslint-disable-next-line testing-library/no-node-access
       const errorContainer = screen.getByText('Something went wrong').closest('div')
       expect(errorContainer).toHaveClass('rounded-md', 'border', 'border-red-200', 'bg-red-50', 'p-4')
 

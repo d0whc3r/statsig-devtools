@@ -249,12 +249,17 @@ export default [
   },
   // Test files configuration
   {
-    files: ['**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}', '**/test/**/*'],
+    files: ['src/**/*.test.{js,jsx,ts,tsx}', 'src/**/*.spec.{js,jsx,ts,tsx}', 'src/**/test/**/*'],
     plugins: {
       'testing-library': testingLibrary,
     },
     rules: {
       ...testingLibrary.configs['flat/react']?.rules,
+      // Relax some rules for test files
+      'testing-library/no-node-access': 'warn', // Allow some direct node access in tests
+      'testing-library/no-container': 'warn', // Allow container usage in some test scenarios
+      'testing-library/no-manual-cleanup': 'warn', // Allow manual cleanup when needed
+
       'no-console': 'off',
       'max-lines': 'off',
       'max-lines-per-function': 'off',

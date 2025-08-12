@@ -106,40 +106,36 @@ function ConditionItem({ condition, compact }: { condition: RuleCondition; compa
 }
 
 function RuleItem({ rule, index, compact }: { rule: ConfigurationRule; index: number; compact?: boolean }) {
+  // Use rule-level environments - if null, it means the rule applies to ALL environments
+  const ruleEnvironments = rule.environments
   return (
     <div className="rounded-lg border bg-white p-4 shadow-sm">
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-2 flex flex-row items-center justify-between">
         <h4 className={`font-semibold text-gray-900 ${compact ? 'text-sm' : 'text-base'}`}>
           {rule.name || `Rule ${index + 1}`}
         </h4>
         <div className="flex gap-2">
-          {rule.passPercentage !== undefined && (
-            <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
-              {rule.passPercentage}% pass
-            </span>
-          )}
           {rule.groupName && (
             <span className="rounded-full bg-purple-100 px-2 py-1 text-xs font-medium text-purple-800">
               {rule.groupName}
             </span>
           )}
-          {rule.environment && rule.environment.length > 0 && (
+          {ruleEnvironments && ruleEnvironments.length > 0 && (
             <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
-              {Array.isArray(rule.environment)
-                ? rule.environment.length === 1
-                  ? rule.environment[0]
-                  : `${rule.environment.length} environments`
-                : rule.environment}
+              {ruleEnvironments.length === 1 ? `Env: ${ruleEnvironments[0]}` : `Envs: ${ruleEnvironments.join(', ')}`}
+            </span>
+          )}
+          {rule.passPercentage !== undefined && (
+            <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
+              {rule.passPercentage}% pass
             </span>
           )}
         </div>
       </div>
 
       {rule.conditions?.length ? (
-        <div className="space-y-2">
-          <div className={`font-medium text-gray-800 ${compact ? 'text-sm' : 'text-base'}`}>
-            Conditions ({rule.conditions.length})
-          </div>
+        <div className="space-y-1">
+          <div className="text-sm font-light text-gray-800">Conditions ({rule.conditions.length})</div>
           {rule.conditions.map((condition, idx) => (
             <ConditionItem key={idx} condition={condition} compact={compact} />
           ))}
@@ -173,12 +169,7 @@ export function RuleConditions({ rules, compact = false }: RuleConditionsProps) 
 
   return (
     <div className="space-y-3">
-      <div className={`flex items-center gap-2 font-semibold text-gray-900 ${compact ? 'text-sm' : 'text-lg'}`}>
-        Rules ({rules.length})
-        <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-normal text-blue-800">
-          Evaluated top to bottom
-        </span>
-      </div>
+      <div className={`font-semibold text-gray-900 ${compact ? 'text-sm' : 'text-lg'}`}>Rules ({rules.length})</div>
       <div className="space-y-3">
         {rules.map((rule, index) => (
           <RuleItem key={rule.id || index} rule={rule} index={index} compact={compact} />

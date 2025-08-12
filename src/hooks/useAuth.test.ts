@@ -18,8 +18,6 @@ const mockViewModeService = vi.mocked(viewModeService)
 
 describe('useAuth', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-
     // Default successful mocks
     mockStorageManager.initialize.mockResolvedValue(undefined)
     mockViewModeService.initializeViewMode.mockResolvedValue(undefined)
@@ -196,10 +194,10 @@ describe('useAuth', () => {
 
       await waitFor(() => {
         expect(result.current.authState.isAuthenticated).toBe(false)
-        expect(result.current.authState.isLoading).toBe(false)
-        expect(result.current.authState.consoleApiKey).toBeUndefined()
-        expect(result.current.authState.clientSdkKey).toBeUndefined()
       })
+      expect(result.current.authState.isLoading).toBe(false)
+      expect(result.current.authState.consoleApiKey).toBeUndefined()
+      expect(result.current.authState.clientSdkKey).toBeUndefined()
     })
 
     it('should handle logout errors gracefully', async () => {
