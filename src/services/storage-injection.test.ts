@@ -108,7 +108,12 @@ describe('StorageInjectionService', () => {
         mockTab.id,
         expect.objectContaining({
           type: 'SET_STORAGE_OVERRIDE',
-          payload: testOverride,
+          // We enrich with domain and path; only check type/key/value
+          payload: expect.objectContaining({
+            type: testOverride.type,
+            key: testOverride.key,
+            value: testOverride.value,
+          }),
         }),
       )
       expect(BrowserStorage.set).toHaveBeenCalled()

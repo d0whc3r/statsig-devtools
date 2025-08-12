@@ -19,11 +19,11 @@ export function PopupInfoBar({ authState, viewMode }: PopupInfoBarProps) {
     return <DashboardStatistics statistics={statistics} />
   }
 
-  // For popup and sidebar modes, show the compact info bar
+  // Compact, responsive layout for popup and sidebar
   return (
-    <div className={`border-b border-gray-200 px-3 py-2 ${viewMode === 'sidebar' ? 'bg-blue-50' : 'bg-white'}`}>
-      <div className="flex items-center justify-between text-xs">
-        <div className="flex items-center gap-3 text-gray-600">
+    <div className={`border-b border-gray-200 ${viewMode === 'sidebar' ? 'bg-blue-50' : 'bg-white'}`}>
+      <div className="grid grid-cols-2 gap-2 px-3 py-2 text-xs sm:grid-cols-3">
+        <div className="flex flex-wrap items-center gap-2 text-gray-600">
           <span className="font-medium">Gates: {statistics.configurationsByType.feature_gate || 0}</span>
           <span className="font-medium">Configs: {statistics.configurationsByType.dynamic_config || 0}</span>
           <span className="font-medium">Experiments: {statistics.configurationsByType.experiment || 0}</span>
@@ -32,9 +32,10 @@ export function PopupInfoBar({ authState, viewMode }: PopupInfoBarProps) {
               Overrides: {activeOverrides.length}
             </span>
           )}
-          {viewMode === 'sidebar' && <span className="font-medium text-blue-700">• Read-only</span>}
         </div>
-        <ActiveTabInfo compact />
+        <div className="col-span-1 flex items-center justify-end sm:col-span-1">
+          <ActiveTabInfo compact />
+        </div>
       </div>
     </div>
   )

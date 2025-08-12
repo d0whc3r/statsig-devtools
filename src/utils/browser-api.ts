@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Browser API abstraction layer for cross-browser compatibility
  * This module provides a unified interface for browser extension APIs
@@ -6,8 +7,9 @@
 
 import { logger } from './logger'
 
-// Re-export browser object with proper typing
-export const browserAPI = browser
+// Re-export browser object with robust fallback (webextension or chrome)
+
+export const browserAPI: any = (globalThis as any).browser ?? (globalThis as any).chrome
 
 // Logger is imported from './logger' above
 
@@ -84,10 +86,11 @@ export class BrowserTabs {
    */
   static async getActiveTab(): Promise<chrome.tabs.Tab | null> {
     try {
-      if (!browserAPI?.tabs?.query) {
+      const tabsApi = (browserAPI as any)?.tabs ?? (globalThis as any)?.chrome?.tabs
+      if (!tabsApi?.query) {
         throw new Error('Tabs API unavailable. Ensure the "tabs" permission is granted in the manifest.')
       }
-      const tabs = await browserAPI.tabs.query({ active: true, currentWindow: true })
+      const tabs = await tabsApi.query({ active: true, currentWindow: true })
       return (tabs[0] as chrome.tabs.Tab) ?? null
     } catch (error) {
       logger.error('Failed to get active tab:', error)
@@ -102,10 +105,11 @@ export class BrowserTabs {
    */
   static async query(queryInfo: chrome.tabs.QueryInfo): Promise<chrome.tabs.Tab[]> {
     try {
-      if (!browserAPI?.tabs?.query) {
+      const tabsApi = (browserAPI as any)?.tabs ?? (globalThis as any)?.chrome?.tabs
+      if (!tabsApi?.query) {
         throw new Error('Tabs API unavailable. Ensure the "tabs" permission is granted in the manifest.')
       }
-      return (await browserAPI.tabs.query(queryInfo as any)) as chrome.tabs.Tab[]
+      return (await tabsApi.query(queryInfo as any)) as chrome.tabs.Tab[]
     } catch (error) {
       logger.error('Failed to query tabs:', error)
       throw new Error(`Tab query failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
@@ -120,10 +124,11 @@ export class BrowserTabs {
    */
   static async sendMessage(tabId: number, message: unknown): Promise<unknown> {
     try {
-      if (!browserAPI?.tabs?.sendMessage) {
+      const tabsApi = (browserAPI as any)?.tabs ?? (globalThis as any)?.chrome?.tabs
+      if (!tabsApi?.sendMessage) {
         throw new Error('Tabs API unavailable. Ensure the "tabs" permission is granted in the manifest.')
       }
-      return await browserAPI.tabs.sendMessage(tabId, message)
+      return await tabsApi.sendMessage(tabId, message)
     } catch (error) {
       // Don't log as error since this is often expected (content script not available)
       const errorMessage = error instanceof Error ? error.message : String(error)

@@ -1,3 +1,4 @@
+import { useActiveTab } from '../hooks/useActiveTab'
 import { logger } from '../utils/logger'
 import {
   ConfirmationDialog,
@@ -19,6 +20,7 @@ export function OverrideManager({
   className = '',
   compact = false,
 }: OverrideManagerProps) {
+  const { tabInfo } = useActiveTab()
   // Debug log
   logger.info('OverrideManager rendered with overrides:', overrides.length, overrides)
 
@@ -60,6 +62,12 @@ export function OverrideManager({
         onConfirm={confirmClearAll}
         onCancel={cancelClearAll}
       />
+      {/* Current domain indicator for clarity in sidebar */}
+      {tabInfo.domain && (
+        <div className="border-t px-2 py-1 text-[10px] text-gray-500">
+          Domain: <span className="font-mono">{tabInfo.domain}</span>
+        </div>
+      )}
     </div>
   )
 }

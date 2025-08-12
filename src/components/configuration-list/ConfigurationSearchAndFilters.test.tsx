@@ -25,7 +25,7 @@ describe('ConfigurationSearchAndFilters', () => {
   it('should render search input with correct placeholder', () => {
     const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} />)
 
-    const searchInput = container.querySelector('input[placeholder="Search configurations..."]')
+    const searchInput = container.querySelector('input[placeholder="Search..."]')
     expect(searchInput).toBeInTheDocument()
   })
 
@@ -39,7 +39,7 @@ describe('ConfigurationSearchAndFilters', () => {
   it('should call onSearchChange when typing in search input', () => {
     const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} />)
 
-    const searchInput = container.querySelector('input[placeholder="Search configurations..."]')
+    const searchInput = container.querySelector('input[placeholder="Search..."]')
     expect(searchInput).toBeInTheDocument()
 
     if (searchInput) {
@@ -51,7 +51,7 @@ describe('ConfigurationSearchAndFilters', () => {
   it('should display search value in input', () => {
     const { container } = render(<ConfigurationSearchAndFilters {...defaultProps} searchQuery="test value" />)
 
-    const searchInput = container.querySelector('input[placeholder="Search configurations..."]') as HTMLInputElement
+    const searchInput = container.querySelector('input[placeholder="Search..."]') as HTMLInputElement
     expect(searchInput).toBeInTheDocument()
     expect(searchInput?.value).toBe('test value')
   })
@@ -62,7 +62,7 @@ describe('ConfigurationSearchAndFilters', () => {
     )
 
     const countText = container.textContent
-    expect(countText).toContain('Showing 15 of 25 configurations')
+    expect(countText).toContain('15 of 25')
   })
 
   it('should handle filter type changes', () => {

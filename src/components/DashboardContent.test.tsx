@@ -77,18 +77,6 @@ describe('DashboardContent', () => {
       expect(configList).toHaveAttribute('data-view-mode', 'popup')
     })
 
-    it('should show read-only banner and disable overrides in sidebar mode', () => {
-      render(<DashboardContent authState={mockAuthState} viewMode="sidebar" />)
-
-      // Should show read-only banner
-      expect(screen.getByText('Read-only mode')).toBeInTheDocument()
-      expect(screen.getByText('- Use popup mode to create overrides')).toBeInTheDocument()
-
-      // Configuration list should be in sidebar mode
-      const configList = screen.getByTestId('configuration-list')
-      expect(configList).toHaveAttribute('data-view-mode', 'sidebar')
-    })
-
     it('should show read-only banner and disable overrides in tab mode', () => {
       render(<DashboardContent authState={mockAuthState} viewMode="tab" />)
 

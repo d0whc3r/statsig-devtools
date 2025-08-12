@@ -60,7 +60,9 @@ export class StorageInjectionService {
       }
       return typedResponse as unknown as Record<string, unknown>
     } catch (error) {
-      logger.error('Failed to send message to content script:', error)
+      // Downgrade to warn because messaging can fail legitimately (e.g., no content script),
+      // and callers may provide a direct execution fallback.
+      logger.warn('Failed to send message to content script:', error)
       throw new Error(
         `Content script communication failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       )
@@ -74,6 +76,7 @@ export class StorageInjectionService {
     logger.info('Applying storage override:', override)
 
     try {
+      // First try via content script messaging
       await this.sendMessageToContentScript({
         type: 'SET_STORAGE_OVERRIDE',
         override,
@@ -83,8 +86,16 @@ export class StorageInjectionService {
 
       logger.info('Storage override applied successfully')
     } catch (error) {
-      logger.error('Failed to apply storage override:', error)
-      throw error
+      logger.warn('SET_STORAGE_OVERRIDE via messaging failed, attempting direct execution fallback...', error)
+
+      // Fallback: execute directly in the tab using scripting API
+      const tab = await this.getActiveTab()
+      if (!tab?.id) {
+        throw new Error('No active tab found')
+      }
+
+      await this.applyOverrideDirect(tab.id, override)
+      logger.info('Storage override applied via direct execution fallback')
     }
   }
 
@@ -415,20 +426,30 @@ export class StorageInjectionService {
     logger.info('Creating override:', override)
 
     try {
+      // Enrich override with current tab domain if missing
+      const currentDomain = await this.getCurrentTabDomain()
+      const enrichedOverride: StorageOverride = {
+        ...override,
+        // For any storage type, persist the domain context to scope per-tab/domain views
+        domain: override.domain ?? currentDomain ?? undefined,
+        // Normalize cookie path
+        path: override.type === 'cookie' ? override.path || '/' : override.path,
+      }
+
       // Apply the override to the current page
-      await this.applyStorageOverride(override)
+      await this.applyStorageOverride(enrichedOverride)
 
       // Get current overrides
       const currentOverrides = await this.getActiveOverrides()
 
       // Generate unique ID for the override
-      const overrideId = this.generateOverrideId(override)
+      const overrideId = this.generateOverrideId(enrichedOverride)
 
       // Remove any existing override with the same ID
       const filteredOverrides = currentOverrides.filter((existing) => this.generateOverrideId(existing) !== overrideId)
 
       // Add the new override with ID
-      const newOverride = { ...override, id: overrideId }
+      const newOverride = { ...enrichedOverride, id: overrideId }
       filteredOverrides.push(newOverride)
 
       // Save updated overrides
@@ -459,11 +480,20 @@ export class StorageInjectionService {
       )
 
       if (overrideToRemove) {
-        // Remove the override from the page
-        await this.sendMessageToContentScript({
-          type: 'REMOVE_STORAGE_OVERRIDE',
-          override: overrideToRemove,
-        })
+        try {
+          // Try remove via content script messaging
+          await this.sendMessageToContentScript({
+            type: 'REMOVE_STORAGE_OVERRIDE',
+            override: overrideToRemove,
+          })
+        } catch (error) {
+          logger.warn('REMOVE_STORAGE_OVERRIDE via messaging failed, attempting direct execution fallback...', error)
+          const tab = await this.getActiveTab()
+          if (!tab?.id) {
+            throw new Error('No active tab found')
+          }
+          await this.removeOverrideDirect(tab.id, overrideToRemove)
+        }
       }
 
       // Remove from stored overrides
@@ -501,8 +531,16 @@ export class StorageInjectionService {
             override,
           })
         } catch (error) {
-          logger.error('Failed to remove override from page:', error)
-          // Continue with other overrides
+          logger.warn('Failed to remove override via messaging, attempting direct execution fallback...', error)
+          const tab = await this.getActiveTab()
+          if (tab?.id) {
+            try {
+              await this.removeOverrideDirect(tab.id, override)
+            } catch (fallbackError) {
+              logger.error('Failed to remove override via direct execution fallback:', fallbackError)
+            }
+          }
+          // Continue with other overrides regardless
         }
       }
 
@@ -531,6 +569,101 @@ export class StorageInjectionService {
     } catch (error) {
       logger.error('Failed to get current tab domain:', error)
       return null
+    }
+  }
+
+  /**
+   * Direct execution helpers (fallback when messaging is unavailable)
+   */
+  private async applyOverrideDirect(tabId: number, override: StorageOverride): Promise<void> {
+    switch (override.type) {
+      case 'localStorage': {
+        await BrowserTabs.executeScript(tabId, {
+          func: (key: string, value: string) => {
+            window.localStorage.setItem(key, value)
+          },
+          args: [override.key, String(override.value)] as unknown as [] as unknown as never,
+        } as unknown as chrome.scripting.ScriptInjection<unknown[], unknown>)
+        return
+      }
+      case 'sessionStorage': {
+        await BrowserTabs.executeScript(tabId, {
+          func: (key: string, value: string) => {
+            window.sessionStorage.setItem(key, value)
+          },
+          args: [override.key, String(override.value)] as unknown as [] as unknown as never,
+        } as unknown as chrome.scripting.ScriptInjection<unknown[], unknown>)
+        return
+      }
+      case 'cookie': {
+        await BrowserTabs.executeScript(tabId, {
+          func: (key: string, value: string, path: string, domain: string | null) => {
+            const parts = [`${key}=${value}`, `path=${path}`, 'SameSite=Lax']
+            if (domain) parts.push(`domain=${domain}`)
+            if (
+              typeof window !== 'undefined' &&
+              typeof window.location !== 'undefined' &&
+              window.location.protocol === 'https:'
+            ) {
+              parts.push('Secure')
+            }
+            document.cookie = parts.join('; ')
+          },
+          // Use null instead of undefined for serializable args
+          args: [
+            override.key,
+            String(override.value),
+            override.path || '/',
+            override.domain ?? null,
+          ] as unknown as [] as unknown as never,
+        } as unknown as chrome.scripting.ScriptInjection<unknown[], unknown>)
+        return
+      }
+      default:
+        throw new Error(`Unsupported storage type: ${override.type}`)
+    }
+  }
+
+  private async removeOverrideDirect(tabId: number, override: StorageOverride): Promise<void> {
+    switch (override.type) {
+      case 'localStorage': {
+        await BrowserTabs.executeScript(tabId, {
+          func: (key: string) => {
+            window.localStorage.removeItem(key)
+          },
+          args: [override.key] as unknown as [] as unknown as never,
+        } as unknown as chrome.scripting.ScriptInjection<unknown[], unknown>)
+        return
+      }
+      case 'sessionStorage': {
+        await BrowserTabs.executeScript(tabId, {
+          func: (key: string) => {
+            window.sessionStorage.removeItem(key)
+          },
+          args: [override.key] as unknown as [] as unknown as never,
+        } as unknown as chrome.scripting.ScriptInjection<unknown[], unknown>)
+        return
+      }
+      case 'cookie': {
+        await BrowserTabs.executeScript(tabId, {
+          func: (key: string, path: string, domain: string | null) => {
+            const parts = [`${key}=`, 'expires=Thu, 01 Jan 1970 00:00:00 GMT', `path=${path}`]
+            if (domain) parts.push(`domain=${domain}`)
+            if (
+              typeof window !== 'undefined' &&
+              typeof window.location !== 'undefined' &&
+              window.location.protocol === 'https:'
+            ) {
+              parts.push('Secure')
+            }
+            document.cookie = parts.join('; ')
+          },
+          args: [override.key, override.path || '/', override.domain ?? null] as unknown as [] as unknown as never,
+        } as unknown as chrome.scripting.ScriptInjection<unknown[], unknown>)
+        return
+      }
+      default:
+        throw new Error(`Unsupported storage type: ${override.type}`)
     }
   }
 }

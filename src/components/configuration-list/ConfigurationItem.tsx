@@ -40,21 +40,21 @@ export const ConfigurationItem = React.memo(
         onKeyDown={handleKeyDown}
         role="button"
         tabIndex={0}
-        className={`card-professional mx-3 my-2 cursor-pointer p-5 ${isSelected ? 'selected' : ''}`}
+        className={`card-professional mx-2 my-1.5 cursor-pointer p-3 ${isSelected ? 'selected' : ''}`}
       >
         <div className="flex items-start justify-between">
           <div className="min-w-0 flex-1">
-            <div className="mb-3 flex items-center gap-3">
+            <div className="mb-2 flex items-center gap-2">
               <ConfigurationStatusIndicator result={result} size="sm" />
-              <h3 className="truncate text-base font-semibold text-gray-900">{config.name}</h3>
+              <h3 className="truncate text-sm font-semibold text-gray-900">{config.name}</h3>
             </div>
 
-            <div className="mb-3 flex items-center gap-2">
-              <span className={getTypeBadgeClass(config.type)}>{formatTypeName(config.type)}</span>
+            <div className="mb-2 flex flex-wrap items-center gap-1">
+              <span className={`${getTypeBadgeClass(config.type)} text-xs`}>{formatTypeName(config.type)}</span>
 
               {!config.enabled && (
-                <span className="type-badge bg-gray-100 text-gray-800">
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <span className="type-badge bg-gray-100 text-xs text-gray-800">
+                  <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -67,8 +67,8 @@ export const ConfigurationItem = React.memo(
               )}
 
               {hasOverrides && (
-                <span className="type-badge border border-orange-200 bg-orange-100 text-orange-800">
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <span className="type-badge border border-orange-200 bg-orange-100 text-xs text-orange-800">
+                  <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -76,16 +76,15 @@ export const ConfigurationItem = React.memo(
                       d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
                     />
                   </svg>
-                  {overrideCount} Override{overrideCount !== 1 ? 's' : ''}
+                  {overrideCount}
                 </span>
               )}
             </div>
 
             {result && (
-              <div className="rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-600">
+              <div className="rounded-md bg-gray-50 px-2 py-1.5 text-xs text-gray-600">
                 {config.type === 'feature_gate' && (
                   <span className="font-medium">
-                    Value:{' '}
                     <span className={result.value ? 'text-green-700' : 'text-red-700'}>
                       {formatValue(result.value)}
                     </span>
@@ -96,15 +95,13 @@ export const ConfigurationItem = React.memo(
                     Group: <span className="text-purple-700">{result.groupName}</span>
                   </span>
                 )}
-                {config.type === 'dynamic_config' && (
-                  <span className="font-medium text-green-700">Configuration loaded successfully</span>
-                )}
+                {config.type === 'dynamic_config' && <span className="font-medium text-green-700">Ready</span>}
               </div>
             )}
           </div>
 
-          <div className="ml-4 flex-shrink-0">
-            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="ml-2 flex-shrink-0">
+            <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </div>

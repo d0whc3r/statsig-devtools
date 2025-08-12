@@ -124,7 +124,7 @@ export const TestPages = {
         <script>
           function checkFeatureFlag() {
             try {
-              const overrideKey = 'statsig_override_test_feature'
+              const overrideKey = 'statsig_test_feature'
               const override = localStorage.getItem(overrideKey)
               
               let enabled = false
@@ -161,7 +161,7 @@ export const TestPages = {
           // Button handlers
           document.getElementById('enable-feature').addEventListener('click', () => {
             try {
-              localStorage.setItem('statsig_override_test_feature', 'true')
+              localStorage.setItem('statsig_test_feature', 'true')
               checkFeatureFlag()
             } catch (error) {
               console.error('Error enabling feature:', error)
@@ -170,7 +170,7 @@ export const TestPages = {
           
           document.getElementById('disable-feature').addEventListener('click', () => {
             try {
-              localStorage.setItem('statsig_override_test_feature', 'false')
+              localStorage.setItem('statsig_test_feature', 'false')
               checkFeatureFlag()
             } catch (error) {
               console.error('Error disabling feature:', error)
@@ -179,7 +179,7 @@ export const TestPages = {
           
           document.getElementById('clear-override').addEventListener('click', () => {
             try {
-              localStorage.removeItem('statsig_override_test_feature')
+              localStorage.removeItem('statsig_test_feature')
               checkFeatureFlag()
             } catch (error) {
               console.error('Error clearing override:', error)
@@ -188,7 +188,7 @@ export const TestPages = {
           
           // Listen for storage changes
           window.addEventListener('storage', (e) => {
-            if (e.key && e.key.startsWith('statsig_override_')) {
+            if (e.key && e.key.startsWith('statsig_')) {
               checkFeatureFlag()
             }
           })
@@ -292,7 +292,7 @@ export const TestPages = {
         <script>
           function checkFeatureFlag() {
             try {
-              const overrideKey = 'statsig_override_checkout_flow_v2'
+              const overrideKey = 'statsig_checkout_flow_v2'
               const override = localStorage.getItem(overrideKey)
               
               let enabled = false
@@ -333,7 +333,7 @@ export const TestPages = {
           
           // Listen for storage changes (from extension)
           window.addEventListener('storage', (e) => {
-            if (e.key && e.key.startsWith('statsig_override_')) {
+            if (e.key && e.key.startsWith('statsig_')) {
               setTimeout(checkFeatureFlag, 100)
             }
           })

@@ -45,15 +45,18 @@ const OPERATORS: Record<string, string> = {
 const formatConditionType = (condition: RuleCondition): string => {
   const { type, targetValue, operator } = condition
 
-  // Handle "public" conditions with environment targeting
-  if (type === 'public' && targetValue && operator) {
-    if (Array.isArray(targetValue) && targetValue.length === 1) {
-      return `Everyone in ${targetValue[0]}`
-    } else if (Array.isArray(targetValue) && targetValue.length > 1) {
-      return `Everyone in ${targetValue.join(', ')}`
-    } else if (typeof targetValue === 'string') {
-      return `Everyone in ${targetValue}`
+  // Handle "public" conditions - show as "Everyone"
+  if (type === 'public') {
+    if (targetValue && operator) {
+      if (Array.isArray(targetValue) && targetValue.length === 1) {
+        return `Everyone in ${targetValue[0]}`
+      } else if (Array.isArray(targetValue) && targetValue.length > 1) {
+        return `Everyone in ${targetValue.join(', ')}`
+      } else if (typeof targetValue === 'string') {
+        return `Everyone in ${targetValue}`
+      }
     }
+    return 'Everyone'
   }
 
   // Handle environment_tier conditions more clearly
@@ -118,6 +121,15 @@ function RuleItem({ rule, index, compact }: { rule: ConfigurationRule; index: nu
           {rule.groupName && (
             <span className="rounded-full bg-purple-100 px-2 py-1 text-xs font-medium text-purple-800">
               {rule.groupName}
+            </span>
+          )}
+          {rule.environment && rule.environment.length > 0 && (
+            <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+              {Array.isArray(rule.environment)
+                ? rule.environment.length === 1
+                  ? rule.environment[0]
+                  : `${rule.environment.length} environments`
+                : rule.environment}
             </span>
           )}
         </div>

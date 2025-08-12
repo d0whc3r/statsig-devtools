@@ -93,6 +93,24 @@ describe('RuleConditions', () => {
       expect(screen.queryByText('[production]')).not.toBeInTheDocument()
     })
 
+    it('should display "Everyone" for public conditions without environment', () => {
+      const mockRuleWithPublicCondition: ConfigurationRule = {
+        id: 'rule-public-simple',
+        name: 'Simple Public Rule',
+        passPercentage: 100,
+        conditions: [
+          {
+            type: 'public',
+            targetValue: null,
+          },
+        ],
+      }
+
+      render(<RuleConditions rules={[mockRuleWithPublicCondition]} />)
+
+      expect(screen.getByText('Everyone')).toBeInTheDocument()
+    })
+
     it('should display "Everyone in [environments]" for public conditions with multiple environments', () => {
       const mockRuleWithMultipleEnvs: ConfigurationRule = {
         id: 'rule-multi-env',
@@ -129,6 +147,46 @@ describe('RuleConditions', () => {
       render(<RuleConditions rules={[mockRuleWithEnvTier]} />)
 
       expect(screen.getByText('Environment: development')).toBeInTheDocument()
+    })
+
+    it('should display environment badge when rule has environment field', () => {
+      const mockRuleWithEnvironment: ConfigurationRule = {
+        id: 'rule-with-env',
+        name: 'Rule with Environment',
+        passPercentage: 100,
+        environment: ['production'],
+        conditions: [
+          {
+            type: 'user_id',
+            operator: 'any',
+            targetValue: ['test-user'],
+          },
+        ],
+      }
+
+      render(<RuleConditions rules={[mockRuleWithEnvironment]} />)
+
+      expect(screen.getByText('production')).toBeInTheDocument()
+    })
+
+    it('should display multiple environments badge when rule has multiple environments', () => {
+      const mockRuleWithMultipleEnvironments: ConfigurationRule = {
+        id: 'rule-with-multi-env',
+        name: 'Rule with Multiple Environments',
+        passPercentage: 100,
+        environment: ['production', 'staging', 'development'],
+        conditions: [
+          {
+            type: 'user_id',
+            operator: 'any',
+            targetValue: ['test-user'],
+          },
+        ],
+      }
+
+      render(<RuleConditions rules={[mockRuleWithMultipleEnvironments]} />)
+
+      expect(screen.getByText('3 environments')).toBeInTheDocument()
     })
   })
 

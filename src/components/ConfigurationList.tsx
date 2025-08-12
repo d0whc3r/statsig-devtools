@@ -75,7 +75,9 @@ export const ConfigurationList = React.memo(
         />
 
         {/* Configuration List */}
-        <div className="custom-scrollbar min-h-0 flex-1 overflow-y-auto">
+        <div
+          className={`custom-scrollbar min-h-0 flex-1 ${_viewMode === 'sidebar' ? 'overflow-visible' : 'overflow-y-auto'}`}
+        >
           {isLoading ? (
             <ConfigurationLoadingState />
           ) : filteredConfigurations.length === 0 ? (

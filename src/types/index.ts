@@ -61,6 +61,7 @@ export interface ConfigurationRule {
   salt?: string
   idType?: string
   groupName?: string
+  environment?: string[] | null
 }
 
 /**

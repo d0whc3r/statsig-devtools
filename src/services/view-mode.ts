@@ -240,7 +240,7 @@ class ViewModeService {
   /**
    * Test sidebar functionality (for debugging)
    */
-  async testSidebarAPI(): Promise<{ supported: boolean; error?: string; details?: any }> {
+  async testSidebarAPI(): Promise<{ supported: boolean; error?: string; details?: unknown }> {
     try {
       const supported = this.isSidebarSupported()
 

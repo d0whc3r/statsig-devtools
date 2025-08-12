@@ -24,6 +24,7 @@ export const mockStatsigResponses = {
                 field: 'userID',
               },
             ],
+            environment: ['staging'],
           },
         ],
         tags: ['checkout', 'conversion'],
@@ -41,12 +42,30 @@ export const mockStatsigResponses = {
             passPercentage: 100,
             conditions: [
               {
-                type: 'custom',
-                operator: 'eq',
-                targetValue: true,
-                field: 'is_beta_user',
+                type: 'user_id',
+                operator: 'any',
+                targetValue: ['user1', 'user2', 'user3'],
+                field: 'userID',
               },
             ],
+            returnValue: true,
+            id: 'rule1',
+            environment: ['production', 'staging'],
+          },
+          {
+            name: 'Public',
+            passPercentage: 50,
+            conditions: [
+              {
+                type: 'public',
+                operator: 'any',
+                targetValue: null,
+                field: 'userID',
+              },
+            ],
+            returnValue: true,
+            id: 'rule2',
+            environment: ['development'],
           },
         ],
         tags: ['ui', 'beta'],
@@ -76,6 +95,7 @@ export const mockStatsigResponses = {
                 field: 'country',
               },
             ],
+            environment: ['production'],
           },
         ],
         groups: [
@@ -103,6 +123,7 @@ export const mockStatsigResponses = {
             name: 'Default Config',
             passPercentage: 100,
             conditions: [],
+            environment: ['production', 'staging', 'development'],
           },
         ],
         defaultValue: {

@@ -3,7 +3,7 @@ import React from 'react'
 import { useActiveTab } from '../hooks/useActiveTab'
 import { useAuth } from '../hooks/useAuth'
 import { useDashboardHeader } from '../hooks/useDashboardHeader'
-import { AuthComponent } from './AuthComponent'
+import { AuthForm } from './auth'
 import { Dashboard } from './Dashboard'
 import { ErrorBoundary } from './ErrorBoundary'
 import { LoadingSpinner } from './LoadingSpinner'
@@ -26,7 +26,7 @@ const getContainerStyles = (viewMode: ViewMode) => {
       : isPopupMode
         ? 'popup-layout bg-gray-50'
         : isSidebarMode
-          ? 'h-screen bg-gray-50'
+          ? 'h-screen bg-gray-50 overflow-hidden'
           : 'h-screen bg-gray-50'
   }`
 }
@@ -51,36 +51,6 @@ const getLogoStyles = (viewMode: ViewMode) => {
   return `bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center ${
     isTabMode ? 'h-10 w-10' : isPopupMode ? 'h-6 w-6' : 'h-8 w-8'
   }`
-}
-
-/**
- * Get title component based on view mode
- */
-const getTitleComponent = (viewMode: ViewMode) => {
-  const isPopupMode = viewMode === 'popup'
-  const isTabMode = viewMode === 'tab'
-  const isSidebarMode = viewMode === 'sidebar'
-
-  if (isPopupMode) {
-    return <span className="text-xs font-semibold text-gray-900">Statsig Tools</span>
-  }
-
-  return (
-    <>
-      <h1 className={`font-bold text-gray-900 ${isTabMode ? 'text-2xl' : 'text-lg'}`}>Statsig Developer Tools</h1>
-      <span
-        className={`rounded-full px-2 py-1 text-xs font-medium ${
-          isTabMode
-            ? 'bg-purple-100 text-purple-800'
-            : isSidebarMode
-              ? 'bg-blue-100 text-blue-800'
-              : 'bg-gray-100 text-gray-800'
-        }`}
-      >
-        {isTabMode ? 'Full Tab' : isSidebarMode ? 'Sidebar' : 'Popup'}
-      </span>
-    </>
-  )
 }
 
 interface AppLayoutProps {
@@ -131,21 +101,22 @@ export function AppLayout({ viewMode }: AppLayoutProps) {
                 </svg>
               </div>
             )}
-            {getTitleComponent(viewMode)}
+            {/* Avoid double title: show compact title only in popup, rely on DashboardHeader elsewhere */}
+            {viewMode === 'popup' && <span className="text-xs font-semibold text-gray-900">Statsig Tools</span>}
           </div>
 
           <ViewModeToggle currentMode={viewMode} />
         </div>
 
-        {/* Main Content */}
+        {/* Main Content with consistent side padding for tab/sidebar */}
         <div
           className={
             viewMode === 'popup'
               ? 'popup-content'
               : viewMode === 'sidebar'
-                ? 'flex-1' // Sidebar uses flex layout like tab mode
+                ? 'flex flex-1 flex-col overflow-hidden'
                 : viewMode === 'tab'
-                  ? 'flex-1'
+                  ? 'flex-1 px-6'
                   : 'flex-1 overflow-hidden'
           }
         >
@@ -162,11 +133,7 @@ export function AppLayout({ viewMode }: AppLayoutProps) {
               <div
                 className={`w-full ${viewMode === 'tab' ? 'max-w-2xl' : 'max-w-md'} ${viewMode === 'popup' ? 'px-4' : ''}`}
               >
-                <AuthComponent
-                  onAuthenticated={handleAuthenticated}
-                  initialError={authState.error}
-                  viewMode={viewMode}
-                />
+                <AuthForm onAuthenticated={handleAuthenticated} initialError={authState.error} viewMode={viewMode} />
               </div>
             </div>
           )}
