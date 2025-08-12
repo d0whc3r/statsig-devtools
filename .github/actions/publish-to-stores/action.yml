@@ -105,16 +105,20 @@ runs:
           if [ -n "${{ inputs.firefox-sources-zip-path }}" ]; then
             FIREFOX_SOURCES_ZIP="${{ inputs.firefox-sources-zip-path }}"
           else
-            FIREFOX_SOURCES_ZIP=$(find .output -name "*sources*.zip" | head -1)
+            FIREFOX_SOURCES_ZIP=$(find .output -name "*firefox-sources*.zip" | head -1)
           fi
           
           if [ -z "$FIREFOX_ZIP" ] || [ ! -f "$FIREFOX_ZIP" ]; then
             echo "❌ Firefox ZIP file not found"
+            echo "Available files in .output:"
+            ls -la .output/ || echo "No .output directory found"
             exit 1
           fi
           
           if [ -z "$FIREFOX_SOURCES_ZIP" ] || [ ! -f "$FIREFOX_SOURCES_ZIP" ]; then
             echo "❌ Firefox sources ZIP file not found"
+            echo "Available files in .output:"
+            ls -la .output/ || echo "No .output directory found"
             exit 1
           fi
           

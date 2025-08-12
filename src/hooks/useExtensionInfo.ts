@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { BrowserRuntime } from '../utils/browser-api'
+import { logger } from '../utils/logger'
 
 interface ExtensionInfo {
   name: string
@@ -28,7 +29,7 @@ export function useExtensionInfo() {
           manifestVersion: manifest.manifest_version || 3,
         })
       } catch (error) {
-        console.error('Failed to get extension info:', error)
+        logger.error('Failed to get extension info:', error)
         // Fallback to default values
         setExtensionInfo({
           name: 'Statsig DevTools',

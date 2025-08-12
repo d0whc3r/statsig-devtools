@@ -17,8 +17,9 @@ A browser extension for testing and debugging Statsig feature flags, experiments
 
 ### For Users
 
-- [Chrome Extension](https://github.com/d0whc3r/statsig-devtools/releases/latest)
-- [Firefox Add-on](https://github.com/d0whc3r/statsig-devtools/releases/latest)
+- **Chrome Web Store**: [Install Extension](https://chrome.google.com/webstore/detail/chapehnicnhgopjmfaimgpgpipnciloo)
+- **Firefox Add-ons**: [Install Extension](https://addons.mozilla.org/addon/95c1abb1-f242-41f7-9ef1-01e20beb7fdb)
+- **Manual Installation**: [Download from Releases](https://github.com/d0whc3r/statsig-devtools/releases/latest)
 
 ### For Developers
 
@@ -70,6 +71,15 @@ npm run check
 └── public/             # Static assets
 ```
 
+## 🚀 Automated Publication
+
+This project uses an automated CI/CD pipeline that:
+
+- ✅ **Automatically publishes** to Chrome Web Store and Firefox Add-ons on every merge to `master`
+- ✅ **Semantic versioning** based on [Conventional Commits](https://conventionalcommits.org/)
+- ✅ **Quality gates** with linting, testing, and type checking
+- ✅ **Cross-browser builds** for Chrome (MV3) and Firefox (MV2)
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -77,6 +87,15 @@ npm run check
 3. Make your changes and run `npm run check`
 4. Commit using [Conventional Commits](https://conventionalcommits.org/)
 5. Push and open a Pull Request
+
+### Commit Message Examples
+
+```bash
+feat: add new configuration override feature
+fix: resolve popup rendering issue on Firefox
+docs: update installation instructions
+perf: optimize configuration loading performance
+```
 
 ## 📝 License
 

@@ -133,6 +133,7 @@ jobs:
     outputs:
       new-release-published: ${{ steps.semantic.outputs.new-release-published }}
       new-release-version: ${{ steps.semantic.outputs.new-release-version }}
+      new-release-tag: ${{ steps.semantic.outputs.new-release-git-tag }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -166,6 +167,125 @@ jobs:
           echo "🚀 Running semantic release..."
           npx semantic-release
           echo "✅ Semantic release completed"
+
+  # Auto-publish to stores after successful release
+  auto-publish-to-stores:
+    name: 'Auto-Publish to Stores'
+    runs-on: ubuntu-latest
+    needs: [semantic-release]
+    if: |
+      always() &&
+      needs.semantic-release.result == 'success' &&
+      needs.semantic-release.outputs.new-release-published == 'true'
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.semantic-release.outputs.new-release-tag }}
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build extensions for store submission
+        uses: ./.github/actions/build-extensions
+        with:
+          build-chrome: 'true'
+          build-firefox: 'true'
+          upload-artifacts: 'false'
+
+      - name: Create release packages
+        uses: ./.github/actions/create-release-artifacts
+        with:
+          create-chrome-zip: 'true'
+          create-firefox-zip: 'true'
+          version: ${{ needs.semantic-release.outputs.new-release-version }}
+
+      - name: Publish to extension stores
+        uses: ./.github/actions/publish-to-stores
+        with:
+          publish-chrome: 'true'
+          publish-firefox: 'true'
+          dry-run: 'false'
+        env:
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_PUBLISH_TARGET: ${{ secrets.CHROME_PUBLISH_TARGET || 'default' }}
+          CHROME_SKIP_SUBMIT_REVIEW: ${{ secrets.CHROME_SKIP_SUBMIT_REVIEW || 'false' }}
+          FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+          FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+          FIREFOX_CHANNEL: ${{ secrets.FIREFOX_CHANNEL || 'listed' }}
+
+      - name: Update release with store publication status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const tag = '${{ needs.semantic-release.outputs.new-release-tag }}';
+
+            // Get the release by tag
+            const { data: release } = await github.rest.repos.getReleaseByTag({
+              owner,
+              repo,
+              tag
+            });
+
+            // Add store publication status to release body
+            const storeStatus = `
+
+            ## 🚀 Automatic Store Publication
+
+            This release has been automatically published to extension stores:
+
+            - ✅ **Chrome Web Store**: [Install Extension](https://chrome.google.com/webstore/detail/${{ secrets.CHROME_EXTENSION_ID }})
+            - ✅ **Firefox Add-ons**: [Install Extension](https://addons.mozilla.org/addon/${{ secrets.FIREFOX_EXTENSION_ID }})
+
+            *Published automatically via GitHub Actions on ${new Date().toISOString()}*
+            `;
+
+            // Update release body
+            await github.rest.repos.updateRelease({
+              owner,
+              repo,
+              release_id: release.id,
+              body: release.body + storeStatus
+            });
+
+            console.log('✅ Release updated with store publication status');
+
+      - name: Create deployment record
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+
+            // Create deployment
+            const { data: deployment } = await github.rest.repos.createDeployment({
+              owner,
+              repo,
+              ref: '${{ needs.semantic-release.outputs.new-release-tag }}',
+              environment: 'production',
+              description: 'Automatic extension store publication',
+              auto_merge: false,
+              required_contexts: []
+            });
+
+            // Create deployment status
+            await github.rest.repos.createDeploymentStatus({
+              owner,
+              repo,
+              deployment_id: deployment.id,
+              state: 'success',
+              description: 'Successfully published to Chrome Web Store and Firefox Add-ons',
+              environment: 'production'
+            });
+
+            console.log('✅ Deployment record created');
 
   # Manual release artifacts (for workflow_dispatch)
   manual-release-artifacts:
@@ -224,7 +344,7 @@ jobs:
   ci-success:
     name: 'CI Success'
     runs-on: ubuntu-latest
-    needs: [quality-checks, unit-tests, build, semantic-release, manual-release-artifacts]
+    needs: [quality-checks, unit-tests, build, semantic-release, manual-release-artifacts, auto-publish-to-stores]
     if: always()
     steps:
       - name: Check all jobs status
@@ -235,6 +355,7 @@ jobs:
           echo "  - Build: ${{ needs.build.result }}"
           echo "  - Semantic Release: ${{ needs.semantic-release.result }}"
           echo "  - Manual Release: ${{ needs.manual-release-artifacts.result }}"
+          echo "  - Auto-Publish to Stores: ${{ needs.auto-publish-to-stores.result }}"
 
           # Check critical jobs
           if [ "${{ needs.quality-checks.result }}" != "success" ] ||
@@ -244,9 +365,17 @@ jobs:
             exit 1
           fi
 
-          # Show release info if available
+          # Show release and publication info
           if [ "${{ needs.semantic-release.outputs.new-release-published }}" == "true" ]; then
             echo "🎉 New release published: v${{ needs.semantic-release.outputs.new-release-version }}"
+            
+            if [ "${{ needs.auto-publish-to-stores.result }}" == "success" ]; then
+              echo "🚀 Extension automatically published to stores!"
+              echo "  ✅ Chrome Web Store: Published"
+              echo "  ✅ Firefox Add-ons: Published"
+            else
+              echo "⚠️ Release created but store publication failed"
+            fi
           else
             echo "ℹ️ No new release (no qualifying commits)"
           fi

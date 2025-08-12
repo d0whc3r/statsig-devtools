@@ -22,6 +22,9 @@ outputs:
   firefox-zip-path:
     description: 'Path to Firefox ZIP file'
     value: ${{ steps.paths.outputs.firefox-zip }}
+  firefox-sources-zip-path:
+    description: 'Path to Firefox sources ZIP file'
+    value: ${{ steps.paths.outputs.firefox-sources-zip }}
 
 runs:
   using: 'composite'
@@ -54,6 +57,29 @@ runs:
         npm run zip:firefox
         echo "✅ Firefox ZIP created"
 
+    - name: Create Firefox sources ZIP
+      if: inputs.create-firefox-zip == 'true'
+      shell: bash
+      run: |
+        echo "📦 Creating Firefox sources ZIP..."
+        VERSION="${{ steps.version.outputs.version }}"
+        EXTENSION_NAME=$(node -p "require('./package.json').name")
+        SOURCES_ZIP=".output/$EXTENSION_NAME-$VERSION-firefox-sources.zip"
+
+        # Create sources ZIP excluding build outputs and unnecessary files
+        zip -r "$SOURCES_ZIP" . \
+          -x "node_modules/*" \
+          -x ".output/*" \
+          -x ".git/*" \
+          -x "coverage/*" \
+          -x "test-results/*" \
+          -x "playwright-report/*" \
+          -x "*.log" \
+          -x ".DS_Store" \
+          -x "*.map"
+
+        echo "✅ Firefox sources ZIP created: $SOURCES_ZIP"
+
     - name: Set output paths
       id: paths
       shell: bash
@@ -66,7 +92,9 @@ runs:
         fi
         if [ "${{ inputs.create-firefox-zip }}" == "true" ]; then
           FIREFOX_ZIP=".output/$EXTENSION_NAME-$VERSION-firefox.zip"
+          FIREFOX_SOURCES_ZIP=".output/$EXTENSION_NAME-$VERSION-firefox-sources.zip"
           echo "firefox-zip=$FIREFOX_ZIP" >> $GITHUB_OUTPUT
+          echo "firefox-sources-zip=$FIREFOX_SOURCES_ZIP" >> $GITHUB_OUTPUT
         fi
 
     - name: Verify ZIP files
@@ -86,11 +114,20 @@ runs:
 
         if [ "${{ inputs.create-firefox-zip }}" == "true" ]; then
           FIREFOX_ZIP="${{ steps.paths.outputs.firefox-zip }}"
+          FIREFOX_SOURCES_ZIP="${{ steps.paths.outputs.firefox-sources-zip }}"
+          
           if [ -f "$FIREFOX_ZIP" ]; then
             echo "✅ Firefox ZIP: $FIREFOX_ZIP ($(du -h "$FIREFOX_ZIP" | cut -f1))"
             unzip -l "$FIREFOX_ZIP" | head -20
           else
             echo "❌ Firefox ZIP not found: $FIREFOX_ZIP"
+            exit 1
+          fi
+          
+          if [ -f "$FIREFOX_SOURCES_ZIP" ]; then
+            echo "✅ Firefox sources ZIP: $FIREFOX_SOURCES_ZIP ($(du -h "$FIREFOX_SOURCES_ZIP" | cut -f1))"
+          else
+            echo "❌ Firefox sources ZIP not found: $FIREFOX_SOURCES_ZIP"
             exit 1
           fi
         fi
@@ -110,3 +147,4 @@ runs:
         echo "  - Version: ${{ steps.version.outputs.version }}"
         echo "  - Chrome ZIP: ${{ inputs.create-chrome-zip == 'true' && '✅ Created' || '⏭️ Skipped' }}"
         echo "  - Firefox ZIP: ${{ inputs.create-firefox-zip == 'true' && '✅ Created' || '⏭️ Skipped' }}"
+        echo "  - Firefox Sources ZIP: ${{ inputs.create-firefox-zip == 'true' && '✅ Created' || '⏭️ Skipped' }}"
