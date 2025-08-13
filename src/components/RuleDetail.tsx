@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { useRuleOverrideSuggestions } from '../hooks/useRuleOverrideSuggestions'
 import { formatValue } from '../utils/configuration-formatters'
 import { EvaluationResultCard } from './EvaluationResultCard'
+import { ExperimentOverrideForm } from './ExperimentOverrideForm'
 import { ExperimentVisualization } from './ExperimentVisualization'
 import { RuleHeader } from './rule-detail/RuleHeader'
 import { RuleConditions } from './RuleConditions'
@@ -30,6 +31,7 @@ export function RuleDetail({
   allowOverrides = true,
 }: RuleDetailProps) {
   const [showOverrideForm, setShowOverrideForm] = useState(false)
+  const [showExperimentOverrideForm, setShowExperimentOverrideForm] = useState(false)
   const [overrideForm, setOverrideForm] = useState<Partial<StorageOverride>>({
     type: 'localStorage',
     key: '',
@@ -82,15 +84,37 @@ export function RuleDetail({
           compact={compact}
           allowOverrides={allowOverrides}
           showOverrideForm={showOverrideForm}
+          showExperimentOverrideForm={showExperimentOverrideForm}
           onOverrideButtonClick={() => {
             if (!showOverrideForm) {
               setOverrideForm({ type: inferDefaultType(), key: getSuggestedKey(), value: getSuggestedOverrideValue() })
             }
             setShowOverrideForm(!showOverrideForm)
+            // Close experiment form if open
+            if (showExperimentOverrideForm) {
+              setShowExperimentOverrideForm(false)
+            }
+          }}
+          onExperimentOverrideButtonClick={() => {
+            setShowExperimentOverrideForm(!showExperimentOverrideForm)
+            // Close regular form if open
+            if (showOverrideForm) {
+              setShowOverrideForm(false)
+            }
           }}
         />
         {/* Evaluation Result */}
         {evaluationResult && <EvaluationResultCard result={evaluationResult} />}
+
+        {/* Experiment Override Form - Only show for experiments */}
+        {allowOverrides && showExperimentOverrideForm && configuration.type === 'experiment' && (
+          <div className="mt-4">
+            <ExperimentOverrideForm
+              experiment={configuration}
+              onClose={() => setShowExperimentOverrideForm(false)}
+            />
+          </div>
+        )}
 
         {/* Override Form - Only show if overrides are allowed (popup mode only) */}
         {allowOverrides && showOverrideForm && (

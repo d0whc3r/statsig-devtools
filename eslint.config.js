@@ -97,6 +97,7 @@ export default [
         'error',
         { prefer: 'type-imports', disallowTypeAnnotations: false },
       ],
+      '@typescript-eslint/array-type': ['error', { default: 'array' }],
 
       // Import/Export rules
       'simple-import-sort/imports': [

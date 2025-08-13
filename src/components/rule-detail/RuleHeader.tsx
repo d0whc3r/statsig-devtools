@@ -8,6 +8,8 @@ interface RuleHeaderProps {
   allowOverrides: boolean
   showOverrideForm: boolean
   onOverrideButtonClick: () => void
+  showExperimentOverrideForm?: boolean
+  onExperimentOverrideButtonClick?: () => void
 }
 
 export function RuleHeader({
@@ -16,6 +18,8 @@ export function RuleHeader({
   allowOverrides,
   showOverrideForm,
   onOverrideButtonClick,
+  showExperimentOverrideForm = false,
+  onExperimentOverrideButtonClick,
 }: RuleHeaderProps) {
   return (
     <div className={compact ? 'mb-2' : 'mb-4'}>
@@ -35,30 +39,61 @@ export function RuleHeader({
           </div>
 
           {allowOverrides && (
-            <button
-              onClick={onOverrideButtonClick}
-              className={`${compact ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'} ${
-                showOverrideForm ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-blue-500 text-white hover:bg-blue-600'
-              } flex items-center gap-1.5 rounded-md font-medium transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none ${
-                showOverrideForm ? 'focus:ring-red-500' : 'focus:ring-blue-500'
-              } flex-shrink-0`}
-            >
-              {showOverrideForm ? (
-                <>
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  Cancel
-                </>
-              ) : (
-                <>
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  Override
-                </>
+            <div className="flex items-center gap-2">
+              {/* Experiment Override Button - Only for experiments */}
+              {configuration.type === 'experiment' && onExperimentOverrideButtonClick && (
+                <button
+                  onClick={onExperimentOverrideButtonClick}
+                  className={`${compact ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'} ${
+                    showExperimentOverrideForm ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-purple-500 text-white hover:bg-purple-600'
+                  } flex items-center gap-1.5 rounded-md font-medium transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                    showExperimentOverrideForm ? 'focus:ring-red-500' : 'focus:ring-purple-500'
+                  } flex-shrink-0`}
+                >
+                  {showExperimentOverrideForm ? (
+                    <>
+                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      Cancel
+                    </>
+                  ) : (
+                    <>
+                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Override Group
+                    </>
+                  )}
+                </button>
               )}
-            </button>
+              
+              {/* Regular Override Button */}
+              <button
+                onClick={onOverrideButtonClick}
+                className={`${compact ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'} ${
+                  showOverrideForm ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-blue-500 text-white hover:bg-blue-600'
+                } flex items-center gap-1.5 rounded-md font-medium transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                  showOverrideForm ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+                } flex-shrink-0`}
+              >
+                {showOverrideForm ? (
+                  <>
+                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Cancel
+                  </>
+                ) : (
+                  <>
+                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Override
+                  </>
+                )}
+              </button>
+            </div>
           )}
         </div>
       </div>

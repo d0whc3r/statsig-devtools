@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { errorHandler } from '../services/error-handler'
 import { statsigIntegration } from '../services/statsig-integration'
+import { statsigOverrideApiService } from '../services/statsig-override-api'
 
 import type { EvaluationResult, StorageOverride } from '../services/statsig-integration'
 import type { AuthState, StatsigConfigurationItem } from '../types'
@@ -48,6 +49,11 @@ export const useConfigurationEvaluation = (
       // Initialize or update SDK
       if (!statsigIntegration.isReady()) {
         await statsigIntegration.initialize(authState.clientSdkKey, user)
+        
+        // Initialize override API service if we have a console API key
+        if (authState.consoleApiKey && authState.consoleApiKey.startsWith('console-')) {
+          statsigOverrideApiService.initialize(authState.consoleApiKey)
+        }
       } else {
         await statsigIntegration.updateUser(user)
       }
@@ -69,7 +75,7 @@ export const useConfigurationEvaluation = (
     } finally {
       setIsEvaluating(false)
     }
-  }, [authState.clientSdkKey, configurations, activeOverrides])
+  }, [authState.clientSdkKey, authState.consoleApiKey, configurations, activeOverrides])
 
   /**
    * Re-evaluate configurations when dependencies change
@@ -121,6 +127,11 @@ export const useConfigurationEvaluation = (
             // Initialize or update SDK
             if (!statsigIntegration.isReady()) {
               await statsigIntegration.initialize(authState.clientSdkKey, user)
+              
+              // Initialize override API service if we have a console API key
+              if (authState.consoleApiKey && authState.consoleApiKey.startsWith('console-')) {
+                statsigOverrideApiService.initialize(authState.consoleApiKey)
+              }
             } else {
               await statsigIntegration.updateUser(user)
             }
@@ -147,7 +158,7 @@ export const useConfigurationEvaluation = (
         evaluateConfigurations()
       }
     }
-  }, [authState.clientSdkKey, configurations, activeOverrides])
+  }, [authState.clientSdkKey, configurations, activeOverrides, authState.consoleApiKey])
 
   /**
    * Cleanup on unmount
