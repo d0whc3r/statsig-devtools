@@ -1,6 +1,8 @@
+import path from 'node:path'
 import { defineConfig } from 'wxt'
 
-// See https://wxt.dev/api/config.html
+import tailwindcss from '@tailwindcss/vite'
+
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   manifest: {
@@ -91,14 +93,6 @@ export default defineConfig({
     },
 
     // Background script and content scripts are automatically configured by WXT based on entrypoints
-    // However, we explicitly declare content scripts to ensure they're included in development builds
-    content_scripts: [
-      {
-        matches: ['<all_urls>'],
-        js: ['content-scripts/content.js'],
-        run_at: 'document_start',
-      },
-    ],
 
     // Web accessible resources for content script communication
     web_accessible_resources: [
@@ -116,8 +110,22 @@ export default defineConfig({
   manifestVersion: 3, // Default to Manifest V3
 
   vite: () => ({
+    plugins: [tailwindcss()],
     define: {
       __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
+    },
+    alias: {
+      '@': path.resolve(__dirname, '.'),
+      '~': path.resolve(__dirname, '.'),
+    },
+    build: {
+      target: 'es2022',
+      minify: 'esbuild',
+      sourcemap: process.env.NODE_ENV === 'development',
+    },
+    esbuild: {
+      target: 'es2022',
+      format: 'esm',
     },
   }),
 })

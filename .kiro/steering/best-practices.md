@@ -65,11 +65,42 @@ export function MyComponent({ prop1, prop2 = 0 }: MyComponentProps) {
 
 ### State Management
 
+#### Local State
+
 - **Local State First**: Use useState for component-specific state
 - **Lift State Up**: Share state at lowest common ancestor
 - **Custom Hooks**: Encapsulate complex state logic
-- **Immutable Updates**: Never mutate state directly
+
+#### Global State with Zustand
+
+- **Store Structure**: Separate stores for different domains (auth, configuration, override, ui)
+- **Immer Middleware**: Use immer for immutable state updates with mutable syntax
+- **Persist Middleware**: Automatic persistence for relevant state
+- **Devtools Integration**: Enable Redux DevTools for debugging
+- **Selectors**: Use selector functions for performance optimization
+- **Direct Imports**: Import stores directly, no barrel exports
+
+#### Zustand Best Practices
+
+```typescript
+// ✅ Good: Direct store import
+import { useAuthStore } from '../stores/auth-store'
+
+// ✅ Good: Selector usage for performance
+const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+
+// ✅ Good: Action usage
+const login = useAuthStore((state) => state.login)
+
+// ❌ Avoid: Barrel imports
+import { useAuthStore } from '../stores'
+```
+
+#### State Updates
+
+- **Immutable Updates**: Never mutate state directly (Immer handles this)
 - **State Normalization**: Flatten nested state structures
+- **Batch Updates**: Group related state changes together
 
 ### Performance Guidelines
 
@@ -89,8 +120,8 @@ import React from 'react'
 import { StatsigClient } from '@statsig/js-client'
 
 // 2. Internal packages with @/ alias
-import { logger } from '@/src/utils/logger'
-import { errorHandler } from '@/src/services/error-handler'
+import { logger } from '@/utils/logger'
+import { errorHandler } from '@/services/error-handler'
 
 // 3. Relative imports
 import { ButtonConfig } from './types'
@@ -105,17 +136,23 @@ import type { AuthState } from '../types'
 
 - **Default Exports**: Components and main service classes
 - **Named Exports**: Utilities, types, and helper functions
-- **Barrel Exports**: Index files for clean imports (see `ViewModeToggle/index.ts`)
+- **NO BARREL EXPORTS**: Barrel files (index.ts) are strictly prohibited
+- **Direct Imports**: Always import directly from the source file
 - **Absolute Imports**: Use `@/` alias for src directory
 
-### Barrel Export Example
+### Import Examples
+
+**❌ Avoid barrel imports:**
 
 ```typescript
-// src/components/ViewModeToggle/index.ts
-export { DebugButton } from './DebugButton'
-export { ErrorDisplay } from './ErrorDisplay'
-export { LoadingSpinner } from './LoadingSpinner'
-export { ToggleButton } from './ToggleButton'
+import { DebugButton, ErrorDisplay } from './components'
+```
+
+**✅ Use direct imports:**
+
+```typescript
+import { DebugButton } from './components/DebugButton'
+import { ErrorDisplay } from './components/ErrorDisplay'
 ```
 
 ## Component Organization Patterns
@@ -125,7 +162,7 @@ export { ToggleButton } from './ToggleButton'
 - **Single Responsibility**: Each component has one clear purpose
 - **Composition over Inheritance**: Build complex components from simple ones
 - **Co-located Files**: Keep related files together (component + test + types)
-- **Barrel Exports**: Use index files for clean imports
+- **Direct Imports**: No barrel exports, import directly from source files
 
 ### Component Refactoring Pattern
 
@@ -133,12 +170,18 @@ When components grow large (>200 lines), refactor into:
 
 ```
 ComponentName/
-├── index.ts              # Barrel export
 ├── ComponentName.tsx     # Main component (30-50 lines)
 ├── SubComponent1.tsx     # Focused sub-components
 ├── SubComponent2.tsx     # Each with single responsibility
 ├── types.ts             # Component-specific types
 └── utils.ts             # Component-specific utilities
+```
+
+**Import pattern for refactored components:**
+
+```typescript
+import { ComponentName } from './ComponentName/ComponentName'
+import { SubComponent1 } from './ComponentName/SubComponent1'
 ```
 
 ### Custom Hook Extraction
@@ -220,7 +263,7 @@ interface StatsigError {
 Use the `errorHandler` service for consistent error management:
 
 ```typescript
-import { errorHandler } from '@/src/services/error-handler'
+import { errorHandler } from '@/services/error-handler'
 
 try {
   await riskyOperation()
@@ -298,7 +341,7 @@ try {
 Use the centralized logger for consistent logging:
 
 ```typescript
-import { logger } from '@/src/utils/logger'
+import { logger } from '@/utils/logger'
 
 // Development-only logging
 logger.info('Configuration loaded successfully')

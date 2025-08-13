@@ -1,0 +1,49 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    // Target ES2022 for compilation output
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": ["ES2022", "ESNext", "DOM", "DOM.Iterable", "WebWorker"],
+    // TypeScript and build settings
+    "allowImportingTsExtensions": true,
+    "jsx": "preserve",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    // Additional strict checks
+    "noImplicitReturns": false,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    // Type definitions
+    "types": ["chrome", "node", "webextension-polyfill"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "~/*": ["./*"]
+    },
+    // Build configuration
+    "tsBuildInfoFile": "./.tsbuild/app.tsbuildinfo",
+    "composite": true,
+    // Modern JavaScript features support
+    "useDefineForClassFields": true,
+    "allowSyntheticDefaultImports": true,
+    "verbatimModuleSyntax": false
+  },
+  "include": ["src/**/*", "entrypoints/**/*", "wxt.config.ts", ".wxt/wxt.d.ts", "src/global.d.ts"],
+  "exclude": [
+    "node_modules",
+    ".output",
+    "dist",
+    "coverage",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "src/test/**/*",
+    "e2e/**/*",
+    "playwright.config.ts",
+    "vitest.config.ts"
+  ]
+}

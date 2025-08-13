@@ -1,6 +1,7 @@
 import prettier from 'eslint-config-prettier'
 import importPlugin from 'eslint-plugin-import'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
+import prettierPlugin from 'eslint-plugin-prettier'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
@@ -23,7 +24,7 @@ export default [
         ecmaFeatures: {
           jsx: true,
         },
-        project: './tsconfig.json',
+        project: './tsconfig.app.json',
         tsconfigRootDir: import.meta.dirname,
       },
       globals: {
@@ -51,6 +52,7 @@ export default [
     },
     plugins: {
       '@typescript-eslint': typescript,
+      prettier: prettierPlugin,
       import: importPlugin,
       'jsx-a11y': jsxA11y,
       react,
@@ -87,16 +89,25 @@ export default [
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'warn',
-      '@typescript-eslint/prefer-optional-chain': 'off', // Requires type info
-      '@typescript-eslint/prefer-nullish-coalescing': 'off', // Requires type info
-      '@typescript-eslint/no-unnecessary-condition': 'off', // Requires type info
-      '@typescript-eslint/no-unnecessary-type-assertion': 'off', // Requires type info
+      '@typescript-eslint/prefer-optional-chain': 'error',
+      '@typescript-eslint/prefer-nullish-coalescing': 'error',
+      '@typescript-eslint/no-unnecessary-condition': 'error',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/prefer-as-const': 'error',
       '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
+      '@typescript-eslint/no-inferrable-types': 'error',
+      '@typescript-eslint/prefer-for-of': 'error',
+      '@typescript-eslint/prefer-includes': 'error',
+      '@typescript-eslint/prefer-string-starts-ends-with': 'error',
       '@typescript-eslint/consistent-type-imports': [
         'error',
-        { prefer: 'type-imports', disallowTypeAnnotations: false },
+        {
+          prefer: 'type-imports',
+          disallowTypeAnnotations: false,
+          fixStyle: 'separate-type-imports',
+        },
       ],
+      '@typescript-eslint/consistent-type-exports': ['error', { fixMixedExportsWithInlineTypeSpecifier: true }],
 
       // Import/Export rules
       'simple-import-sort/imports': [
@@ -109,7 +120,7 @@ export default [
             ['^@/'],
             // Relative imports
             ['^\\.'],
-            // Type imports
+            // Type imports (side effect imports)
             ['^.*\\u0000$'],
           ],
         },
@@ -166,6 +177,9 @@ export default [
       'max-lines-per-function': ['warn', 200],
       'max-params': ['warn', 4],
 
+      // Prettier integration
+      'prettier/prettier': 'error',
+
       // Accessibility
       'jsx-a11y/alt-text': 'error',
       'jsx-a11y/anchor-has-content': 'error',
@@ -185,7 +199,7 @@ export default [
   },
   // JavaScript files configuration (without TypeScript parser)
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -211,6 +225,7 @@ export default [
       },
     },
     plugins: {
+      prettier: prettierPlugin,
       import: importPlugin,
       'simple-import-sort': simpleImportSort,
       'unused-imports': unusedImports,
@@ -229,6 +244,9 @@ export default [
       'import/first': 'error',
       'import/newline-after-import': 'error',
 
+      // Prettier integration
+      'prettier/prettier': 'error',
+
       // General best practices
       'prefer-const': 'error',
       'no-var': 'error',
@@ -240,83 +258,115 @@ export default [
       'object-shorthand': 'error',
     },
   },
-  // Extension scripts configuration
+  // Development and extension files configuration
   {
-    files: ['entrypoints/background.ts', 'entrypoints/content.ts'],
+    files: [
+      'scripts/**/*.js',
+      'src/stores/store-devtools.ts',
+      'src/utils/dev-tools.ts',
+      'src/components/DevToolsInfo.tsx',
+    ],
+    languageOptions: {
+      globals: {
+        localStorage: 'readonly',
+        sessionStorage: 'readonly',
+        location: 'readonly',
+        document: 'readonly',
+        window: 'readonly',
+      },
+    },
     rules: {
-      'no-console': 'off', // Console logging is useful for extension debugging
+      'no-console': 'off', // Console logging is expected in these files
     },
   },
   // Test files configuration
   {
-    files: ['src/**/*.test.{js,jsx,ts,tsx}', 'src/**/*.spec.{js,jsx,ts,tsx}', 'src/**/test/**/*'],
+    files: ['src/**/*.test.{ts,tsx}', 'src/**/test/**/*'],
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+        project: './tsconfig.test.json',
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     plugins: {
       'testing-library': testingLibrary,
     },
     rules: {
       ...testingLibrary.configs['flat/react']?.rules,
-      // Relax some rules for test files
-      'testing-library/no-node-access': 'warn', // Allow some direct node access in tests
-      'testing-library/no-container': 'warn', // Allow container usage in some test scenarios
-      'testing-library/no-manual-cleanup': 'warn', // Allow manual cleanup when needed
-
       'no-console': 'off',
       'max-lines': 'off',
       'max-lines-per-function': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
-      'jsx-a11y/click-events-have-key-events': 'off',
-      'jsx-a11y/no-noninteractive-element-interactions': 'off',
     },
   },
   // Playwright E2E test files configuration
   {
-    files: ['e2e/**/*.{js,ts}', 'playwright.config.ts'],
+    files: ['e2e/**/*.ts', 'playwright.config.ts'],
     languageOptions: {
-      globals: {
-        // Playwright globals
-        test: 'readonly',
-        expect: 'readonly',
-        describe: 'readonly',
-        beforeEach: 'readonly',
-        afterEach: 'readonly',
-        beforeAll: 'readonly',
-        afterAll: 'readonly',
-        // Browser globals for E2E tests
-        page: 'readonly',
-        context: 'readonly',
-        browser: 'readonly',
-        chromium: 'readonly',
-        firefox: 'readonly',
-        webkit: 'readonly',
-        // Node.js globals for E2E setup
-        __dirname: 'readonly',
-        __filename: 'readonly',
-        require: 'readonly',
-        module: 'readonly',
-        exports: 'readonly',
+      parser: typescriptParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: './tsconfig.e2e.json',
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     rules: {
-      // Relax rules for E2E tests
-      'no-console': 'off', // Console logging is useful for E2E debugging
-      'max-lines': 'off', // E2E tests can be longer
-      'max-lines-per-function': 'off', // E2E test functions can be longer
-      complexity: 'off', // E2E tests can be more complex
-      'max-depth': 'off', // E2E tests may have deeper nesting
-      '@typescript-eslint/no-explicit-any': 'off', // E2E tests may use any for flexibility
-      '@typescript-eslint/no-non-null-assertion': 'off', // E2E tests may use non-null assertions
-      'prefer-const': 'warn', // Prefer const but not strict in E2E
-      'no-unused-expressions': 'off', // E2E tests may have expressions for waiting
-      'no-await-in-loop': 'off', // E2E tests often need sequential async operations
-      '@typescript-eslint/no-unused-vars': 'off', // May have unused vars in E2E setup
-      'unused-imports/no-unused-vars': 'off', // May have unused imports for types
-      // Allow dynamic imports for E2E utilities
-      'import/no-dynamic-require': 'off',
-      '@typescript-eslint/no-var-requires': 'off',
+      'no-console': 'off',
+      'max-lines': 'off',
+      'max-lines-per-function': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+  // Config files configuration
+  {
+    files: ['vitest.config.ts', 'wxt.config.ts', 'playwright.config.ts'],
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: './tsconfig.config.json',
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      'no-console': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+  // JavaScript config files (no TypeScript parser needed)
+  {
+    files: ['postcss.config.mjs', 'eslint.config.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        __dirname: 'readonly',
+        import: 'readonly',
+      },
+    },
+    plugins: {
+      prettier: prettierPlugin,
+      'simple-import-sort': simpleImportSort,
+    },
+    rules: {
+      'no-console': 'off',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      'prettier/prettier': 'error',
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', '.wxt/', 'coverage/', '.output/', 'src/templates/*.ejs'],
+    ignores: ['dist/', 'node_modules/', '.wxt/', 'coverage/', '.output/'],
   },
   prettier,
 ]

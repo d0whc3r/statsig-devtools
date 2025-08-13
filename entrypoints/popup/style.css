@@ -1,70 +1,36 @@
-/* Estilos optimizados para el popup de la extensión */
+@reference '@/src/styles/globals.css';
+
+/* Popup-specific optimizations */
 html,
 body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+  @apply m-0 h-full w-full overflow-hidden p-0;
 }
 
 body {
-  width: 480px;
-  min-width: 480px;
-  min-height: 550px;
-  max-width: 480px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-  background-color: #ffffff;
-  overflow: auto;
+  @apply h-[550px] w-[480px] overflow-auto bg-white;
 }
 
 #root {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  @apply flex h-full w-full flex-col;
 }
 
-/* Fix for popup layout to prevent double scrollbars */
 .popup-layout {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  @apply flex h-full flex-col overflow-hidden;
 }
 
 .popup-content {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  @apply flex flex-1 flex-col overflow-hidden;
 }
 
 .popup-scrollable {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  @apply flex-1 overflow-x-hidden overflow-y-auto;
 }
 
-/* Scrollbar personalizado para mejor visualización */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 #f7fafc;
+/* Popup-specific loading states */
+.popup-loading {
+  @apply flex h-full w-full items-center justify-center;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f7fafc;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #cbd5e0;
-  border-radius: 3px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #a0aec0;
+.popup-loading-spinner {
+  @apply border-t-primary-600 h-8 w-8 animate-spin rounded-full border-2 border-neutral-200;
 }

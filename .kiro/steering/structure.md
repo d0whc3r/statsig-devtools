@@ -224,8 +224,8 @@ import React from 'react'
 import { StatsigClient } from '@statsig/js-client'
 
 // 2. Internal packages with @/ alias
-import { logger } from '@/src/utils/logger'
-import { errorHandler } from '@/src/services/error-handler'
+import { logger } from '@/utils/logger'
+import { errorHandler } from '@/services/error-handler'
 
 // 3. Relative imports
 import { ButtonConfig } from './types'

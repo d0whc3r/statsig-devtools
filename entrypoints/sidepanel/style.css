@@ -1,111 +1,47 @@
-/* Import global styles */
-@import '@/src/styles/globals.css';
+@reference '@/src/styles/globals.css';
 
-/* Sidebar-specific styles - diseño del popup pero para panel lateral */
+/* Sidebar-specific optimizations */
 body {
-  margin: 0;
-  padding: 0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #ffffff;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  @apply m-0 overflow-x-hidden p-0;
+  @apply h-full w-full bg-neutral-50;
 }
 
-/* Sidebar optimizations */
-.sidebar-optimized {
-  width: 100%;
-  height: 100vh;
-  overflow-x: hidden; /* Prevent horizontal scroll */
-}
-
-/* Ensure all content fits within sidebar width */
 #root {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
+  @apply h-full w-full max-w-full overflow-x-hidden;
+}
+
+.sidebar-optimized {
+  @apply h-screen w-full overflow-x-hidden;
 }
 
 /* Responsive adjustments for sidebar */
 @media (max-width: 400px) {
   .type-badge {
-    font-size: 0.625rem;
-    padding: 0.125rem 0.5rem;
+    @apply px-2 py-0.5 text-xs;
   }
 
   .card-professional {
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    padding: 0.75rem;
+    @apply mx-2 p-3;
   }
 }
 
-/* Scrollbars mejorados para sidebar */
-.sidebar-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.sidebar-scroll::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-.sidebar-scroll::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-
-.sidebar-scroll::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Custom scrollbar for sidebar content */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f8fafc;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 2px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Animación suave para sidebar */
 .sidebar-fade-in {
-  animation: sidebarFadeIn 0.2s ease-out;
+  animation: slideDown 0.3s ease-out;
 }
 
-@keyframes sidebarFadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Ensure text doesn't overflow in sidebar */
 .truncate-sidebar {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
+  @apply max-w-full truncate;
 }
 
-/* Responsive type badges for sidebar */
 .type-badge {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100px;
+  @apply max-w-[100px] overflow-hidden text-ellipsis whitespace-nowrap;
+}
+
+/* Sidepanel-specific loading states */
+.sidebar-loading {
+  @apply flex h-full w-full items-center justify-center;
+}
+
+.sidebar-loading-spinner {
+  @apply border-t-primary-600 h-6 w-6 animate-spin rounded-full border-2 border-neutral-200;
 }

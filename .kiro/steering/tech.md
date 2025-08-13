@@ -30,16 +30,19 @@ inclusion: always
 
 ### API Integration
 
-- **Dual API Strategy**: Console API (metadata) + Client SDK (evaluation)
-- **@statsig/js-client 3.21.1**: Official Statsig SDK for real-time evaluation
-- **REST API**: Console API for configuration fetching
+- **Console API Only**: Single API strategy using Console API key for all operations
+- **REST API**: Console API for configuration fetching and management
 - **Caching**: 5-minute TTL for configuration data
+- **No Client SDK**: Removed client SDK dependency for simplified architecture
 
 ### State Management
 
-- **React Hooks**: useState, useEffect, useCallback for local state
+- **Zustand**: Lightweight state management with TypeScript support
+- **Immer Middleware**: Immutable state updates with mutable syntax
+- **Persist Middleware**: Automatic state persistence to browser storage
+- **Devtools Integration**: Redux DevTools support for debugging
+- **React Hooks**: useState, useEffect, useCallback for local component state
 - **Custom Hooks**: Reusable logic for auth, configurations, overrides
-- **No Global State**: Prop drilling with context for shared data
 - **Browser Storage**: Persistent state using browser.storage.local
 
 ### Development Tools

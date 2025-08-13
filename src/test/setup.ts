@@ -1,19 +1,8 @@
-import { afterEach, beforeEach, vi } from 'vitest'
+import { vi } from 'vitest'
 
 import '@testing-library/jest-dom/vitest'
-// eslint-disable-next-line testing-library/no-manual-cleanup
-import { cleanup } from '@testing-library/react'
 
-beforeEach(() => {
-  vi.clearAllMocks()
-})
-
-// Global cleanup after each test
-afterEach(() => {
-  cleanup()
-})
-
-// Mock browser APIs
+// Mock browser APIs for testing
 const mockBrowser = {
   storage: {
     local: {
@@ -44,6 +33,21 @@ const mockBrowser = {
       addListener: vi.fn(),
       removeListener: vi.fn(),
     },
+    onInstalled: {
+      addListener: vi.fn(),
+    },
+  },
+  windows: {
+    getCurrent: vi.fn(),
+  },
+  sidePanel: {
+    open: vi.fn(),
+    setPanelBehavior: vi.fn(),
+  },
+  commands: {
+    onCommand: {
+      addListener: vi.fn(),
+    },
   },
 }
 
@@ -52,12 +56,13 @@ global.browser = mockBrowser
 // @ts-expect-error - Mocking global chrome API
 global.chrome = mockBrowser
 
-// Mock webextension-polyfill
-vi.mock('webextension-polyfill', () => ({
-  default: mockBrowser,
-}))
+// Mock WXT globals
+// @ts-expect-error - Mocking WXT global
+global.defineBackground = vi.fn()
+// @ts-expect-error - Mocking WXT global
+global.defineContentScript = vi.fn()
 
-// Mock crypto API
+// Mock crypto API for encryption tests
 Object.defineProperty(globalThis, 'crypto', {
   value: {
     subtle: {
@@ -76,5 +81,8 @@ Object.defineProperty(globalThis, 'crypto', {
   },
 })
 
-// Mock fetch
-global.fetch = vi.fn()
+// Mock window object for browser environment
+Object.defineProperty(window, 'statsigStores', {
+  value: undefined,
+  writable: true,
+})

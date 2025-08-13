@@ -1,84 +1,71 @@
-/* Import global styles first */
-@import '@/src/styles/globals.css';
+@reference '@/src/styles/globals.css';
 
+/* Tab-specific optimizations */
 body {
-  margin: 0;
-  padding: 0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #ffffff;
-  min-height: 100vh;
+  @apply min-h-screen w-screen;
 }
 
-/* Tab optimizations - tamaño completo pero diseño limpio */
+#root {
+  @apply flex min-h-screen w-screen flex-col;
+}
+
 .tab-optimized {
-  width: 100vw;
-  height: 100vh;
-  max-width: none;
+  @apply h-screen w-screen max-w-none;
+  @apply min-h-screen w-full bg-neutral-50;
 }
 
-/* Scrollbars mejorados para tab */
-.tab-scroll::-webkit-scrollbar {
-  width: 8px;
-}
-
-.tab-scroll::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 4px;
-}
-
-.tab-scroll::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-  border: 1px solid #f1f5f9;
-}
-
-.tab-scroll::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Layout para tab - sin grid de 2 columnas, layout simple */
 .tab-layout {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  min-height: 100vh;
+  @apply mx-auto min-h-screen w-full max-w-6xl px-4 py-6;
 }
 
 @media (max-width: 1024px) {
   .tab-layout {
-    padding: 0.5rem;
+    @apply px-4 py-4;
   }
 }
 
-/* Cards simples para tab - sin efectos excesivos */
 .tab-card {
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow:
-    0 1px 3px 0 rgba(0, 0, 0, 0.1),
-    0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-  margin-bottom: 1rem;
+  @apply mb-6 rounded-xl border border-neutral-200 bg-white shadow-sm;
+  @apply transition-shadow duration-200 hover:shadow-md;
 }
 
-/* Animación suave para tab */
 .tab-fade-in {
-  animation: tabFadeIn 0.2s ease-out;
+  animation: slideUp 0.3s ease-out;
 }
 
-@keyframes tabFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
+/* Tab-specific loading states */
+.loading-container {
+  @apply flex h-screen w-full items-center justify-center;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+.loading-content {
+  @apply text-center;
+}
+
+.loading-spinner {
+  @apply border-t-primary-600 h-10 w-10 rounded-full border-4 border-neutral-200;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  @apply mt-4 text-sm text-neutral-500;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  100% {
+    transform: rotate(360deg);
   }
+}
+
+/* Tab-specific content styles */
+.tab-content {
+  @apply min-h-screen w-full bg-neutral-50;
+}
+
+.tab-header {
+  @apply sticky top-0 z-10 border-b border-neutral-200 bg-white/80 backdrop-blur-sm;
 }

@@ -33,9 +33,8 @@ Statsig DevTools is a browser extension that empowers developers and QA engineer
 
 ### API Key Types
 
-- **Console API Key**: Server-side key (prefix: `console-`) for fetching configuration metadata
-- **Client SDK Key**: Client-side key (prefix: `client-`) for real-time evaluation
-- **Dual API Strategy**: Using both keys for complete functionality
+- **Console API Key**: Server-side key (prefix: `console-`) for all operations including configuration metadata and evaluation
+- **Single API Strategy**: Simplified architecture using only Console API key
 
 ### Evaluation Concepts
 
@@ -65,10 +64,8 @@ Statsig DevTools is a browser extension that empowers developers and QA engineer
 ### API Key Validation
 
 - Console API keys must start with "console-" prefix
-- Client SDK keys must start with "client-" prefix
-- Console API keys cannot be used for real-time evaluation
-- Client SDK keys cannot be used for configuration metadata fetching
 - API key validation includes permission and project access checks
+- Single key handles both configuration metadata and evaluation operations
 
 ### Configuration Evaluation
 
@@ -137,7 +134,7 @@ Statsig DevTools is a browser extension that empowers developers and QA engineer
 
 ### Authentication & Security
 
-- Dual API key system (Console API + Client SDK)
+- Single API key system (Console API only)
 - AES-GCM encryption for stored API keys
 - API key validation with project detection
 - Secure storage with browser.storage.local
@@ -193,10 +190,9 @@ Statsig DevTools is a browser extension that empowers developers and QA engineer
 
 ### Functional Constraints
 
-- Console API keys cannot perform real-time evaluation
-- Client SDK keys cannot fetch configuration metadata
 - Content script injection blocked on internal browser pages
 - Override application requires page refresh in some cases
+- Single API key handles all operations (simplified architecture)
 
 ## Success Metrics
 

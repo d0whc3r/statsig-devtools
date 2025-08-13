@@ -17,6 +17,15 @@ coverage/
 playwright-report/
 test-results/
 
+# TypeScript build info
+.tsbuild/
+*.tsbuildinfo
+
+# Development extensions and profiles
+.dev-extensions/
+.dev-profile/
+.dev-setup-complete
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

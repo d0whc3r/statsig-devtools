@@ -1,115 +1,128 @@
-import { BrowserRuntime } from '@/src/utils/browser-api'
-import { logger } from '@/src/utils/logger'
-
-import {
-  clearAllOverrides,
-  getCookies,
-  getStorageValue,
-  handleRemoveStorageOverride,
-  handleSetStorageOverride,
-} from './modules/storage-operations'
-
-// Import modular functionality
-import type { ContentScriptMessage, ContentScriptResponse } from './types/content-types'
-
-// Global declarations for browser APIs used in injected scripts
-declare const _localStorage: Storage
-declare const _sessionStorage: Storage
-declare const _document: Document
-
-// Extend global window interface
-declare global {
-  interface Window {
-    statsigOverrides?: Record<string, { value: unknown; type: string; timestamp: number }>
-    statsigCookieResult?: Record<string, string>
-    Statsig?: {
-      checkGate: (gateName: string, user?: Record<string, unknown>) => boolean
-      getConfig: (configName: string, user?: Record<string, unknown>) => { value: unknown }
-      getExperiment: (experimentName: string, user?: Record<string, unknown>) => unknown
-    }
-  }
+interface StorageOverridePayload {
+  type: 'localStorage' | 'sessionStorage' | 'cookie'
+  key: string
+  value?: string
+  domain?: string
 }
 
-/**
- * Main message handler for content script
- */
-
-async function handleMessage(
-  message: ContentScriptMessage,
-  _sender: chrome.runtime.MessageSender,
-  sendResponse: (response: ContentScriptResponse) => void,
-): Promise<void> {
-  try {
-    logger.log('📨 Content script received message:', message.type)
-
-    switch (message.type) {
-      case 'SET_STORAGE_OVERRIDE': {
-        const result = await handleSetStorageOverride(message.override)
-        sendResponse(result)
-        break
-      }
-      case 'REMOVE_STORAGE_OVERRIDE': {
-        const result = await handleRemoveStorageOverride(message.override)
-        sendResponse(result)
-        break
-      }
-      case 'GET_STORAGE_VALUE': {
-        const result = await getStorageValue(message.key, message.storageType)
-        sendResponse(result)
-        break
-      }
-      case 'CLEAR_ALL_OVERRIDES': {
-        const result = await clearAllOverrides()
-        sendResponse(result)
-        break
-      }
-      case 'GET_COOKIES': {
-        const result = await getCookies()
-        sendResponse(result)
-        break
-      }
-      case 'PING': {
-        sendResponse({ success: true, data: 'pong' })
-        break
-      }
-      default: {
-        sendResponse({
-          success: false,
-          error: `Unknown message type: ${(message as { type: string }).type}`,
-        })
-      }
-    }
-  } catch (error) {
-    logger.error('❌ Error handling message:', error)
-    sendResponse({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    })
-  }
+interface GetStoragePayload {
+  type: 'localStorage' | 'sessionStorage' | 'cookie'
+  key: string
 }
 
-/**
- * Initialize content script
- */
-function initializeContentScript(): void {
-  logger.log('🚀 Content script initialized')
-
-  // Set up message listener
-  BrowserRuntime.addMessageListener((message, sender, sendResponse) => {
-    handleMessage(message as ContentScriptMessage, sender, sendResponse)
-    return true // Keep message channel open for async responses
-  })
-
-  logger.log('✅ Content script ready to receive messages')
+interface ContentScriptMessage {
+  type: 'SET_STORAGE_OVERRIDE' | 'REMOVE_STORAGE_OVERRIDE' | 'GET_STORAGE_VALUE' | 'PING'
+  payload?: StorageOverridePayload | GetStoragePayload
 }
 
-/**
- * WXT Content Script Entry Point
- */
 export default defineContentScript({
   matches: ['<all_urls>'],
+  runAt: 'document_start',
   main() {
-    // Initialize the content script
-    initializeContentScript()
+    console.log('Statsig DevTools content script loaded')
+
+    // Message listener for storage operations
+    browser.runtime.onMessage.addListener((message: ContentScriptMessage, _sender, sendResponse) => {
+      switch (message.type) {
+        case 'SET_STORAGE_OVERRIDE':
+          if (!message.payload) {
+            sendResponse({ success: false, error: 'Payload is required' })
+            return true
+          }
+          handleSetStorageOverride(message.payload as StorageOverridePayload)
+            .then((result) => sendResponse({ success: true, data: result }))
+            .catch((error) => sendResponse({ success: false, error: error.message }))
+          return true
+
+        case 'REMOVE_STORAGE_OVERRIDE':
+          if (!message.payload) {
+            sendResponse({ success: false, error: 'Payload is required' })
+            return true
+          }
+          handleRemoveStorageOverride(message.payload as StorageOverridePayload)
+            .then((result) => sendResponse({ success: true, data: result }))
+            .catch((error) => sendResponse({ success: false, error: error.message }))
+          return true
+
+        case 'GET_STORAGE_VALUE':
+          if (!message.payload) {
+            sendResponse({ success: false, error: 'Payload is required' })
+            return true
+          }
+          getStorageValue(message.payload as GetStoragePayload)
+            .then((result) => sendResponse({ success: true, data: result }))
+            .catch((error) => sendResponse({ success: false, error: error.message }))
+          return true
+
+        case 'PING':
+          sendResponse({ success: true, data: 'pong' })
+          return true
+
+        default:
+          sendResponse({ success: false, error: `Unknown message type: ${message.type}` })
+          return true
+      }
+    })
+
+    // Storage override handlers
+    async function handleSetStorageOverride(payload: StorageOverridePayload) {
+      const { type, key, value, domain } = payload
+
+      if (!value) {
+        throw new Error('Value is required for setting storage override')
+      }
+
+      switch (type) {
+        case 'localStorage':
+          localStorage.setItem(key, value)
+          break
+        case 'sessionStorage':
+          sessionStorage.setItem(key, value)
+          break
+        case 'cookie':
+          document.cookie = `${key}=${value}; domain=${domain ?? location.hostname}; path=/`
+          break
+        default:
+          throw new Error(`Unsupported storage type: ${type}`)
+      }
+      return { type, key, value, applied: true }
+    }
+
+    async function handleRemoveStorageOverride(payload: StorageOverridePayload) {
+      const { type, key, domain } = payload
+
+      switch (type) {
+        case 'localStorage':
+          localStorage.removeItem(key)
+          break
+        case 'sessionStorage':
+          sessionStorage.removeItem(key)
+          break
+        case 'cookie':
+          document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=${domain ?? location.hostname}; path=/`
+          break
+        default:
+          throw new Error(`Unsupported storage type: ${type}`)
+      }
+      return { type, key, removed: true }
+    }
+
+    async function getStorageValue(payload: GetStoragePayload) {
+      const { type, key } = payload
+
+      switch (type) {
+        case 'localStorage':
+          return localStorage.getItem(key)
+        case 'sessionStorage':
+          return sessionStorage.getItem(key)
+        case 'cookie': {
+          const cookies = document.cookie.split(';')
+          const cookie = cookies.find((c) => c.trim().startsWith(`${key}=`))
+          return cookie ? cookie.split('=')[1] : null
+        }
+        default:
+          throw new Error(`Unsupported storage type: ${type}`)
+      }
+    }
   },
 })

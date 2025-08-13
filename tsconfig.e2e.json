@@ -1,0 +1,17 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "types": ["@playwright/test", "node"],
+    "jsx": "react-jsx",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": false,
+    "noUncheckedIndexedAccess": false,
+    "exactOptionalPropertyTypes": false,
+    "moduleResolution": "Node",
+    "tsBuildInfoFile": "./.tsbuild/e2e.tsbuildinfo",
+    "composite": true
+  },
+  "include": ["e2e/**/*", "playwright.config.ts"],
+  "exclude": ["node_modules", ".output", "dist", "coverage", "src/**/*", "entrypoints/**/*"]
+}
