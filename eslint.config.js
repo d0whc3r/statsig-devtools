@@ -258,27 +258,6 @@ export default [
       'object-shorthand': 'error',
     },
   },
-  // Development and extension files configuration
-  {
-    files: [
-      'scripts/**/*.js',
-      'src/stores/store-devtools.ts',
-      'src/utils/dev-tools.ts',
-      'src/components/DevToolsInfo.tsx',
-    ],
-    languageOptions: {
-      globals: {
-        localStorage: 'readonly',
-        sessionStorage: 'readonly',
-        location: 'readonly',
-        document: 'readonly',
-        window: 'readonly',
-      },
-    },
-    rules: {
-      'no-console': 'off', // Console logging is expected in these files
-    },
-  },
   // Test files configuration
   {
     files: ['src/**/*.test.{ts,tsx}', 'src/**/test/**/*'],

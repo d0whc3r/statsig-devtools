@@ -1,5 +1,3 @@
-import { useDevTools } from '@/src/utils/dev-tools'
-
 import type { ReactNode } from 'react'
 
 export interface AppLayoutProps {
@@ -8,7 +6,6 @@ export interface AppLayoutProps {
 }
 
 export function AppLayout({ viewMode, children }: AppLayoutProps) {
-  useDevTools()
   const containerClasses = {
     popup: 'popup-container',
     sidebar: 'sidebar-container',

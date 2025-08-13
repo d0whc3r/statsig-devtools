@@ -6,11 +6,6 @@ import App from './App'
 import '@/src/styles/globals.css'
 import './style.css'
 
-// Initialize development tools in development mode
-if (import.meta.env.DEV) {
-  import('@/src/utils/dev-tools')
-}
-
 // Create root and render the app
 const rootElement = document.getElementById('root')
 if (!rootElement) {
