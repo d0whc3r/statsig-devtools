@@ -1,17 +1,12 @@
-@reference '@/src/styles/globals.css';
+@import '@/src/styles/globals.css';
 
 /* Sidebar-specific optimizations */
 body {
-  @apply m-0 overflow-x-hidden p-0;
-  @apply h-full w-full bg-neutral-50;
+  @apply bg-background m-0 h-full w-full overflow-x-hidden p-0;
 }
 
 #root {
   @apply h-full w-full max-w-full overflow-x-hidden;
-}
-
-.sidebar-optimized {
-  @apply h-screen w-full overflow-x-hidden;
 }
 
 /* Responsive adjustments for sidebar */
@@ -26,22 +21,22 @@ body {
 }
 
 .sidebar-fade-in {
-  animation: slideDown 0.3s ease-out;
+  @apply animate-pulse;
 }
 
 .truncate-sidebar {
-  @apply max-w-full truncate;
+  @apply max-w-full overflow-hidden text-ellipsis whitespace-nowrap;
 }
 
 .type-badge {
   @apply max-w-[100px] overflow-hidden text-ellipsis whitespace-nowrap;
 }
 
-/* Sidepanel-specific loading states */
+/* Sidebar-specific loading states */
 .sidebar-loading {
   @apply flex h-full w-full items-center justify-center;
 }
 
 .sidebar-loading-spinner {
-  @apply border-t-primary-600 h-6 w-6 animate-spin rounded-full border-2 border-neutral-200;
+  @apply border-border border-t-primary h-6 w-6 animate-spin rounded-full border-2;
 }

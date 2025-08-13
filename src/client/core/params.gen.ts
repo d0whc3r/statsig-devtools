@@ -57,7 +57,7 @@ const buildKeyMap = (fields: FieldsConfig, map?: KeyMap): KeyMap => {
       if (config.key) {
         map.set(config.key, {
           in: config.in,
-          map: config.map,
+          map: config.map ?? '',
         })
       }
     } else if (config.args) {

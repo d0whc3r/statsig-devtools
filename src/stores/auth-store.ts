@@ -6,36 +6,33 @@ export interface AuthState {
   consoleApiKey: string | null
 
   // User information
-  user: {
-    id: string | null
-    email: string | null
-    name: string | null
-  } | null
+  user:
+    | {
+        userId: string
+        stableId?: never
+      }
+    | {
+        userId?: never
+        stableId: string
+      }
+    | null
 
   // Loading states
   isValidatingKey: boolean
   isLoggingOut: boolean
-
-  // Error states
-  authError: string | null
 }
 
 export interface AuthActions {
-  // Authentication actions
-  setConsoleApiKey: (key: string) => void
-  setAuthenticated: (authenticated: boolean) => void
+  // User actions
   setUser: (user: AuthState['user']) => void
+  getUserId: () => string | null
 
   // Loading actions
-  setValidatingKey: (validating: boolean) => void
-  setLoggingOut: (loggingOut: boolean) => void
-
-  // Error actions
-  setAuthError: (error: string | null) => void
-  clearAuthError: () => void
+  setIsValidatingKey: (validating: boolean) => void
+  setIsLoggingOut: (loggingOut: boolean) => void
 
   // Combined actions
-  login: (consoleKey: string, user: AuthState['user']) => void
+  login: (consoleKey: string) => void
   logout: () => void
   reset: () => void
 }
@@ -48,59 +45,38 @@ const initialState: AuthState = {
   user: null,
   isValidatingKey: false,
   isLoggingOut: false,
-  authError: null,
 }
 
 export const useAuthStore = createSelectivelyPersistedStore<AuthStore>(
-  (set) => ({
+  (set, get) => ({
     ...initialState,
-
-    // Authentication actions
-    setConsoleApiKey: (key: string) =>
-      set((state) => {
-        state.consoleApiKey = key
-        state.authError = null
-      }),
-
-    setAuthenticated: (authenticated: boolean) =>
-      set((state) => {
-        state.isAuthenticated = authenticated
-      }),
 
     setUser: (user: AuthState['user']) =>
       set((state) => {
         state.user = user
       }),
 
+    getUserId: () => {
+      const { user } = get()
+      return user?.userId ?? user?.stableId ?? null
+    },
+
     // Loading actions
-    setValidatingKey: (validating: boolean) =>
+    setIsValidatingKey: (validating: boolean) =>
       set((state) => {
         state.isValidatingKey = validating
       }),
 
-    setLoggingOut: (loggingOut: boolean) =>
+    setIsLoggingOut: (loggingOut: boolean) =>
       set((state) => {
         state.isLoggingOut = loggingOut
       }),
 
-    // Error actions
-    setAuthError: (error: string | null) =>
-      set((state) => {
-        state.authError = error
-      }),
-
-    clearAuthError: () =>
-      set((state) => {
-        state.authError = null
-      }),
-
     // Combined actions
-    login: (consoleKey: string, user: AuthState['user']) =>
+    login: (consoleKey: string) =>
       set((state) => {
         state.consoleApiKey = consoleKey
-        state.user = user
         state.isAuthenticated = true
-        state.authError = null
       }),
 
     logout: () =>
@@ -108,7 +84,6 @@ export const useAuthStore = createSelectivelyPersistedStore<AuthStore>(
         state.isAuthenticated = false
         state.consoleApiKey = null
         state.user = null
-        state.authError = null
         state.isValidatingKey = false
         state.isLoggingOut = false
       }),
@@ -120,9 +95,11 @@ export const useAuthStore = createSelectivelyPersistedStore<AuthStore>(
   }),
   'auth-store',
   (state) => ({
+    isAuthenticated: state.isAuthenticated,
     consoleApiKey: state.consoleApiKey,
     user: state.user,
-    isAuthenticated: state.isAuthenticated,
+    isValidatingKey: state.isValidatingKey,
+    isLoggingOut: state.isLoggingOut,
   }),
   1,
 )

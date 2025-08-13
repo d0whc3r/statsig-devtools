@@ -1,71 +1,37 @@
-@reference '@/src/styles/globals.css';
+@import '@/src/styles/globals.css';
 
 /* Tab-specific optimizations */
+html,
 body {
-  @apply min-h-screen w-screen;
+  @apply m-0 h-full w-full p-0;
+}
+
+body {
+  @apply bg-background;
 }
 
 #root {
-  @apply flex min-h-screen w-screen flex-col;
-}
-
-.tab-optimized {
-  @apply h-screen w-screen max-w-none;
-  @apply min-h-screen w-full bg-neutral-50;
-}
-
-.tab-layout {
-  @apply mx-auto min-h-screen w-full max-w-6xl px-4 py-6;
-}
-
-@media (max-width: 1024px) {
-  .tab-layout {
-    @apply px-4 py-4;
-  }
-}
-
-.tab-card {
-  @apply mb-6 rounded-xl border border-neutral-200 bg-white shadow-sm;
-  @apply transition-shadow duration-200 hover:shadow-md;
-}
-
-.tab-fade-in {
-  animation: slideUp 0.3s ease-out;
+  @apply min-h-screen w-full;
 }
 
 /* Tab-specific loading states */
-.loading-container {
+.tab-loading {
   @apply flex h-screen w-full items-center justify-center;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
 }
 
-.loading-content {
-  @apply text-center;
+.tab-loading-spinner {
+  @apply border-border border-t-primary h-12 w-12 animate-spin rounded-full border-[3px];
 }
 
-.loading-spinner {
-  @apply border-t-primary-600 h-10 w-10 rounded-full border-4 border-neutral-200;
-  animation: spin 1s linear infinite;
-}
-
-.loading-text {
-  @apply mt-4 text-sm text-neutral-500;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
+/* Tab-specific responsive design */
+@media (max-width: 768px) {
+  .tab-container {
+    @apply p-4;
   }
 }
 
-/* Tab-specific content styles */
-.tab-content {
-  @apply min-h-screen w-full bg-neutral-50;
-}
-
-.tab-header {
-  @apply sticky top-0 z-10 border-b border-neutral-200 bg-white/80 backdrop-blur-sm;
+@media (max-width: 640px) {
+  .tab-container {
+    @apply p-2;
+  }
 }

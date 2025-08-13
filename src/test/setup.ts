@@ -1,4 +1,4 @@
-import { vi } from 'vitest'
+import { beforeEach, vi } from 'vitest'
 
 import '@testing-library/jest-dom/vitest'
 
@@ -86,3 +86,16 @@ Object.defineProperty(window, 'statsigStores', {
   value: undefined,
   writable: true,
 })
+
+beforeEach(() => {
+  vi.clearAllMocks()
+})
+
+vi.mock('@/src/utils/logger', () => ({
+  Logger: vi.fn().mockImplementation(() => ({
+    error: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
+  })),
+}))

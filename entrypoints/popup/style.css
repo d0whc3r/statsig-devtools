@@ -1,4 +1,4 @@
-@reference '@/src/styles/globals.css';
+@import '@/src/styles/globals.css';
 
 /* Popup-specific optimizations */
 html,
@@ -7,23 +7,11 @@ body {
 }
 
 body {
-  @apply h-[550px] w-[480px] overflow-auto bg-white;
+  @apply bg-background h-[550px] w-[480px] overflow-auto;
 }
 
 #root {
   @apply flex h-full w-full flex-col;
-}
-
-.popup-layout {
-  @apply flex h-full flex-col overflow-hidden;
-}
-
-.popup-content {
-  @apply flex flex-1 flex-col overflow-hidden;
-}
-
-.popup-scrollable {
-  @apply flex-1 overflow-x-hidden overflow-y-auto;
 }
 
 /* Popup-specific loading states */
@@ -32,5 +20,5 @@ body {
 }
 
 .popup-loading-spinner {
-  @apply border-t-primary-600 h-8 w-8 animate-spin rounded-full border-2 border-neutral-200;
+  @apply border-border border-t-primary h-8 w-8 animate-spin rounded-full border-2;
 }

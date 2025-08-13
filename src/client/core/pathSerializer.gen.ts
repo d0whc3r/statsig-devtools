@@ -97,7 +97,7 @@ export const serializeArrayParam = ({
       }
 
       return serializePrimitiveParam({
-        allowReserved,
+        allowReserved: Boolean(allowReserved),
         name,
         value: v as string,
       })
@@ -157,7 +157,7 @@ export const serializeObjectParam = ({
   const joinedValues = Object.entries(value)
     .map(([key, v]) =>
       serializePrimitiveParam({
-        allowReserved,
+        allowReserved: Boolean(allowReserved),
         name: style === 'deepObject' ? `${name}[${key}]` : key,
         value: v as string,
       }),

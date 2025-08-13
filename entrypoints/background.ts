@@ -55,6 +55,28 @@ export default defineBackground(() => {
           })
         return true
 
+      case 'GET_MANIFEST_INFO':
+        try {
+          const manifest = browser.runtime.getManifest()
+          logger.debug('Manifest info retrieved', {
+            name: manifest.name,
+            version: manifest.version,
+            description: manifest.description,
+          })
+          sendResponse({
+            success: true,
+            data: {
+              name: manifest.name,
+              version: manifest.version,
+              description: manifest.description,
+            },
+          })
+        } catch (error) {
+          logger.error('Failed to get manifest info', error)
+          sendResponse({ success: false, error: 'Failed to get manifest info' })
+        }
+        return true
+
       case 'PING_BACKGROUND':
         logger.debug('PING_BACKGROUND received, responding with timestamp')
         sendResponse({ success: true, timestamp: Date.now() })
