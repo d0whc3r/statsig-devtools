@@ -74,13 +74,13 @@ export default defineContentScript({
 
       switch (type) {
         case 'localStorage':
-          localStorage.setItem(key, value)
+          window.localStorage.setItem(key, value)
           break
         case 'sessionStorage':
-          sessionStorage.setItem(key, value)
+          window.sessionStorage.setItem(key, value)
           break
         case 'cookie':
-          document.cookie = `${key}=${value}; domain=${domain ?? location.hostname}; path=/`
+          document.cookie = `${key}=${value}; domain=${domain ?? window.location.hostname}; path=/`
           break
         default:
           throw new Error(`Unsupported storage type: ${type}`)
@@ -93,13 +93,13 @@ export default defineContentScript({
 
       switch (type) {
         case 'localStorage':
-          localStorage.removeItem(key)
+          window.localStorage.removeItem(key)
           break
         case 'sessionStorage':
-          sessionStorage.removeItem(key)
+          window.sessionStorage.removeItem(key)
           break
         case 'cookie':
-          document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=${domain ?? location.hostname}; path=/`
+          document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=${domain ?? window.location.hostname}; path=/`
           break
         default:
           throw new Error(`Unsupported storage type: ${type}`)
@@ -112,9 +112,9 @@ export default defineContentScript({
 
       switch (type) {
         case 'localStorage':
-          return localStorage.getItem(key)
+          return window.localStorage.getItem(key)
         case 'sessionStorage':
-          return sessionStorage.getItem(key)
+          return window.sessionStorage.getItem(key)
         case 'cookie': {
           const cookies = document.cookie.split(';')
           const cookie = cookies.find((c) => c.trim().startsWith(`${key}=`))

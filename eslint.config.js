@@ -326,7 +326,7 @@ export default [
   },
   // Config files configuration
   {
-    files: ['vitest.config.ts', 'wxt.config.ts', 'playwright.config.ts'],
+    files: ['*.config.ts'],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
@@ -343,7 +343,7 @@ export default [
   },
   // JavaScript config files (no TypeScript parser needed)
   {
-    files: ['postcss.config.mjs', 'eslint.config.js'],
+    files: ['*.config.mjs', '*.config.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -366,7 +366,7 @@ export default [
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', '.wxt/', 'coverage/', '.output/'],
+    ignores: ['dist/', 'node_modules/', '.wxt/', 'coverage/', '.output/', 'src/client/**/*'],
   },
   prettier,
 ]

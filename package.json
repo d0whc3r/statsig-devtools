@@ -38,12 +38,10 @@
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox --mv2",
-    "dev:clean": "wxt",
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox --mv2",
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox --mv2",
-    "compile": "tsc --noEmit",
     "type-check": "tsc --build --force",
     "type-check:app": "tsc --noEmit --project tsconfig.app.json",
     "type-check:test": "tsc --noEmit --project tsconfig.test.json",
@@ -52,17 +50,11 @@
     "postinstall": "wxt prepare",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest run --coverage",
-    "test:coverage:ui": "vitest --ui --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:debug": "playwright test --debug",
-    "test:e2e:headed": "playwright test --headed",
+    "openapi-ts": "openapi-ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "check": "npm run lint:fix && npm run type-check:all && npm run test",
     "check:ci": "npm run lint && npm run type-check:all && npm run test",
     "check:e2e": "npm run build && npm run test:e2e",
@@ -81,6 +73,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@hey-api/openapi-ts": "^0.80.9",
     "@playwright/test": "^1.54.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
@@ -129,8 +122,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
+      "eslint --fix"
     ],
     "*.{json,md,html,css,yml,yaml}": [
       "prettier --write"

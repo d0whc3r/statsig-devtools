@@ -5,6 +5,6 @@
     "checkJs": false,
     "noEmit": true
   },
-  "include": ["vitest.config.ts", "wxt.config.ts", "playwright.config.ts", "postcss.config.mjs", "eslint.config.js"],
+  "include": ["*.config.ts", "*.config.mjs", "*.config.js"],
   "exclude": []
 }
