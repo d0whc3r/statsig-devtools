@@ -1,6 +1,6 @@
-import prettier from 'eslint-config-prettier'
 import importPlugin from 'eslint-plugin-import'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
@@ -319,5 +319,5 @@ export default [
   {
     ignores: ['dist/', 'node_modules/', '.wxt/', 'coverage/', '.output/', 'src/templates/*.ejs'],
   },
-  prettier,
+  eslintPluginPrettierRecommended,
 ]

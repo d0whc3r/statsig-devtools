@@ -1,4 +1,4 @@
-import type { StorageOverride } from '../../services/statsig-integration'
+import type { StorageOverride } from '../../types'
 import type { ReactNode } from 'react'
 
 export interface OverrideFormProps {

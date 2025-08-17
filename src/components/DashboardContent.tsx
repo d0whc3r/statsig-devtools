@@ -6,8 +6,8 @@ import { useStorageOverrides } from '../hooks/useStorageOverrides'
 import { ConfigurationDetailPanel } from './ConfigurationDetailPanel'
 import { ConfigurationList } from './ConfigurationList'
 
-import type { EvaluationResult, StorageOverride } from '../services/statsig-integration'
-import type { AuthState, StatsigConfigurationItem } from '../types'
+import type { EvaluationResult } from '../services/unified-statsig-api'
+import type { AuthState, StatsigConfigurationItem, StorageOverride } from '../types'
 
 interface DashboardContentProps {
   authState: AuthState
@@ -19,7 +19,10 @@ export function DashboardContent({ authState, viewMode }: DashboardContentProps)
   const { tabInfo } = useActiveTab()
   const domainForFiltering = viewMode !== 'tab' ? (tabInfo.domain ?? undefined) : undefined
   const { activeOverrides } = useStorageOverrides(domainForFiltering)
-  const { evaluationResults } = useConfigurationEvaluation(authState, configurations, activeOverrides)
+  const { evaluationResults } = useConfigurationEvaluation(authState)
+  const evaluationResultsMap = new Map<string, EvaluationResult>(
+    evaluationResults.map((r) => [r.configurationName, r] as [string, EvaluationResult]),
+  )
   const { selectedConfiguration, handleConfigurationSelect } = useConfigurationSelection()
 
   if (viewMode === 'popup') {
@@ -27,7 +30,7 @@ export function DashboardContent({ authState, viewMode }: DashboardContentProps)
       <PopupLayout
         authState={authState}
         configurations={configurations}
-        evaluationResults={evaluationResults}
+        evaluationResults={evaluationResultsMap}
         activeOverrides={activeOverrides}
         selectedConfiguration={selectedConfiguration}
         isLoading={isLoading}
@@ -44,7 +47,7 @@ export function DashboardContent({ authState, viewMode }: DashboardContentProps)
       <SidebarLayout
         authState={authState}
         configurations={configurations}
-        evaluationResults={evaluationResults}
+        evaluationResults={evaluationResultsMap}
         activeOverrides={activeOverrides}
         selectedConfiguration={selectedConfiguration}
         isLoading={isLoading}
@@ -60,7 +63,7 @@ export function DashboardContent({ authState, viewMode }: DashboardContentProps)
     <TabLayout
       authState={authState}
       configurations={configurations}
-      evaluationResults={evaluationResults}
+      evaluationResults={evaluationResultsMap}
       activeOverrides={activeOverrides}
       selectedConfiguration={selectedConfiguration}
       isLoading={isLoading}

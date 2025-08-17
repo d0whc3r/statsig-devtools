@@ -308,7 +308,7 @@ export class CacheManager<T = unknown> {
   /**
    * Get cache entries sorted by access frequency
    */
-  getEntriesByFrequency(): Array<{ key: string; accessCount: number; lastAccessed: number }> {
+  getEntriesByFrequency(): { key: string; accessCount: number; lastAccessed: number }[] {
     return Array.from(this.cache.entries())
       .map(([key, entry]) => ({
         key,

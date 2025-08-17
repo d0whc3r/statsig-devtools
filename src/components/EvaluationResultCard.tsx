@@ -2,7 +2,7 @@ import React from 'react'
 
 import { formatValue } from '../utils/configuration-formatters'
 
-import type { EvaluationResult } from '../services/statsig-integration'
+import type { EvaluationResult } from '../services/unified-statsig-api'
 
 interface EvaluationResultCardProps {
   result: EvaluationResult

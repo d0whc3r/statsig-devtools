@@ -33,13 +33,6 @@ export function isConsoleApiKey(apiKey: string): boolean {
 }
 
 /**
- * Check if API key is a Client SDK key (starts with 'client-')
- */
-export function isClientSdkKey(apiKey: string): boolean {
-  return apiKey.startsWith('client-')
-}
-
-/**
  * Validate API key format
  */
 export function validateApiKey(apiKey: string): { isValid: boolean; type: 'console' | 'client' | 'unknown' } {
@@ -49,10 +42,6 @@ export function validateApiKey(apiKey: string): { isValid: boolean; type: 'conso
 
   if (isConsoleApiKey(apiKey)) {
     return { isValid: true, type: 'console' }
-  }
-
-  if (isClientSdkKey(apiKey)) {
-    return { isValid: true, type: 'client' }
   }
 
   return { isValid: false, type: 'unknown' }
@@ -125,8 +114,6 @@ export function createRequestHeaders(
 
   if (isConsoleApiKey(apiKey)) {
     headers['STATSIG-API-KEY'] = apiKey
-  } else if (isClientSdkKey(apiKey)) {
-    headers['STATSIG-CLIENT-KEY'] = apiKey
   }
 
   return { ...headers, ...additionalHeaders }

@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { StorageInjectionService } from '../services/storage-injection'
 import { BrowserStorage, BrowserTabs } from '../utils/browser-api'
 
-import type { StorageOverride } from '../services/statsig-integration'
+import type { StorageOverride } from '../types'
 
 // Mock browser APIs
 vi.mock('../utils/browser-api', () => ({

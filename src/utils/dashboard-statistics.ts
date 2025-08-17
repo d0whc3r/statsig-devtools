@@ -1,5 +1,5 @@
-import type { EvaluationResult, StorageOverride } from '../services/statsig-integration'
-import type { StatsigConfigurationItem } from '../types'
+import type { EvaluationResult } from '../services/unified-statsig-api'
+import type { StatsigConfigurationItem, StorageOverride } from '../types'
 
 /**
  * Interface for dashboard statistics
@@ -80,7 +80,7 @@ export const getStatisticsSummary = (statistics: DashboardStatistics): string =>
  */
 export const getTypeDistribution = (
   statistics: DashboardStatistics,
-): Array<{ type: string; count: number; percentage: number }> => {
+): { type: string; count: number; percentage: number }[] => {
   const { configurationsByType, totalConfigurations } = statistics
 
   return Object.entries(configurationsByType).map(([type, count]) => ({

@@ -117,44 +117,6 @@ export class StorageManager {
   }
 
   /**
-   * Store Client SDK key with encryption
-   */
-  public async storeClientSdkKey(apiKey: string): Promise<void> {
-    if (!apiKey || typeof apiKey !== 'string') {
-      throw new Error('Invalid SDK key provided')
-    }
-
-    try {
-      const encryptedData = await this.encryptData(apiKey)
-      await browser.storage.local.set({
-        [STORAGE_KEYS.CLIENT_SDK_KEY]: encryptedData,
-      })
-    } catch (error) {
-      logger.error('Failed to store Client SDK key:', error)
-      throw new Error('Failed to store Client SDK key securely')
-    }
-  }
-
-  /**
-   * Retrieve Client SDK key with decryption
-   */
-  public async getClientSdkKey(): Promise<string | null> {
-    try {
-      const result = await browser.storage.local.get(STORAGE_KEYS.CLIENT_SDK_KEY)
-      const encryptedData = result[STORAGE_KEYS.CLIENT_SDK_KEY] as EncryptedData
-
-      if (!encryptedData) {
-        return null
-      }
-
-      return await this.decryptData(encryptedData)
-    } catch (error) {
-      logger.error('Failed to retrieve Client SDK key:', error)
-      return null
-    }
-  }
-
-  /**
    * Clear Console API key from storage
    */
   public async clearConsoleApiKey(): Promise<void> {
@@ -163,18 +125,6 @@ export class StorageManager {
     } catch (error) {
       logger.error('Failed to clear Console API key:', error)
       throw new Error('Failed to clear Console API key')
-    }
-  }
-
-  /**
-   * Clear Client SDK key from storage
-   */
-  public async clearClientSdkKey(): Promise<void> {
-    try {
-      await browser.storage.local.remove(STORAGE_KEYS.CLIENT_SDK_KEY)
-    } catch (error) {
-      logger.error('Failed to clear Client SDK key:', error)
-      throw new Error('Failed to clear Client SDK key')
     }
   }
 
@@ -265,19 +215,6 @@ export class StorageManager {
       return !!result[STORAGE_KEYS.CONSOLE_API_KEY]
     } catch (error) {
       logger.error('Failed to check Console API key existence:', error)
-      return false
-    }
-  }
-
-  /**
-   * Check if Client SDK key exists
-   */
-  public async hasClientSdkKey(): Promise<boolean> {
-    try {
-      const result = await browser.storage.local.get(STORAGE_KEYS.CLIENT_SDK_KEY)
-      return !!result[STORAGE_KEYS.CLIENT_SDK_KEY]
-    } catch (error) {
-      logger.error('Failed to check Client SDK key existence:', error)
       return false
     }
   }

@@ -16,9 +16,10 @@ export interface UseDashboardStatisticsReturn {
 export function useDashboardStatistics(authState: AuthState): UseDashboardStatisticsReturn {
   const { configurations, isLoading } = useConfigurationData(authState)
   const { activeOverrides } = useStorageOverrides()
-  const { evaluationResults } = useConfigurationEvaluation(authState, configurations, activeOverrides)
+  const { evaluationResults } = useConfigurationEvaluation(authState)
+  const evaluationResultsMap = new Map(evaluationResults.map((r) => [r.configurationName, r]))
 
-  const statistics = calculateDashboardStatistics(configurations, evaluationResults, activeOverrides)
+  const statistics = calculateDashboardStatistics(configurations, evaluationResultsMap, activeOverrides)
 
   return {
     statistics,

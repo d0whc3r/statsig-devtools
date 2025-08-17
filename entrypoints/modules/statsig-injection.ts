@@ -7,7 +7,7 @@ import { logger } from '@/src/utils/logger'
 import { executeScriptDirect } from './script-execution'
 
 import type { StatsigSDK, StatsigWindow } from '../types/content-types'
-import type { StorageOverride } from '@/src/services/statsig-integration'
+import type { StorageOverride } from '@/src/types'
 
 /**
  * Inject Statsig-specific override logic with improved error handling and reliability
@@ -46,7 +46,7 @@ export async function injectStatsigOverride(override: StorageOverride): Promise<
         // eslint-disable-next-line no-console
         console.log('✅ STATSIG: Override injected successfully', { featureName, featureType, overrideValue })
       },
-      [override.featureName, override.featureType, override.value],
+      [override.featureName, override.featureType, String(override.value)],
     )
 
     logger.log(`✅ Statsig override injected successfully for ${override.featureName}`)

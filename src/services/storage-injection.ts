@@ -1,7 +1,7 @@
 import { BrowserStorage, BrowserTabs } from '../utils/browser-api'
 import { logger } from '../utils/logger'
 
-import type { StorageOverride } from './statsig-integration'
+import type { StorageOverride } from '../types'
 
 /**
  * Content script response interface

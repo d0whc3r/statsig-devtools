@@ -1,7 +1,6 @@
 import React from 'react'
 
-import type { StorageOverride } from '../services/statsig-integration'
-import type { StatsigConfigurationItem } from '../types'
+import type { StatsigConfigurationItem, StorageOverride } from '../types'
 
 interface RuleDetailOverrideFormProps {
   configuration: StatsigConfigurationItem
@@ -85,7 +84,7 @@ export function RuleDetailOverrideForm({
           <div className="flex gap-2">
             <textarea
               id="override-value"
-              value={overrideForm.value || ''}
+              value={typeof overrideForm.value === 'string' ? overrideForm.value : String(overrideForm.value ?? '')}
               onChange={(e) => setOverrideForm({ ...overrideForm, value: e.target.value })}
               placeholder="Enter override value"
               rows={2}

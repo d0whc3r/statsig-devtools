@@ -1,4 +1,4 @@
-import type { StorageOverride } from '../../services/statsig-integration'
+import type { StorageOverride } from '../../types'
 
 /**
  * Get override type icon

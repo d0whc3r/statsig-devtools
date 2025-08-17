@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { statsigOverrideApiService } from '../services/statsig-override-api'
+import { type LocalOverrideRequest, localOverrideService } from '../services/local-override.service'
 import { LoadingSpinner } from './LoadingSpinner'
 
 import type { StatsigConfigurationItem } from '../types'
@@ -50,11 +50,9 @@ export function ExperimentOverrideForm({ experiment, onClose }: ExperimentOverri
       const result = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: () => {
-          const stableIdKeys = Object.keys(window.localStorage).filter(key => 
-            key.startsWith('statsig.stable_id.')
-          )
-          const userIdKeys = Object.keys(window.localStorage).filter(key => 
-            key.startsWith('statsig.user_id.') || key === 'statsig_user_id'
+          const stableIdKeys = Object.keys(window.localStorage).filter((key) => key.startsWith('statsig.stable_id.'))
+          const userIdKeys = Object.keys(window.localStorage).filter(
+            (key) => key.startsWith('statsig.user_id.') || key === 'statsig_user_id',
           )
 
           let stableId = null
@@ -62,12 +60,12 @@ export function ExperimentOverrideForm({ experiment, onClose }: ExperimentOverri
 
           // Get stableId
           if (stableIdKeys.length > 0) {
-            stableId = window.localStorage.getItem(stableIdKeys[0])
+            stableId = JSON.parse(window.localStorage.getItem(stableIdKeys[0]) ?? '""')
           }
 
           // Get userId
           if (userIdKeys.length > 0) {
-            userId = window.localStorage.getItem(userIdKeys[0])
+            userId = JSON.parse(window.localStorage.getItem(userIdKeys[0]) ?? '""')
           }
 
           return { stableId, userId }
@@ -75,15 +73,15 @@ export function ExperimentOverrideForm({ experiment, onClose }: ExperimentOverri
       })
 
       const { stableId, userId } = result[0].result || {}
-       
-       // Determine which identifier to use (prefer stableId)
-       if (stableId) {
-         setStableIdInfo({ stableId: stableId || null, userId: userId || null, source: 'stableId' })
-       } else if (userId) {
-         setStableIdInfo({ stableId: stableId || null, userId: userId || null, source: 'userId' })
-       } else {
-         setStableIdInfo({ stableId: null, userId: null, source: null })
-       }
+
+      // Determine which identifier to use (prefer stableId)
+      if (stableId) {
+        setStableIdInfo({ stableId: stableId || null, userId: userId || null, source: 'stableId' })
+      } else if (userId) {
+        setStableIdInfo({ stableId: stableId || null, userId: userId || null, source: 'userId' })
+      } else {
+        setStableIdInfo({ stableId: null, userId: null, source: null })
+      }
     } catch (err) {
       console.error('Failed to load user identifiers:', err)
       setError(err instanceof Error ? err.message : 'Failed to load user identifiers')
@@ -106,25 +104,29 @@ export function ExperimentOverrideForm({ experiment, onClose }: ExperimentOverri
     setError(null)
 
     try {
-      const identifierValue = stableIdInfo.source === 'stableId' 
-        ? stableIdInfo.stableId 
-        : stableIdInfo.userId
+      const identifierValue = stableIdInfo.source === 'stableId' ? stableIdInfo.stableId : stableIdInfo.userId
 
       if (!identifierValue) {
         throw new Error('User identifier not available')
       }
 
-      // Create override using Statsig's API
-      await statsigOverrideApiService.createExperimentOverride({
+      const request: LocalOverrideRequest = {
         experimentName: experiment.name,
         userId: stableIdInfo.source === 'userId' ? identifierValue : undefined,
         stableId: stableIdInfo.source === 'stableId' ? identifierValue : undefined,
         groupName: selectedGroup,
-      })
-      onClose()
+      }
+
+      const response = await localOverrideService.createExperimentOverride(request)
+
+      if (response.success) {
+        onClose()
+      } else {
+        throw new Error(response.message)
+      }
     } catch (err) {
-      console.error('Failed to create override:', err)
-      setError(err instanceof Error ? err.message : 'Failed to create override')
+      console.error('Failed to create local override:', err)
+      setError(err instanceof Error ? err.message : 'Failed to create local override')
     } finally {
       setIsLoading(false)
     }
@@ -165,7 +167,13 @@ export function ExperimentOverrideForm({ experiment, onClose }: ExperimentOverri
           </button>
         </div>
 
-        <form onSubmit={(e) => { e.preventDefault(); handleCreateOverride(); }} className="space-y-6">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleCreateOverride()
+          }}
+          className="space-y-6"
+        >
           {/* User Identifier Status */}
           <div className="space-y-2">
             <div className="block text-sm font-medium text-gray-700">User Identifier</div>
@@ -176,22 +184,30 @@ export function ExperimentOverrideForm({ experiment, onClose }: ExperimentOverri
               </div>
             ) : stableIdInfo.source ? (
               <div className="flex items-center gap-2">
-                <span className="badge-professional bg-green-100 text-green-800 border-green-200">
+                <span className="badge-professional border-green-200 bg-green-100 text-green-800">
                   {stableIdInfo.source === 'stableId' ? 'Stable ID' : 'User ID'}
                 </span>
-                <span className="text-sm font-mono text-gray-500">
-                   {`${(stableIdInfo.source === 'stableId' 
-                     ? stableIdInfo.stableId 
-                     : stableIdInfo.userId)?.substring(0, 8)}...`}
-                 </span>
+                <span className="font-mono text-sm text-gray-500">
+                  {`${(stableIdInfo.source === 'stableId' ? stableIdInfo.stableId : stableIdInfo.userId)?.substring(
+                    0,
+                    8,
+                  )}...`}
+                </span>
               </div>
             ) : (
-              <div className="alert-professional alert-error p-3 rounded-lg">
+              <div className="alert-professional alert-error rounded-lg p-3">
                 <div className="flex items-center gap-2">
                   <svg className="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                    />
                   </svg>
-                  <span className="text-sm">No user identifier found in localStorage. Make sure Statsig is initialized on this page.</span>
+                  <span className="text-sm">
+                    No user identifier found in localStorage. Make sure Statsig is initialized on this page.
+                  </span>
                 </div>
               </div>
             )}
@@ -199,7 +215,9 @@ export function ExperimentOverrideForm({ experiment, onClose }: ExperimentOverri
 
           {/* Group Selection */}
           <div className="space-y-2">
-            <label htmlFor="group-select" className="block text-sm font-medium text-gray-700">Select Group</label>
+            <label htmlFor="group-select" className="block text-sm font-medium text-gray-700">
+              Select Group
+            </label>
             {availableGroups.length > 0 ? (
               <select
                 id="group-select"
@@ -215,10 +233,15 @@ export function ExperimentOverrideForm({ experiment, onClose }: ExperimentOverri
                 ))}
               </select>
             ) : (
-              <div className="alert-professional p-3 rounded-lg bg-blue-50 border-blue-200">
+              <div className="alert-professional rounded-lg border-blue-200 bg-blue-50 p-3">
                 <div className="flex items-center gap-2">
                   <svg className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                   <span className="text-sm text-blue-700">No groups available for this experiment.</span>
                 </div>
@@ -228,10 +251,15 @@ export function ExperimentOverrideForm({ experiment, onClose }: ExperimentOverri
 
           {/* Error Display */}
           {error && (
-            <div className="alert-professional alert-error p-3 rounded-lg">
+            <div className="alert-professional alert-error rounded-lg p-3">
               <div className="flex items-center gap-2">
                 <svg className="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                  />
                 </svg>
                 <span className="text-sm">{error}</span>
               </div>
@@ -243,7 +271,7 @@ export function ExperimentOverrideForm({ experiment, onClose }: ExperimentOverri
             <button
               type="submit"
               disabled={!selectedGroup || !stableIdInfo.source || isLoading}
-              className="btn-primary flex-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary flex flex-1 items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
                 <>
@@ -254,20 +282,21 @@ export function ExperimentOverrideForm({ experiment, onClose }: ExperimentOverri
                 'Create Override'
               )}
             </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="btn-secondary px-4 py-2"
-            >
+            <button type="button" onClick={onClose} className="btn-secondary px-4 py-2">
               Cancel
             </button>
           </div>
 
           {/* Info */}
-          <div className="alert-professional p-3 rounded-lg bg-blue-50 border-blue-200">
+          <div className="alert-professional rounded-lg border-blue-200 bg-blue-50 p-3">
             <div className="flex items-center gap-2">
               <svg className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               <span className="text-xs text-blue-700">
                 This override will be applied to the current domain and will persist until removed.

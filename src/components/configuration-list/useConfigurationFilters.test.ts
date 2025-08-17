@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { useConfigurationFilters } from './useConfigurationFilters'
 
-import type { EvaluationResult } from '../../services/statsig-integration'
+import type { EvaluationResult } from '../../services/unified-statsig-api'
 import type { StatsigConfigurationItem } from '../../types'
 import type React from 'react'
 

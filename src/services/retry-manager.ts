@@ -64,7 +64,7 @@ const logger = {
 export class RetryManager {
   private static instance: RetryManager
   private networkStatus: NetworkStatus = { isOnline: navigator.onLine }
-  private retryQueues: Map<string, Array<() => Promise<void>>> = new Map()
+  private retryQueues: Map<string, (() => Promise<void>)[]> = new Map()
 
   private constructor() {
     this.setupNetworkListeners()
@@ -299,10 +299,7 @@ export class RetryManager {
   /**
    * Batch retry operations
    */
-  async batchRetry<T>(
-    operations: Array<() => Promise<T>>,
-    config: Partial<RetryConfig> = {},
-  ): Promise<Array<T | Error>> {
+  async batchRetry<T>(operations: (() => Promise<T>)[], config: Partial<RetryConfig> = {}): Promise<(T | Error)[]> {
     const results = await Promise.allSettled(operations.map((operation) => this.withRetry(operation, config)))
 
     return results.map((result) => (result.status === 'fulfilled' ? result.value : result.reason))

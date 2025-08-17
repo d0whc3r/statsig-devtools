@@ -3,8 +3,7 @@ import { useStorageOverrides } from '../hooks/useStorageOverrides'
 import { ActiveTabInfo } from './ActiveTabInfo'
 import { DashboardStatistics } from './DashboardStatistics'
 
-import type { StorageOverride } from '../services/statsig-integration'
-import type { AuthState } from '../types'
+import type { AuthState, StorageOverride } from '../types'
 
 interface PopupInfoBarProps {
   authState: AuthState

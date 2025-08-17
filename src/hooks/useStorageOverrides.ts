@@ -5,7 +5,7 @@ import { storageInjectionService } from '../services/storage-injection'
 import { browserAPI } from '../utils/browser-api'
 import { useActiveTab } from './useActiveTab'
 
-import type { StorageOverride } from '../services/statsig-integration'
+import type { StorageOverride } from '../types'
 
 /**
  * Custom hook for managing storage overrides

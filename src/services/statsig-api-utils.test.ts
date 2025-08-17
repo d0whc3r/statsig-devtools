@@ -12,7 +12,6 @@ import {
   getRetryDelay,
   handleApiResponse,
   isAuthError,
-  isClientSdkKey,
   isConsoleApiKey,
   isRateLimited,
   isServerError,
@@ -62,18 +61,7 @@ describe('statsig-api-utils', () => {
       })
     })
 
-    describe('isClientSdkKey', () => {
-      it('should return true for client SDK keys', () => {
-        expect(isClientSdkKey('client-test-key')).toBe(true)
-        expect(isClientSdkKey('client-')).toBe(true)
-      })
-
-      it('should return false for non-client keys', () => {
-        expect(isClientSdkKey('console-test-key')).toBe(false)
-        expect(isClientSdkKey('test-key')).toBe(false)
-        expect(isClientSdkKey('')).toBe(false)
-      })
-    })
+    // Removed client key tests since only console key is supported in this project
 
     describe('validateApiKey', () => {
       it('should validate console API keys', () => {

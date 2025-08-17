@@ -2,7 +2,7 @@ import React from 'react'
 
 import { getStatusIconPath, getStatusIndicatorClass, getStatusText } from '../utils/configuration-formatters'
 
-import type { EvaluationResult } from '../services/statsig-integration'
+import type { EvaluationResult } from '../services/unified-statsig-api'
 
 interface ConfigurationStatusIndicatorProps {
   result?: EvaluationResult

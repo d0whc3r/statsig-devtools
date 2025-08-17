@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as configurationFormatters from '../utils/configuration-formatters'
 import { ConfigurationStatusIndicator } from './ConfigurationStatusIndicator'
 
-import type { EvaluationResult } from '../services/statsig-integration'
+import type { EvaluationResult } from '../services/unified-statsig-api'
 
 import { render, screen } from '@testing-library/react'
 

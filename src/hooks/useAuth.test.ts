@@ -4,8 +4,6 @@ import { storageManager } from '../services/storage-manager'
 import { viewModeService } from '../services/view-mode'
 import { useAuth } from './useAuth'
 
-import type { AuthState } from '../types'
-
 import { act, renderHook, waitFor } from '@testing-library/react'
 
 // Mock dependencies
@@ -22,11 +20,8 @@ describe('useAuth', () => {
     mockStorageManager.initialize.mockResolvedValue(undefined)
     mockViewModeService.initializeViewMode.mockResolvedValue(undefined)
     mockStorageManager.hasConsoleApiKey.mockResolvedValue(false)
-    mockStorageManager.hasClientSdkKey.mockResolvedValue(false)
     mockStorageManager.getConsoleApiKey.mockResolvedValue(null)
-    mockStorageManager.getClientSdkKey.mockResolvedValue(null)
     mockStorageManager.storeConsoleApiKey.mockResolvedValue(undefined)
-    mockStorageManager.storeClientSdkKey.mockResolvedValue(undefined)
     mockStorageManager.clearAllData.mockResolvedValue(undefined)
   })
 
@@ -60,53 +55,6 @@ describe('useAuth', () => {
 
       expect(result.current.authState.isAuthenticated).toBe(true)
       expect(result.current.authState.consoleApiKey).toBe(testApiKey)
-      expect(result.current.authState.clientSdkKey).toBe(testApiKey)
-
-      // Should store the same key for both types in unified mode
-      expect(mockStorageManager.storeClientSdkKey).toHaveBeenCalledWith(testApiKey)
-    })
-
-    it('should authenticate when client SDK key exists', async () => {
-      const testSdkKey = 'client-test-key-456'
-      mockStorageManager.hasClientSdkKey.mockResolvedValue(true)
-      mockStorageManager.getClientSdkKey.mockResolvedValue(testSdkKey)
-
-      const { result } = renderHook(() => useAuth())
-
-      await waitFor(() => {
-        expect(result.current.authState.isLoading).toBe(false)
-      })
-
-      expect(result.current.authState.isAuthenticated).toBe(true)
-      expect(result.current.authState.consoleApiKey).toBe(testSdkKey)
-      expect(result.current.authState.clientSdkKey).toBe(testSdkKey)
-
-      // Should store the same key for both types in unified mode
-      expect(mockStorageManager.storeConsoleApiKey).toHaveBeenCalledWith(testSdkKey)
-    })
-
-    it('should prefer client SDK key when both keys exist', async () => {
-      const consoleKey = 'console-key-123'
-      const clientKey = 'client-key-456'
-
-      mockStorageManager.hasConsoleApiKey.mockResolvedValue(true)
-      mockStorageManager.hasClientSdkKey.mockResolvedValue(true)
-      mockStorageManager.getConsoleApiKey.mockResolvedValue(consoleKey)
-      mockStorageManager.getClientSdkKey.mockResolvedValue(clientKey)
-
-      const { result } = renderHook(() => useAuth())
-
-      await waitFor(() => {
-        expect(result.current.authState.isLoading).toBe(false)
-      })
-
-      expect(result.current.authState.isAuthenticated).toBe(true)
-      expect(result.current.authState.consoleApiKey).toBe(clientKey)
-      expect(result.current.authState.clientSdkKey).toBe(clientKey)
-
-      // Should not call store methods when both keys already exist
-      expect(mockStorageManager.storeConsoleApiKey).not.toHaveBeenCalled()
-      expect(mockStorageManager.storeClientSdkKey).not.toHaveBeenCalled()
     })
 
     it('should handle initialization errors gracefully', async () => {
@@ -122,206 +70,108 @@ describe('useAuth', () => {
       expect(result.current.authState.isAuthenticated).toBe(false)
       expect(result.current.authState.error).toBe('Failed to load authentication state')
     })
+  })
 
-    it('should handle storage read errors gracefully', async () => {
-      const storageError = new Error('Failed to read from storage')
-      mockStorageManager.hasConsoleApiKey.mockRejectedValue(storageError)
-
+  describe('login', () => {
+    it('should store console API key and update auth state', async () => {
       const { result } = renderHook(() => useAuth())
+      const testApiKey = 'new-console-key-789'
 
       await waitFor(() => {
         expect(result.current.authState.isLoading).toBe(false)
+      })
+
+      await act(async () => {
+        await result.current.login({
+          isAuthenticated: true,
+          consoleApiKey: testApiKey,
+          isLoading: false,
+        })
+      })
+
+      expect(mockStorageManager.storeConsoleApiKey).toHaveBeenCalledWith(testApiKey)
+      expect(result.current.authState.isAuthenticated).toBe(true)
+      expect(result.current.authState.consoleApiKey).toBe(testApiKey)
+    })
+
+    it('should handle login errors', async () => {
+      const { result } = renderHook(() => useAuth())
+      const loginError = new Error('Storage failed')
+      mockStorageManager.storeConsoleApiKey.mockRejectedValue(loginError)
+
+      await waitFor(() => {
+        expect(result.current.authState.isLoading).toBe(false)
+      })
+
+      await act(async () => {
+        await result.current.login({
+          isAuthenticated: true,
+          consoleApiKey: 'test-key',
+          isLoading: false,
+        })
       })
 
       expect(result.current.authState.isAuthenticated).toBe(false)
-      expect(result.current.authState.error).toBe('Failed to load authentication state')
+      expect(result.current.authState.error).toBe('Storage failed')
     })
   })
 
-  describe('authentication handling', () => {
-    it('should update auth state when handleAuthenticated is called', async () => {
+  describe('logout', () => {
+    it('should clear console API key and reset auth state', async () => {
       const { result } = renderHook(() => useAuth())
 
-      await waitFor(() => {
-        expect(result.current.authState.isLoading).toBe(false)
-      })
-
-      const newAuthState: AuthState = {
-        isAuthenticated: true,
-        consoleApiKey: 'new-console-key',
-        clientSdkKey: 'new-client-key',
-        isLoading: false,
-        projectName: 'Test Project',
-      }
-
-      act(() => {
-        result.current.handleAuthenticated(newAuthState)
-      })
-
-      expect(result.current.authState.isAuthenticated).toBe(true)
-      expect(result.current.authState.consoleApiKey).toBe('new-console-key')
-      expect(result.current.authState.clientSdkKey).toBe('new-client-key')
-      expect(result.current.authState.isLoading).toBe(false)
-      expect(result.current.authState.projectName).toBe('Test Project')
-    })
-  })
-
-  describe('logout functionality', () => {
-    it('should clear all data and reset auth state on logout', async () => {
-      // Start with authenticated state
-      const testApiKey = 'test-key-123'
-      mockStorageManager.hasConsoleApiKey.mockResolvedValue(true)
-      mockStorageManager.getConsoleApiKey.mockResolvedValue(testApiKey)
-
-      const { result } = renderHook(() => useAuth())
-
-      await waitFor(() => {
-        expect(result.current.authState.isAuthenticated).toBe(true)
-      })
-
-      // Reset mocks to simulate cleared storage after logout
-      mockStorageManager.hasConsoleApiKey.mockResolvedValue(false)
-      mockStorageManager.hasClientSdkKey.mockResolvedValue(false)
-      mockStorageManager.getConsoleApiKey.mockResolvedValue(null)
-      mockStorageManager.getClientSdkKey.mockResolvedValue(null)
-
-      // Perform logout
+      // First login
       await act(async () => {
-        await result.current.handleLogout()
+        await result.current.login({
+          isAuthenticated: true,
+          consoleApiKey: 'test-console-key',
+          isLoading: false,
+        })
       })
 
-      expect(mockStorageManager.clearAllData).toHaveBeenCalled()
-
-      await waitFor(() => {
-        expect(result.current.authState.isAuthenticated).toBe(false)
+      // Then logout
+      await act(async () => {
+        await result.current.logout()
       })
-      expect(result.current.authState.isLoading).toBe(false)
+
+      expect(mockStorageManager.clearConsoleApiKey).toHaveBeenCalled()
+      expect(result.current.authState.isAuthenticated).toBe(false)
       expect(result.current.authState.consoleApiKey).toBeUndefined()
-      expect(result.current.authState.clientSdkKey).toBeUndefined()
     })
 
-    it('should handle logout errors gracefully', async () => {
-      const logoutError = new Error('Failed to clear storage')
-      mockStorageManager.clearAllData.mockRejectedValue(logoutError)
-
+    it('should handle logout errors', async () => {
       const { result } = renderHook(() => useAuth())
+      const logoutError = new Error('Clear failed')
+      mockStorageManager.clearConsoleApiKey.mockRejectedValue(logoutError)
 
-      await waitFor(() => {
-        expect(result.current.authState.isLoading).toBe(false)
+      // First set up an authenticated state
+      await act(async () => {
+        await result.current.login({
+          isAuthenticated: true,
+          consoleApiKey: 'test-console-key',
+          isLoading: false,
+        })
       })
 
-      await result.current.handleLogout()
-
-      await waitFor(() => {
-        expect(result.current.authState.error).toBe('Failed to logout properly')
+      // Then try to logout with error
+      await act(async () => {
+        await result.current.logout()
       })
+
+      expect(result.current.authState.error).toBe('Clear failed')
     })
   })
 
-  describe('re-initialization', () => {
-    it('should allow manual re-initialization', async () => {
+  describe('initializeAuth', () => {
+    it('should be callable directly', async () => {
       const { result } = renderHook(() => useAuth())
 
-      await waitFor(() => {
-        expect(result.current.authState.isLoading).toBe(false)
+      await act(async () => {
+        await result.current.initializeAuth()
       })
-
-      // Clear mocks to verify re-initialization calls
-      vi.clearAllMocks()
-      mockStorageManager.initialize.mockResolvedValue(undefined)
-      mockViewModeService.initializeViewMode.mockResolvedValue(undefined)
-      mockStorageManager.hasConsoleApiKey.mockResolvedValue(false)
-      mockStorageManager.hasClientSdkKey.mockResolvedValue(false)
-
-      await result.current.initializeAuth()
 
       expect(mockStorageManager.initialize).toHaveBeenCalled()
       expect(mockViewModeService.initializeViewMode).toHaveBeenCalled()
-    })
-  })
-
-  describe('unified mode key synchronization', () => {
-    it('should synchronize keys when only console key exists', async () => {
-      const consoleKey = 'console-only-key'
-      mockStorageManager.hasConsoleApiKey.mockResolvedValue(true)
-      mockStorageManager.hasClientSdkKey.mockResolvedValue(false)
-      mockStorageManager.getConsoleApiKey.mockResolvedValue(consoleKey)
-      mockStorageManager.getClientSdkKey.mockResolvedValue(null)
-
-      const { result } = renderHook(() => useAuth())
-
-      await waitFor(() => {
-        expect(result.current.authState.isLoading).toBe(false)
-      })
-
-      expect(mockStorageManager.storeClientSdkKey).toHaveBeenCalledWith(consoleKey)
-      expect(result.current.authState.consoleApiKey).toBe(consoleKey)
-      expect(result.current.authState.clientSdkKey).toBe(consoleKey)
-    })
-
-    it('should synchronize keys when only client key exists', async () => {
-      const clientKey = 'client-only-key'
-      mockStorageManager.hasConsoleApiKey.mockResolvedValue(false)
-      mockStorageManager.hasClientSdkKey.mockResolvedValue(true)
-      mockStorageManager.getConsoleApiKey.mockResolvedValue(null)
-      mockStorageManager.getClientSdkKey.mockResolvedValue(clientKey)
-
-      const { result } = renderHook(() => useAuth())
-
-      await waitFor(() => {
-        expect(result.current.authState.isLoading).toBe(false)
-      })
-
-      expect(mockStorageManager.storeConsoleApiKey).toHaveBeenCalledWith(clientKey)
-      expect(result.current.authState.consoleApiKey).toBe(clientKey)
-      expect(result.current.authState.clientSdkKey).toBe(clientKey)
-    })
-
-    it('should not synchronize when both keys already exist', async () => {
-      const consoleKey = 'console-key'
-      const clientKey = 'client-key'
-
-      mockStorageManager.hasConsoleApiKey.mockResolvedValue(true)
-      mockStorageManager.hasClientSdkKey.mockResolvedValue(true)
-      mockStorageManager.getConsoleApiKey.mockResolvedValue(consoleKey)
-      mockStorageManager.getClientSdkKey.mockResolvedValue(clientKey)
-
-      const { result } = renderHook(() => useAuth())
-
-      await waitFor(() => {
-        expect(result.current.authState.isLoading).toBe(false)
-      })
-
-      expect(mockStorageManager.storeConsoleApiKey).not.toHaveBeenCalled()
-      expect(mockStorageManager.storeClientSdkKey).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('edge cases', () => {
-    it('should handle empty string keys as invalid', async () => {
-      mockStorageManager.hasConsoleApiKey.mockResolvedValue(true)
-      mockStorageManager.getConsoleApiKey.mockResolvedValue('')
-
-      const { result } = renderHook(() => useAuth())
-
-      await waitFor(() => {
-        expect(result.current.authState.isLoading).toBe(false)
-      })
-
-      expect(result.current.authState.isAuthenticated).toBe(false)
-    })
-
-    it('should handle null keys as invalid', async () => {
-      mockStorageManager.hasConsoleApiKey.mockResolvedValue(true)
-      mockStorageManager.getConsoleApiKey.mockResolvedValue(null)
-
-      const { result } = renderHook(() => useAuth())
-
-      await waitFor(() => {
-        expect(result.current.authState.isLoading).toBe(false)
-      })
-
-      expect(result.current.authState.isAuthenticated).toBe(false)
     })
   })
 })

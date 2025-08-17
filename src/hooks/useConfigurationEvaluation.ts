@@ -1,178 +1,162 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-import { errorHandler } from '../services/error-handler'
-import { statsigIntegration } from '../services/statsig-integration'
-import { statsigOverrideApiService } from '../services/statsig-override-api'
+import { unifiedStatsigService } from '../services/unified-statsig-api'
+import { logger } from '../utils/logger'
 
-import type { EvaluationResult, StorageOverride } from '../services/statsig-integration'
-import type { AuthState, StatsigConfigurationItem } from '../types'
+import type { EvaluationResult } from '../services/unified-statsig-api'
+import type { AuthState } from '../types'
 
 /**
- * Custom hook for managing configuration evaluation and results
+ * Hook for evaluating Statsig configurations with override support
  */
-export const useConfigurationEvaluation = (
-  authState: AuthState,
-  configurations: StatsigConfigurationItem[],
-  activeOverrides: StorageOverride[],
-) => {
-  const [evaluationResults, setEvaluationResults] = useState<Map<string, EvaluationResult>>(new Map())
+export const useConfigurationEvaluation = (authState: AuthState) => {
+  const [evaluationResults, setEvaluationResults] = useState<EvaluationResult[]>([])
   const [isEvaluating, setIsEvaluating] = useState(false)
-
-  // Use refs to track previous values and avoid unnecessary re-evaluations
-  const prevAuthStateRef = useRef<string | undefined>(undefined)
-  const prevConfigurationsRef = useRef<string | null>(null)
-  const prevOverridesRef = useRef<string | null>(null)
+  const [evaluationError, setEvaluationError] = useState<string | null>(null)
 
   /**
-   * Initialize SDK and evaluate all configurations
+   * Evaluate all configurations for the current user
    */
-  const initializeAndEvaluate = useCallback(async () => {
-    if (!authState.clientSdkKey || configurations.length === 0) {
-      return
-    }
-
-    // Skip evaluation if we only have a Console API key (not compatible with Client SDK)
-    if (authState.clientSdkKey.startsWith('console-')) {
-      // eslint-disable-next-line no-console
-      console.info('Skipping client-side evaluation: Console API key detected (not compatible with Client SDK)')
-      setEvaluationResults(new Map())
-      setIsEvaluating(false)
+  const evaluateConfigurations = useCallback(async () => {
+    if (!authState.isAuthenticated || !authState.consoleApiKey) {
+      logger.warn('Cannot evaluate configurations: not authenticated')
+      setEvaluationResults([])
       return
     }
 
     setIsEvaluating(true)
+    setEvaluationError(null)
 
     try {
-      // Build user context from overrides
-      const user = statsigIntegration.buildUserFromOverrides(activeOverrides)
-
-      // Initialize or update SDK
-      if (!statsigIntegration.isReady()) {
-        await statsigIntegration.initialize(authState.clientSdkKey, user)
-        
-        // Initialize override API service if we have a console API key
-        if (authState.consoleApiKey && authState.consoleApiKey.startsWith('console-')) {
-          statsigOverrideApiService.initialize(authState.consoleApiKey)
-        }
-      } else {
-        await statsigIntegration.updateUser(user)
+      // Initialize the service if not already done
+      if (!unifiedStatsigService.isReady()) {
+        await unifiedStatsigService.initialize(authState.consoleApiKey)
       }
 
-      // Evaluate all configurations
-      const results = await statsigIntegration.evaluateAllConfigurations(configurations)
+      // Get all configurations
+      const configurations = await unifiedStatsigService.getAllConfigurations()
 
-      // Convert to Map for easier lookup
-      const resultsMap = new Map<string, EvaluationResult>()
-      results.forEach((result) => {
-        resultsMap.set(result.configurationName, result)
-      })
+      // Evaluate each configuration
+      const results: EvaluationResult[] = []
 
-      setEvaluationResults(resultsMap)
-    } catch (err) {
-      errorHandler.handleError(err, 'Evaluating configurations')
-      // Set empty results on error to prevent UI issues
-      setEvaluationResults(new Map())
+      for (const config of configurations) {
+        try {
+          let result: EvaluationResult
+
+          if (config.type === 'feature_gate') {
+            result = await unifiedStatsigService.evaluateFeatureGate(config.name)
+          } else {
+            // For experiments and dynamic configs, create a basic evaluation result
+            result = {
+              configurationName: config.name,
+              type: config.type,
+              passed: config.enabled || false,
+              value: config.enabled || false,
+              reason: 'Configuration evaluation',
+            }
+          }
+
+          results.push(result)
+        } catch (configError) {
+          logger.error(`Failed to evaluate configuration ${config.name}:`, configError)
+          // Add a failed evaluation result
+          results.push({
+            configurationName: config.name,
+            type: config.type,
+            passed: false,
+            value: false,
+            reason: 'Evaluation failed',
+          })
+        }
+      }
+
+      setEvaluationResults(results)
+      logger.info(`Evaluated ${results.length} configurations`)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      logger.error('Configuration evaluation failed:', error)
+      setEvaluationError(errorMessage)
+      setEvaluationResults([])
     } finally {
       setIsEvaluating(false)
     }
-  }, [authState.clientSdkKey, authState.consoleApiKey, configurations, activeOverrides])
+  }, [authState.isAuthenticated, authState.consoleApiKey])
 
   /**
-   * Re-evaluate configurations when dependencies change
+   * Re-evaluate configurations with fresh data
    */
-  useEffect(() => {
-    if (configurations.length === 0) {
+  const refreshEvaluations = useCallback(async () => {
+    if (!authState.isAuthenticated || !authState.consoleApiKey) {
       return
     }
 
-    // Create stable hashes for comparison
-    const currentAuthState = authState.clientSdkKey
-    const currentConfigurations = JSON.stringify(configurations.map((c) => c.name))
-    const currentOverrides = JSON.stringify(activeOverrides.map((o) => `${o.type}:${o.key}:${o.value}`))
+    setIsEvaluating(true)
+    setEvaluationError(null)
 
-    // Check if any dependencies have actually changed
-    const authStateChanged = prevAuthStateRef.current !== currentAuthState
-    const configurationsChanged = prevConfigurationsRef.current !== currentConfigurations
-    const overridesChanged = prevOverridesRef.current !== currentOverrides
+    try {
+      // Refresh configurations from the service
+      await unifiedStatsigService.refreshConfigurations()
 
-    if (authStateChanged || configurationsChanged || overridesChanged) {
-      // Update refs
-      prevAuthStateRef.current = currentAuthState
-      prevConfigurationsRef.current = currentConfigurations
-      prevOverridesRef.current = currentOverrides
-
-      // Only evaluate if we have a valid auth state
-      if (currentAuthState) {
-        // Execute evaluation logic directly here to avoid dependency issues
-        const evaluateConfigurations = async () => {
-          if (!authState.clientSdkKey || configurations.length === 0) {
-            return
-          }
-
-          // Skip evaluation if we only have a Console API key (not compatible with Client SDK)
-          if (authState.clientSdkKey.startsWith('console-')) {
-            // eslint-disable-next-line no-console
-            console.info('Skipping client-side evaluation: Console API key detected (not compatible with Client SDK)')
-            setEvaluationResults(new Map())
-            setIsEvaluating(false)
-            return
-          }
-
-          setIsEvaluating(true)
-
-          try {
-            // Build user context from overrides
-            const user = statsigIntegration.buildUserFromOverrides(activeOverrides)
-
-            // Initialize or update SDK
-            if (!statsigIntegration.isReady()) {
-              await statsigIntegration.initialize(authState.clientSdkKey, user)
-              
-              // Initialize override API service if we have a console API key
-              if (authState.consoleApiKey && authState.consoleApiKey.startsWith('console-')) {
-                statsigOverrideApiService.initialize(authState.consoleApiKey)
-              }
-            } else {
-              await statsigIntegration.updateUser(user)
-            }
-
-            // Evaluate all configurations
-            const results = await statsigIntegration.evaluateAllConfigurations(configurations)
-
-            // Convert to Map for easier lookup
-            const resultsMap = new Map<string, EvaluationResult>()
-            results.forEach((result) => {
-              resultsMap.set(result.configurationName, result)
-            })
-
-            setEvaluationResults(resultsMap)
-          } catch (err) {
-            errorHandler.handleError(err, 'Evaluating configurations')
-            // Set empty results on error to prevent UI issues
-            setEvaluationResults(new Map())
-          } finally {
-            setIsEvaluating(false)
-          }
-        }
-
-        evaluateConfigurations()
-      }
+      // Re-evaluate all configurations
+      await evaluateConfigurations()
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      logger.error('Configuration refresh failed:', error)
+      setEvaluationError(errorMessage)
+    } finally {
+      setIsEvaluating(false)
     }
-  }, [authState.clientSdkKey, configurations, activeOverrides, authState.consoleApiKey])
+  }, [authState.isAuthenticated, authState.consoleApiKey, evaluateConfigurations])
 
   /**
-   * Cleanup on unmount
+   * Get evaluation result for a specific configuration
    */
-  useEffect(
-    () => () => {
-      statsigIntegration.cleanup()
-    },
-    [],
+  const getEvaluationResult = useCallback(
+    (configurationName: string): EvaluationResult | undefined =>
+      evaluationResults.find((result) => result.configurationName === configurationName),
+    [evaluationResults],
   )
+
+  /**
+   * Check if a feature gate is enabled
+   */
+  const isFeatureEnabled = useCallback(
+    (gateName: string): boolean => {
+      const result = getEvaluationResult(gateName)
+      return result?.passed || false
+    },
+    [getEvaluationResult],
+  )
+
+  /**
+   * Get experiment value
+   */
+  const getExperimentValue = useCallback(
+    (experimentName: string): unknown => {
+      const result = getEvaluationResult(experimentName)
+      return result?.value
+    },
+    [getEvaluationResult],
+  )
+
+  // Auto-evaluate when authentication state changes
+  useEffect(() => {
+    if (authState.isAuthenticated && authState.consoleApiKey) {
+      evaluateConfigurations()
+    } else {
+      setEvaluationResults([])
+      setEvaluationError(null)
+    }
+  }, [authState.isAuthenticated, authState.consoleApiKey, evaluateConfigurations])
 
   return {
     evaluationResults,
     isEvaluating,
-    initializeAndEvaluate,
+    evaluationError,
+    evaluateConfigurations,
+    refreshEvaluations,
+    getEvaluationResult,
+    isFeatureEnabled,
+    getExperimentValue,
   }
 }

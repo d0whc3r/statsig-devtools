@@ -8,12 +8,12 @@
 export interface StatsigRule {
   name?: string
   passPercentage?: number
-  conditions?: Array<{
+  conditions?: {
     type: string
     targetValue: unknown
     operator: string
     field: string
-  }>
+  }[]
   returnValue?: unknown
   id?: string
   salt?: string
@@ -52,10 +52,10 @@ export const CACHE_TTL = 5 * 60 * 1000
 export interface StatsigApiResponse<T = unknown> {
   data?: T
   message?: string
-  errors?: Array<{
+  errors?: {
     property: string
     errorMessage: string
-  }>
+  }[]
   has_updates?: boolean
   time?: number
 }
@@ -100,11 +100,11 @@ export interface ExperimentResponse {
   description?: string
   isEnabled: boolean
   rules: StatsigRule[]
-  groups?: Array<{
+  groups?: {
     name: string
     size: number
     parameterValues?: Record<string, unknown>
-  }>
+  }[]
   tags?: string[]
   createdTime?: number
   lastModifierName?: string

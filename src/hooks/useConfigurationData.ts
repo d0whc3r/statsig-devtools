@@ -17,7 +17,7 @@ export const useConfigurationData = (authState: AuthState) => {
    * Load configurations
    */
   const loadConfigurations = useCallback(async () => {
-    const apiKey = authState.clientSdkKey || authState.consoleApiKey
+    const apiKey = authState.consoleApiKey
 
     if (!apiKey) {
       setError('API key not available')
@@ -43,7 +43,7 @@ export const useConfigurationData = (authState: AuthState) => {
     } finally {
       setIsLoading(false)
     }
-  }, [authState.consoleApiKey, authState.clientSdkKey])
+  }, [authState.consoleApiKey])
 
   /**
    * Refresh configurations

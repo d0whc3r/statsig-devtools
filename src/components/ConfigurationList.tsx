@@ -10,8 +10,8 @@ import {
   useConfigurationOverrides,
 } from './configuration-list'
 
-import type { EvaluationResult, StorageOverride } from '../services/statsig-integration'
-import type { StatsigConfigurationItem } from '../types'
+import type { EvaluationResult } from '../services/unified-statsig-api'
+import type { StatsigConfigurationItem, StorageOverride } from '../types'
 
 interface ConfigurationListProps {
   configurations: StatsigConfigurationItem[]

@@ -25,37 +25,15 @@ export const useAuth = () => {
       await viewModeService.initializeViewMode()
 
       // Check if we have stored credentials
-      const [hasConsoleKey, hasClientKey] = await Promise.all([
-        storageManager.hasConsoleApiKey(),
-        storageManager.hasClientSdkKey(),
-      ])
+      const consoleApiKey = await storageManager.getConsoleApiKey()
 
-      if (hasConsoleKey || hasClientKey) {
-        const [consoleApiKey, clientSdkKey] = await Promise.all([
-          storageManager.getConsoleApiKey(),
-          storageManager.getClientSdkKey(),
-        ])
-
-        // Use whichever key is available, prefer client key if both exist
-        const primaryKey = clientSdkKey || consoleApiKey
-
-        if (primaryKey) {
-          // For unified mode, ensure both keys are the same
-          if (!consoleApiKey) {
-            await storageManager.storeConsoleApiKey(primaryKey)
-          }
-          if (!clientSdkKey) {
-            await storageManager.storeClientSdkKey(primaryKey)
-          }
-
-          setAuthState({
-            isAuthenticated: true,
-            consoleApiKey: primaryKey,
-            clientSdkKey: primaryKey,
-            isLoading: false,
-          })
-          return
-        }
+      if (consoleApiKey) {
+        setAuthState({
+          isAuthenticated: true,
+          consoleApiKey,
+          isLoading: false,
+        })
+        return
       }
 
       setAuthState({
@@ -73,27 +51,46 @@ export const useAuth = () => {
   }, [])
 
   /**
-   * Handle successful authentication
+   * Handle login
    */
-  const handleAuthenticated = useCallback((newAuthState: AuthState) => {
-    setAuthState(newAuthState)
+  const login = useCallback(async (authData: AuthState) => {
+    try {
+      setAuthState((prev) => ({ ...prev, isLoading: true, error: undefined }))
+
+      if (authData.consoleApiKey) {
+        await storageManager.storeConsoleApiKey(authData.consoleApiKey)
+      }
+
+      setAuthState({
+        isAuthenticated: true,
+        consoleApiKey: authData.consoleApiKey,
+        isLoading: false,
+      })
+    } catch (error) {
+      setAuthState((prev) => ({
+        ...prev,
+        isLoading: false,
+        error: error instanceof Error ? error.message : 'Login failed',
+      }))
+    }
   }, [])
 
   /**
    * Handle logout
    */
-  const handleLogout = useCallback(async () => {
+  const logout = useCallback(async () => {
     try {
-      await storageManager.clearAllData()
+      await storageManager.clearConsoleApiKey()
+
       setAuthState({
         isAuthenticated: false,
+        consoleApiKey: undefined,
         isLoading: false,
       })
     } catch (error) {
-      logger.error('Failed to logout:', error)
       setAuthState((prev) => ({
         ...prev,
-        error: 'Failed to logout properly',
+        error: error instanceof Error ? error.message : 'Logout failed',
       }))
     }
   }, [])
@@ -107,8 +104,8 @@ export const useAuth = () => {
 
   return {
     authState,
-    handleAuthenticated,
-    handleLogout,
+    login,
+    logout,
     initializeAuth,
   }
 }

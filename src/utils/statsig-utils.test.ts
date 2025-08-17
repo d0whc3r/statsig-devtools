@@ -41,7 +41,7 @@ describe('Statsig Utils - Business Logic', () => {
       .join(' ')
   }
 
-  const calculateOverrideStatistics = (overrides: Array<{ type: string; timestamp: number }>) => {
+  const calculateOverrideStatistics = (overrides: { type: string; timestamp: number }[]) => {
     const stats = {
       total: overrides.length,
       byType: {} as Record<string, number>,

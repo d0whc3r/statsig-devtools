@@ -1,6 +1,6 @@
 import React from 'react'
 
-import type { EvaluationResult } from '../services/statsig-integration'
+import type { EvaluationResult } from '../services/unified-statsig-api'
 import type { StatsigConfigurationItem } from '../types'
 
 interface ExperimentSummaryCardProps {

@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 
 import { logger } from '../../utils/logger'
 
-import type { StorageOverride } from '../../services/statsig-integration'
+import type { StorageOverride } from '../../types'
 
 /**
  * Hook to manage override manager state and operations

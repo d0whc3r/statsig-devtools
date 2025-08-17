@@ -4,14 +4,28 @@
  */
 
 import { logger } from '../utils/logger'
-import { errorHandler } from './error-handler'
-import { getAllConfigurations } from './statsig-api'
+import { consoleApiClient, endpoints } from './http-client'
+import { apiLogger } from './statsig-api-utils'
 
-import type { StatsigConfigurationItem } from '../types'
-import type { StatsigClient, StatsigUser } from '@statsig/js-client'
+import type { ConfigurationRule, StatsigConfigurationItem } from '../types'
 
-// API Configuration
-const REQUEST_TIMEOUT = 10000
+/**
+ * Statsig User interface (reimplemented without SDK dependency)
+ */
+export interface StatsigUser {
+  userID: string
+  email?: string
+  ip?: string
+  userAgent?: string
+  country?: string
+  locale?: string
+  appVersion?: string
+  custom?: Record<string, unknown>
+  privateAttributes?: Record<string, unknown>
+  customIDs?: Record<string, string>
+}
+
+// API Configuration (removed REQUEST_TIMEOUT as it's no longer used)
 
 export interface ApiValidationResponse {
   isValid: boolean
@@ -59,10 +73,10 @@ export interface EvaluationResult {
  * Statsig Service - Requires Console API Key
  */
 export class UnifiedStatsigService {
-  private client: StatsigClient | null = null
   private currentUser: StatsigUser | null = null
   private isInitialized = false
   private consoleApiKey = ''
+  // Single HTTP client is used for all Console API calls
 
   /**
    * Validate API key input
@@ -77,52 +91,7 @@ export class UnifiedStatsigService {
     return null
   }
 
-  /**
-   * Handle API response status codes
-   */
-  private handleApiResponse(response: Response): ApiValidationResponse | null {
-    if (response.ok) {
-      logger.info('✅ API key validation successful')
-      return {
-        isValid: true,
-        projectName: 'Statsig Project',
-      }
-    }
-
-    let errorMessage = `API validation failed with status ${response.status}`
-
-    switch (response.status) {
-      case 401:
-        errorMessage = 'Invalid API key. Please verify your Console API key is correct and has not expired.'
-        logger.error('❌ Statsig API: 401 Unauthorized - Invalid API key')
-        break
-      case 403:
-        errorMessage = 'API key does not have sufficient permissions. Please check your project access rights.'
-        logger.error('❌ Statsig API: 403 Forbidden - Insufficient permissions')
-        break
-      case 404:
-        errorMessage = 'API endpoint not found. Please check your API key format.'
-        logger.error('❌ Statsig API: 404 Not Found - Invalid endpoint')
-        break
-      case 429:
-        errorMessage = 'Rate limit exceeded. Please wait a moment and try again.'
-        logger.error('❌ Statsig API: 429 Rate Limited')
-        break
-      case 500:
-      case 502:
-      case 503:
-        errorMessage = 'Statsig server error. Please try again in a few moments.'
-        logger.error(`❌ Statsig API: ${response.status} Server Error`)
-        break
-      default:
-        logger.error(`❌ Statsig API: Unexpected status ${response.status}`)
-    }
-
-    return {
-      isValid: false,
-      error: errorMessage,
-    }
-  }
+  // No separate handleApiResponse; validation handled inline
 
   /**
    * Handle validation errors
@@ -180,35 +149,22 @@ export class UnifiedStatsigService {
   }
 
   /**
-   * Validate Console API key
+   * Validate Console API key using centralized method
    */
   private async validateConsoleApiKey(apiKey: string): Promise<ApiValidationResponse> {
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT)
-
     try {
-      logger.info('Validating Console API key...')
-
-      // Use GET method like the working legacy service
-      const response = await fetch('https://statsigapi.net/console/v1/gates', {
-        method: 'GET',
-        headers: {
-          'STATSIG-API-KEY': apiKey.trim(),
-          'STATSIG-API-VERSION': '20240601',
-          'Content-Type': 'application/json',
-        },
-        signal: controller.signal,
-      })
-
-      clearTimeout(timeoutId)
-      return (
-        this.handleApiResponse(response) || {
-          isValid: false,
-          error: 'Invalid API response',
-        }
-      )
+      // Do a lightweight request to validate the key
+      const originalKey = (consoleApiClient as any).config?.apiKey
+      consoleApiClient.updateConfig({ apiKey: apiKey.trim() })
+      const response = await consoleApiClient.get(endpoints.console.gates)
+      // restore
+      consoleApiClient.updateConfig({ apiKey: String(originalKey || '') })
+      if (response && response.data) {
+        apiLogger.info('Console API key validation successful')
+        return { isValid: true, projectName: 'Statsig Project' }
+      }
+      return { isValid: false, error: 'Invalid API response' }
     } catch (error) {
-      clearTimeout(timeoutId)
       return this.handleValidationError(error)
     }
   }
@@ -220,40 +176,132 @@ export class UnifiedStatsigService {
     logger.info('Initializing Statsig service with Console API key...')
 
     try {
+      // Validate the Console API key first
+      const validation = await this.validateApiKey(consoleApiKey)
+      if (!validation.isValid) {
+        throw new Error(validation.error || 'Invalid Console API key')
+      }
+
       this.consoleApiKey = consoleApiKey.trim()
+
+      // Configure HTTP client with API key
+      consoleApiClient.updateConfig({ apiKey: this.consoleApiKey })
+
       this.currentUser = user || this.buildDefaultUser()
-
-      // Note: We don't create a StatsigClient here because Console API keys
-      // are not compatible with the client SDK endpoints. The Console API key
-      // is only used for fetching configuration data via the Console API.
-      this.client = null
-
-      // Note: We don't initialize a client SDK because Console API keys
-      // are not compatible with client SDK endpoints
       this.isInitialized = true
 
-      logger.info('Statsig Client SDK initialized successfully')
+      logger.info('Statsig service initialized successfully')
     } catch (error) {
-      logger.error('Failed to initialize Statsig Client SDK:', error)
+      logger.error('Failed to initialize Statsig service:', error)
       this.cleanup()
-      throw new Error(`SDK initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      throw error
     }
   }
 
   /**
-   * Get all configurations using Console API
+   * Get all configurations using centralized API with caching
    */
   async getAllConfigurations(): Promise<StatsigConfigurationItem[]> {
-    if (!this.consoleApiKey) {
-      throw new Error('Console API key not set')
+    if (!this.isInitialized || !this.consoleApiKey) {
+      throw new Error('Service not initialized. Call initialize() first.')
     }
 
     try {
-      logger.info('Fetching configurations with Console API key...')
-      return await getAllConfigurations(this.consoleApiKey)
+      logger.info('Fetching all configurations from Console API...')
+      const [gatesResp, expResp, confResp] = await Promise.all([
+        consoleApiClient.get(endpoints.console.gates),
+        consoleApiClient.get(endpoints.console.experiments),
+        consoleApiClient.get(endpoints.console.dynamicConfigs),
+      ])
+
+      interface ConsoleGate {
+        id: string
+        name: string
+        isEnabled?: boolean
+        enabled?: boolean
+        rules?: ConfigurationRule[]
+        lastModifierName?: string
+        lastModifierID?: string
+        createdTime?: number
+      }
+      interface ConsoleExperiment {
+        id: string
+        name: string
+        isEnabled?: boolean
+        enabled?: boolean
+        rules?: ConfigurationRule[]
+        groups?: { name: string; size: number; parameterValues?: Record<string, unknown> }[]
+        lastModifierName?: string
+        lastModifierID?: string
+        createdTime?: number
+      }
+      interface ConsoleConfig {
+        id: string
+        name: string
+        isEnabled?: boolean
+        enabled?: boolean
+        rules?: ConfigurationRule[]
+        defaultValue?: unknown
+        lastModifierName?: string
+        lastModifierID?: string
+        createdTime?: number
+      }
+
+      const gates: ConsoleGate[] = Array.isArray((gatesResp as { data?: { data?: unknown[] } })?.data?.data)
+        ? ((gatesResp as { data?: { data?: unknown[] } }).data?.data as ConsoleGate[])
+        : []
+      const experiments: ConsoleExperiment[] = Array.isArray((expResp as { data?: { data?: unknown[] } })?.data?.data)
+        ? ((expResp as { data?: { data?: unknown[] } }).data?.data as ConsoleExperiment[])
+        : []
+      const configs: ConsoleConfig[] = Array.isArray((confResp as { data?: { data?: unknown[] } })?.data?.data)
+        ? ((confResp as { data?: { data?: unknown[] } }).data?.data as ConsoleConfig[])
+        : []
+
+      // Transform to unified configuration format
+      const allConfigurations: StatsigConfigurationItem[] = [
+        ...gates.map((gate) => ({
+          id: gate.id,
+          name: gate.name,
+          type: 'feature_gate' as const,
+          enabled: Boolean(gate.isEnabled ?? gate.enabled ?? true),
+          rules: gate.rules || [],
+          lastModifierName: gate.lastModifierName,
+          lastModifierID: gate.lastModifierID,
+          createdTime: gate.createdTime,
+        })),
+        ...experiments.map((experiment) => ({
+          id: experiment.id,
+          name: experiment.name,
+          type: 'experiment' as const,
+          enabled: Boolean(experiment.isEnabled ?? experiment.enabled ?? true),
+          rules: experiment.rules || [],
+          groups: (experiment.groups || []).map((g) => ({
+            name: g.name,
+            size: g.size ?? 0,
+            parameterValues: g.parameterValues,
+          })),
+          lastModifierName: experiment.lastModifierName,
+          lastModifierID: experiment.lastModifierID,
+          createdTime: experiment.createdTime,
+        })),
+        ...configs.map((config) => ({
+          id: config.id,
+          name: config.name,
+          type: 'dynamic_config' as const,
+          enabled: Boolean(config.isEnabled ?? config.enabled ?? true),
+          rules: config.rules || [],
+          defaultValue: config.defaultValue || {},
+          lastModifierName: config.lastModifierName,
+          lastModifierID: config.lastModifierID,
+          createdTime: config.createdTime,
+        })),
+      ]
+
+      logger.info(`Retrieved ${allConfigurations.length} configurations`)
+      return allConfigurations
     } catch (error) {
       logger.error('Failed to get configurations:', error)
-      throw errorHandler.handleError(error, 'Getting configurations')
+      throw error
     }
   }
 
@@ -272,7 +320,7 @@ export class UnifiedStatsigService {
       reason: 'Console API key does not support client evaluation',
       debugInfo: {
         evaluatedRules: [],
-        userContext: this.currentUser || {},
+        userContext: this.currentUser || this.buildDefaultUser(),
         timestamp: new Date().toISOString(),
       },
     }
@@ -309,16 +357,22 @@ export class UnifiedStatsigService {
   }
 
   /**
+   * Force refresh configurations by clearing cache
+   */
+  async refreshConfigurations(): Promise<StatsigConfigurationItem[]> {
+    await consoleApiClient.clearCache()
+    return this.getAllConfigurations()
+  }
+
+  /**
    * Cleanup resources
    */
   cleanup(): void {
-    if (this.client) {
-      this.client.shutdown()
-      this.client = null
-    }
     this.isInitialized = false
     this.currentUser = null
     this.consoleApiKey = ''
+    // best-effort cache clear
+    void consoleApiClient.clearCache().catch(() => {})
     logger.info('Statsig service cleaned up')
   }
 }

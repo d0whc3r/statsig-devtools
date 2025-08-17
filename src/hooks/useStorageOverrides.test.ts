@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useStorageOverrides } from '../hooks/useStorageOverrides'
 import { storageInjectionService } from '../services/storage-injection'
 
-import type { StorageOverride } from '../services/statsig-integration'
+import type { StorageOverride } from '../types'
 
 import { renderHook, waitFor } from '@testing-library/react'
 

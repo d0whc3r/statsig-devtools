@@ -37,7 +37,6 @@ describe('ConfigurationDetailPanel', () => {
     isAuthenticated: true,
     isLoading: false,
     consoleApiKey: 'test-client-key',
-    projectName: 'test-project',
     error: undefined,
   }
 

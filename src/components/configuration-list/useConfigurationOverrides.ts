@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import type { StorageOverride } from '../../services/statsig-integration'
+import type { StorageOverride } from '../../types'
 
 /**
  * Hook to manage configuration overrides logic

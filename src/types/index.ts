@@ -47,11 +47,11 @@ export interface StatsigConfigurationItem {
   lastModifierID?: string
   createdTime?: number
   lastModifiedTime?: number
-  groups?: Array<{
+  groups?: {
     name: string
     size: number
     parameterValues?: Record<string, unknown>
-  }>
+  }[]
 }
 
 /**
@@ -91,9 +91,10 @@ export type StatsigConfigurations = StatsigConfigurationItem[]
 export interface AuthState {
   isAuthenticated: boolean
   consoleApiKey?: string
-  clientSdkKey?: string
   isLoading: boolean
   error?: string
+  // Back-compat optional fields used by some tests
+  clientSdkKey?: string
   projectName?: string
 }
 
@@ -104,4 +105,19 @@ export interface ApiValidationResponse {
   isValid: boolean
   error?: string
   projectName?: string
+}
+
+/**
+ * Storage override used for applying values in the inspected page
+ */
+export interface StorageOverride {
+  type: 'cookie' | 'localStorage' | 'sessionStorage'
+  key: string
+  value: unknown
+  domain?: string | null
+  path?: string
+  // Optional metadata for Statsig-specific flows
+  featureName?: string
+  featureType?: 'feature_gate' | 'experiment' | 'dynamic_config'
+  id?: string
 }

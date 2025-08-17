@@ -47,10 +47,10 @@ export interface RequestConfig {
 export interface ApiResponse<T = unknown> {
   data?: T
   message?: string
-  errors?: Array<{
+  errors?: {
     property: string
     errorMessage: string
-  }>
+  }[]
   has_updates?: boolean
   time?: number
   success?: boolean
@@ -64,7 +64,7 @@ export class HttpError extends Error {
     message: string,
     public status: number,
     public response?: unknown,
-    public url?: string
+    public url?: string,
   ) {
     super(message)
     this.name = 'HttpError'
@@ -87,8 +87,8 @@ export class HttpClient {
         enabled: false,
         ttl: 5 * 60 * 1000, // 5 minutes default
         cacheName: 'statsig-http-cache',
-        ...config.cache
-      }
+        ...config.cache,
+      },
     }
     this.initializeCache()
   }
@@ -111,7 +111,7 @@ export class HttpClient {
    */
   updateConfig(updates: Partial<ApiConfig>): void {
     this.config = { ...this.config, ...updates }
-    
+
     // Reinitialize cache if cache config changed
     if (updates.cache) {
       this.initializeCache()
@@ -151,14 +151,17 @@ export class HttpClient {
   /**
    * Build URL with query parameters
    */
-  private buildUrl(endpoint: string, params?: Record<string, string | number | boolean>): string {
-    const url = new URL(endpoint, this.config.baseUrl)
-    
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        url.searchParams.append(key, String(value))
-      })
-    }
+  private buildUrl(endpoint: string, params: Record<string, string | number | boolean> = {}): string {
+    const baseUrl = new URL(this.config.baseUrl)
+    const basePaths = baseUrl.pathname.split('/')
+    const url = new URL(endpoint, baseUrl.origin)
+    const endPaths = url.pathname.split('/')
+    const joinedPaths = [...basePaths, ...endPaths]
+    url.pathname = joinedPaths.join('/')
+
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.append(key, String(value))
+    })
 
     return url.toString()
   }
@@ -175,9 +178,9 @@ export class HttpClient {
 
       const cacheData = await cachedResponse.json()
       const now = Date.now()
-      
+
       // Check if cache is still valid
-      if (cacheData.timestamp && (now - cacheData.timestamp) < (this.config.cache?.ttl || 0)) {
+      if (cacheData.timestamp && now - cacheData.timestamp < (this.config.cache?.ttl || 0)) {
         return cacheData.response
       }
 
@@ -199,11 +202,11 @@ export class HttpClient {
     try {
       const cacheData = {
         response,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       }
 
       const cacheResponse = new Response(JSON.stringify(cacheData), {
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       })
 
       await this.cache.put(url, cacheResponse)
@@ -221,7 +224,7 @@ export class HttpClient {
 
     try {
       const keys = await this.cache.keys()
-      await Promise.all(keys.map(key => this.cache!.delete(key)))
+      await Promise.all(keys.map((key) => this.cache!.delete(key)))
       logger.info('Cache cleared successfully')
     } catch (error) {
       logger.warn('Failed to clear cache', String(error))
@@ -234,17 +237,17 @@ export class HttpClient {
   private async executeRequest<T>(
     url: string,
     options: RequestConfig,
-    retries = this.config.retries || 3
+    retries = this.config.retries || 3,
   ): Promise<ApiResponse<T>> {
     const method = options.method || 'GET'
-    
+
     // Only cache GET requests
     if (method === 'GET' && this.config.cache?.enabled && !options.forceRefresh) {
       const cachedResponse = await this.getCachedResponse<T>(url)
       if (cachedResponse) {
-         logger.info(`Cache hit for: ${url}`)
-         return cachedResponse
-       }
+        logger.info(`Cache hit for: ${url}`)
+        return cachedResponse
+      }
     }
 
     const controller = new AbortController()
@@ -261,7 +264,7 @@ export class HttpClient {
             body: options.body,
             signal: controller.signal,
           }
-          
+
           const result = await fetch(url, fetchOptions)
 
           if (!result.ok) {
@@ -269,13 +272,13 @@ export class HttpClient {
               `HTTP ${result.status}: ${result.statusText}`,
               result.status,
               await result.text().catch(() => null),
-              url
+              url,
             )
           }
 
           return result
         },
-        { maxRetries: retries }
+        { maxRetries: retries },
       )
 
       const contentType = response.headers.get('content-type')
@@ -301,17 +304,12 @@ export class HttpClient {
       return apiResponse
     } catch (error) {
       logger.error(`HTTP request failed: ${url}`, String(error))
-      
+
       if (error instanceof HttpError) {
         throw error
       }
-      
-      throw new HttpError(
-        error instanceof Error ? error.message : 'Unknown error',
-        0,
-        error,
-        url
-      )
+
+      throw new HttpError(error instanceof Error ? error.message : 'Unknown error', 0, error, url)
     } finally {
       clearTimeout(timeoutId)
     }
@@ -320,112 +318,114 @@ export class HttpClient {
   /**
    * Generic GET request
    */
-  async get<T = unknown>(
-    endpoint: string,
-    config?: RequestConfig
-  ): Promise<ApiResponse<T>> {
+  async get<T = unknown>(endpoint: string, config?: RequestConfig): Promise<ApiResponse<T>> {
     const url = this.buildUrl(endpoint, config?.params)
     const headers = this.createHeaders(config?.headers)
 
     logger.info(`GET ${url}`)
 
-    return this.executeRequest<T>(url, {
-      method: 'GET',
-      headers,
-      timeout: config?.timeout,
-      retries: config?.retries,
-      params: config?.params,
-    }, config?.retries)
+    return this.executeRequest<T>(
+      url,
+      {
+        method: 'GET',
+        headers,
+        timeout: config?.timeout,
+        retries: config?.retries,
+        params: config?.params,
+      },
+      config?.retries,
+    )
   }
 
   /**
    * Generic POST request
    */
-  async post<T = unknown, D = unknown>(
-    endpoint: string,
-    data?: D,
-    config?: RequestConfig
-  ): Promise<ApiResponse<T>> {
+  async post<T = unknown, D = unknown>(endpoint: string, data?: D, config?: RequestConfig): Promise<ApiResponse<T>> {
     const url = this.buildUrl(endpoint, config?.params)
     const headers = this.createHeaders(config?.headers)
 
     logger.info(`POST ${url}`)
 
-    return this.executeRequest<T>(url, {
-      method: 'POST',
-      headers,
-      body: data ? JSON.stringify(data) : undefined,
-      timeout: config?.timeout,
-      retries: config?.retries,
-      params: config?.params,
-    }, config?.retries)
+    return this.executeRequest<T>(
+      url,
+      {
+        method: 'POST',
+        headers,
+        body: data ? JSON.stringify(data) : undefined,
+        timeout: config?.timeout,
+        retries: config?.retries,
+        params: config?.params,
+      },
+      config?.retries,
+    )
   }
 
   /**
    * Generic PUT request
    */
-  async put<T = unknown, D = unknown>(
-    endpoint: string,
-    data?: D,
-    config?: RequestConfig
-  ): Promise<ApiResponse<T>> {
+  async put<T = unknown, D = unknown>(endpoint: string, data?: D, config?: RequestConfig): Promise<ApiResponse<T>> {
     const url = this.buildUrl(endpoint, config?.params)
     const headers = this.createHeaders(config?.headers)
 
     logger.info(`PUT ${url}`)
 
-    return this.executeRequest<T>(url, {
-      method: 'PUT',
-      headers,
-      body: data ? JSON.stringify(data) : undefined,
-      timeout: config?.timeout,
-      retries: config?.retries,
-      params: config?.params,
-    }, config?.retries)
+    return this.executeRequest<T>(
+      url,
+      {
+        method: 'PUT',
+        headers,
+        body: data ? JSON.stringify(data) : undefined,
+        timeout: config?.timeout,
+        retries: config?.retries,
+        params: config?.params,
+      },
+      config?.retries,
+    )
   }
 
   /**
    * Generic DELETE request
    */
-  async delete<T = unknown>(
-    endpoint: string,
-    config?: RequestConfig
-  ): Promise<ApiResponse<T>> {
+  async delete<T = unknown>(endpoint: string, config?: RequestConfig): Promise<ApiResponse<T>> {
     const url = this.buildUrl(endpoint, config?.params)
     const headers = this.createHeaders(config?.headers)
 
     logger.info(`DELETE ${url}`)
 
-    return this.executeRequest<T>(url, {
-      method: 'DELETE',
-      headers,
-      timeout: config?.timeout,
-      retries: config?.retries,
-      params: config?.params,
-    }, config?.retries)
+    return this.executeRequest<T>(
+      url,
+      {
+        method: 'DELETE',
+        headers,
+        timeout: config?.timeout,
+        retries: config?.retries,
+        params: config?.params,
+      },
+      config?.retries,
+    )
   }
 
   /**
    * Generic PATCH request
    */
-  async patch<T = unknown, D = unknown>(
-    endpoint: string,
-    data?: D,
-    config?: RequestConfig
-  ): Promise<ApiResponse<T>> {
+  async patch<T = unknown, D = unknown>(endpoint: string, data?: D, config?: RequestConfig): Promise<ApiResponse<T>> {
     const url = this.buildUrl(endpoint, config?.params)
     const headers = this.createHeaders(config?.headers)
 
     logger.info(`PATCH ${url}`)
 
-    return this.executeRequest<T>(url, {
-      method: 'PATCH',
-      headers,
-      body: data ? JSON.stringify(data) : undefined,
-      timeout: config?.timeout,
-      retries: config?.retries,
-      params: config?.params,
-    }, config?.retries)
+    return this.executeRequest<T>(
+      url,
+      {
+        method: 'PATCH',
+        headers,
+        body: data ? JSON.stringify(data) : undefined,
+        timeout: config?.timeout,
+        retries: config?.retries,
+        params: config?.params,
+      },
+      config?.retries,
+    )
   }
 }
 
@@ -435,7 +435,6 @@ export class HttpClient {
 export function createHttpClient(config: ApiConfig): HttpClient {
   return new HttpClient(config)
 }
-
 
 const CONSOLE_API_VERSION = '20240601'
 /**
@@ -447,8 +446,6 @@ export const consoleApiClient = createHttpClient({
     'STATSIG-API-VERSION': CONSOLE_API_VERSION,
   },
 })
-
-
 
 /**
  * Type-safe API endpoint definitions

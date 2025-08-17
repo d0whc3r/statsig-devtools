@@ -1,21 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { logger } from '../utils/logger'
-import { ErrorCategory, errorHandler, ErrorSeverity } from './error-handler'
-import { getAllConfigurations } from './statsig-api'
 import { UnifiedStatsigService, unifiedStatsigService } from './unified-statsig-api'
 
-import type { StatsigConfigurationItem } from '../types'
-import type { StatsigUser } from '@statsig/js-client'
+import type { StatsigUser } from './unified-statsig-api'
 
 // Mock dependencies
 vi.mock('../utils/logger')
 vi.mock('./error-handler')
-vi.mock('./statsig-api')
 
 // Mock fetch globally
 const mockFetch = vi.fn()
 global.fetch = mockFetch
+
+// No external API module to mock; fetch is stubbed below
 
 describe('UnifiedStatsigService', () => {
   let service: UnifiedStatsigService
@@ -25,6 +23,8 @@ describe('UnifiedStatsigService', () => {
     vi.clearAllMocks()
     vi.clearAllTimers()
     vi.useFakeTimers()
+
+    // Default valid responses handled via fetch mocks in individual tests
   })
 
   describe('API Key Validation', () => {
@@ -76,62 +76,65 @@ describe('UnifiedStatsigService', () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 401,
+        statusText: 'Unauthorized',
       })
 
       const result = await service.validateApiKey('console-invalid-key')
 
       expect(result.isValid).toBe(false)
-      expect(result.error).toBe('Invalid API key. Please verify your Console API key is correct and has not expired.')
+      expect(result.error).toBe('Invalid Console API key. Please check your key and try again.')
     })
 
     it('should handle 403 forbidden error', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 403,
+        statusText: 'Forbidden',
       })
 
       const result = await service.validateApiKey('console-forbidden-key')
 
       expect(result.isValid).toBe(false)
-      expect(result.error).toBe(
-        'API key does not have sufficient permissions. Please check your project access rights.',
-      )
+      expect(result.error).toBe('API validation failed: 403 Forbidden')
     })
 
     it('should handle 404 not found error', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
+        statusText: 'Not Found',
       })
 
       const result = await service.validateApiKey('console-notfound-key')
 
       expect(result.isValid).toBe(false)
-      expect(result.error).toBe('API endpoint not found. Please check your API key format.')
+      expect(result.error).toBe('API validation failed: 404 Not Found')
     })
 
     it('should handle 429 rate limit error', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 429,
+        statusText: 'Too Many Requests',
       })
 
       const result = await service.validateApiKey('console-ratelimited-key')
 
       expect(result.isValid).toBe(false)
-      expect(result.error).toBe('Rate limit exceeded. Please wait a moment and try again.')
+      expect(result.error).toBe('API validation failed: 429 Too Many Requests')
     })
 
     it('should handle 500 server error', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
+        statusText: 'Internal Server Error',
       })
 
       const result = await service.validateApiKey('console-server-error-key')
 
       expect(result.isValid).toBe(false)
-      expect(result.error).toBe('Statsig server error. Please try again in a few moments.')
+      expect(result.error).toBe('API validation failed: 500 Internal Server Error')
     })
 
     it('should handle network timeout', async () => {
@@ -177,6 +180,14 @@ describe('UnifiedStatsigService', () => {
   })
 
   describe('Service Initialization', () => {
+    beforeEach(() => {
+      // Mock fetch for API key validation
+      mockFetch.mockResolvedValue({
+        ok: true,
+        status: 200,
+      })
+    })
+
     it('should initialize with console API key', async () => {
       const user: StatsigUser = {
         userID: 'test-user',
@@ -187,7 +198,7 @@ describe('UnifiedStatsigService', () => {
 
       expect(service.isReady()).toBe(true)
       expect(logger.info).toHaveBeenCalledWith('Initializing Statsig service with Console API key...')
-      expect(logger.info).toHaveBeenCalledWith('Statsig Client SDK initialized successfully')
+      expect(logger.info).toHaveBeenCalledWith('Statsig service initialized successfully')
     })
 
     it('should initialize with default user when no user provided', async () => {
@@ -197,70 +208,65 @@ describe('UnifiedStatsigService', () => {
     })
 
     it('should handle initialization error', async () => {
-      // Mock an error during initialization
-      vi.spyOn(service as any, 'buildDefaultUser').mockImplementationOnce(() => {
-        throw new Error('User creation failed')
-      })
+      // Mock fetch to fail for this test
+      mockFetch.mockRejectedValueOnce(new Error('Network error'))
 
       await expect(service.initialize('console-test-key')).rejects.toThrow(
-        'SDK initialization failed: User creation failed',
+        'An unexpected error occurred during validation',
       )
       expect(service.isReady()).toBe(false)
     })
   })
 
   describe('Configuration Management', () => {
-    beforeEach(async () => {
-      await service.initialize('console-test-key')
+    beforeEach(() => {
+      // Mock fetch for API calls - need multiple responses for validation and API calls
+      mockFetch.mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ data: [] }),
+      })
     })
 
     it('should get all configurations', async () => {
-      const mockConfigurations: StatsigConfigurationItem[] = [
-        {
-          name: 'Test Gate',
-          type: 'feature_gate',
-          enabled: true,
-          rules: [],
-          defaultValue: false,
-        },
-      ]
-
-      vi.mocked(getAllConfigurations).mockResolvedValueOnce(mockConfigurations)
-
+      await service.initialize('console-test-key')
       const result = await service.getAllConfigurations()
 
-      expect(result).toEqual(mockConfigurations)
-      expect(getAllConfigurations).toHaveBeenCalledWith('console-test-key')
+      expect(Array.isArray(result)).toBe(true)
+      expect(result.length).toBe(0) // Empty array from mock data
     })
 
     it('should handle error when getting configurations', async () => {
-      const error = new Error('API error')
-      const statsigError = {
-        id: 'test-error-id',
-        category: ErrorCategory.API,
-        severity: ErrorSeverity.MEDIUM,
-        message: 'API error',
-        userMessage: 'API error occurred',
-        timestamp: new Date().toISOString(),
-        recoverable: true,
-        originalError: error,
+      // First initialize the service
+      await service.initialize('console-test-key')
+
+      // Then mock the console API service to throw an error
+      const mockConsoleApiService = {
+        getFeatureGates: vi.fn().mockRejectedValue(new Error('API error')),
+        getExperiments: vi.fn(),
+        getDynamicConfigs: vi.fn(),
       }
-      vi.mocked(getAllConfigurations).mockRejectedValueOnce(error)
-      vi.mocked(errorHandler.handleError).mockReturnValueOnce(statsigError)
+      ;(service as any).consoleApiService = mockConsoleApiService
 
       await expect(service.getAllConfigurations()).rejects.toThrow('API error')
-      expect(errorHandler.handleError).toHaveBeenCalledWith(error, 'Getting configurations')
     })
 
     it('should throw error when getting configurations without API key', async () => {
       const uninitializedService = new UnifiedStatsigService()
 
-      await expect(uninitializedService.getAllConfigurations()).rejects.toThrow('Console API key not set')
+      await expect(uninitializedService.getAllConfigurations()).rejects.toThrow(
+        'Service not initialized. Call initialize() first.',
+      )
     })
   })
 
   describe('Feature Gate Evaluation', () => {
     beforeEach(async () => {
+      mockFetch.mockResolvedValue({
+        ok: true,
+        status: 200,
+      })
+
       await service.initialize('console-test-key')
     })
 
@@ -280,6 +286,11 @@ describe('UnifiedStatsigService', () => {
 
   describe('User Management', () => {
     beforeEach(async () => {
+      mockFetch.mockResolvedValue({
+        ok: true,
+        status: 200,
+      })
+
       await service.initialize('console-test-key')
     })
 
@@ -311,11 +322,21 @@ describe('UnifiedStatsigService', () => {
     })
 
     it('should return true for isReady when initialized', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+      })
+
       await service.initialize('console-test-key')
       expect(service.isReady()).toBe(true)
     })
 
     it('should cleanup service state', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+      })
+
       await service.initialize('console-test-key')
       expect(service.isReady()).toBe(true)
 
@@ -325,14 +346,18 @@ describe('UnifiedStatsigService', () => {
       expect(logger.info).toHaveBeenCalledWith('Statsig service cleaned up')
     })
 
-    it('should cleanup with client when present', async () => {
-      // Mock a client being present
-      const mockClient = { shutdown: vi.fn() }
-      ;(service as any).client = mockClient
+    it('should cleanup console API service when present', async () => {
+      // Initialize service first
+      mockFetch.mockResolvedValue({
+        ok: true,
+        status: 200,
+      })
+
+      await service.initialize('console-test-key')
+      expect(service.isReady()).toBe(true)
 
       service.cleanup()
 
-      expect(mockClient.shutdown).toHaveBeenCalled()
       expect(service.isReady()).toBe(false)
     })
   })
@@ -343,6 +368,11 @@ describe('UnifiedStatsigService', () => {
     })
 
     it('should maintain state across imports', async () => {
+      mockFetch.mockResolvedValue({
+        ok: true,
+        status: 200,
+      })
+
       await unifiedStatsigService.initialize('console-singleton-test')
       expect(unifiedStatsigService.isReady()).toBe(true)
 
@@ -353,7 +383,7 @@ describe('UnifiedStatsigService', () => {
 
   describe('Edge Cases', () => {
     it('should handle whitespace in API key', async () => {
-      mockFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValue({
         ok: true,
         status: 200,
       })
@@ -372,6 +402,11 @@ describe('UnifiedStatsigService', () => {
     })
 
     it('should handle initialization with whitespace in API key', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+      })
+
       await service.initialize('  console-whitespace-key  ')
       expect(service.isReady()).toBe(true)
     })

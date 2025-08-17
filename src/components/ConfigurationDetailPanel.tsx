@@ -2,8 +2,7 @@ import { useConfigurationEvaluation } from '../hooks/useConfigurationEvaluation'
 import { useStorageOverrides } from '../hooks/useStorageOverrides'
 import { RuleDetail } from './RuleDetail'
 
-import type { StorageOverride } from '../services/statsig-integration'
-import type { AuthState, StatsigConfigurationItem } from '../types'
+import type { AuthState, StatsigConfigurationItem, StorageOverride } from '../types'
 
 interface ConfigurationDetailPanelProps {
   authState: AuthState
@@ -22,7 +21,8 @@ export function ConfigurationDetailPanel({
   allowOverrides = true,
   domain,
 }: ConfigurationDetailPanelProps) {
-  const { evaluationResults } = useConfigurationEvaluation(authState, [configuration], [])
+  const { evaluationResults } = useConfigurationEvaluation(authState)
+  const evaluationResultsMap = new Map(evaluationResults.map((r) => [r.configurationName, r]))
   const { activeOverrides, createOverride, removeOverride } = useStorageOverrides(domain)
 
   const relatedOverrides = activeOverrides.filter((ov) => {
@@ -66,7 +66,7 @@ export function ConfigurationDetailPanel({
         <div className={`custom-scrollbar flex-1 overflow-y-auto ${compact ? 'max-h-80' : ''}`}>
           <RuleDetail
             configuration={configuration}
-            evaluationResult={evaluationResults.get(configuration.name)}
+            evaluationResult={evaluationResultsMap.get(configuration.name)}
             onOverrideCreate={handleOverrideCreate}
             compact={compact}
             allowOverrides={allowOverrides}

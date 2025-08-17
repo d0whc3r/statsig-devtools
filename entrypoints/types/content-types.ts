@@ -2,7 +2,7 @@
  * Types for content script functionality
  */
 
-import type { StorageOverride } from '@/src/services/statsig-integration'
+import type { StorageOverride } from '@/src/types'
 
 /**
  * Statsig SDK interface

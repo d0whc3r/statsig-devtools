@@ -14,7 +14,7 @@ export interface UseDashboardHeaderReturn {
  */
 export function useDashboardHeader(authState: AuthState): UseDashboardHeaderReturn {
   const { isLoading, refreshConfigurations } = useConfigurationData(authState)
-  const { isEvaluating } = useConfigurationEvaluation(authState, [], [])
+  const { isEvaluating } = useConfigurationEvaluation(authState)
 
   return {
     isLoading,

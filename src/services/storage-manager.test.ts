@@ -195,65 +195,6 @@ describe('StorageManager', () => {
     })
   })
 
-  describe('Client SDK Key Management', () => {
-    beforeEach(async () => {
-      await storageManager.initialize()
-    })
-
-    it('should store Client SDK key with encryption', async () => {
-      const sdkKey = 'client-sdk-key-456'
-
-      await expect(storageManager.storeClientSdkKey(sdkKey)).resolves.not.toThrow()
-
-      expect(mockCrypto.subtle.encrypt).toHaveBeenCalled()
-      expect(browser.storage.local.set).toHaveBeenCalledWith({
-        statsig_client_sdk_key: expect.objectContaining({
-          encryptedValue: expect.any(String),
-          iv: expect.any(String),
-          salt: expect.any(String),
-        }),
-      })
-    })
-
-    it('should reject invalid SDK key', async () => {
-      await expect(storageManager.storeClientSdkKey('')).rejects.toThrow('Invalid SDK key provided')
-
-      await expect(storageManager.storeClientSdkKey(null as any)).rejects.toThrow('Invalid SDK key provided')
-    })
-
-    it('should retrieve Client SDK key with decryption', async () => {
-      const encryptedData = {
-        encryptedValue: '1,2,3,4',
-        iv: '5,6,7,8',
-        salt: '9,10,11,12',
-      }
-      vi.mocked(browser.storage.local.get).mockResolvedValue({
-        statsig_client_sdk_key: encryptedData,
-      })
-
-      const result = await storageManager.getClientSdkKey()
-
-      expect(mockCrypto.subtle.decrypt).toHaveBeenCalled()
-      expect(result).toBe('decrypted-data')
-    })
-
-    it('should clear Client SDK key', async () => {
-      await expect(storageManager.clearClientSdkKey()).resolves.not.toThrow()
-
-      expect(browser.storage.local.remove).toHaveBeenCalledWith('statsig_client_sdk_key')
-    })
-
-    it('should check if Client SDK key exists', async () => {
-      vi.mocked(browser.storage.local.get).mockResolvedValue({
-        statsig_client_sdk_key: { encryptedValue: 'test' },
-      })
-
-      const exists = await storageManager.hasClientSdkKey()
-
-      expect(exists).toBe(true)
-    })
-  })
-
   describe('Configuration Caching', () => {
     beforeEach(async () => {
       await storageManager.initialize()

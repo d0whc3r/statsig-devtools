@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as configListModule from './configuration-list'
 import { ConfigurationList } from './ConfigurationList'
 
-import type { EvaluationResult, StorageOverride } from '../services/statsig-integration'
-import type { StatsigConfigurationItem } from '../types'
+import type { EvaluationResult } from '../services/unified-statsig-api'
+import type { StatsigConfigurationItem, StorageOverride } from '../types'
 
 import { render, screen } from '@testing-library/react'
 

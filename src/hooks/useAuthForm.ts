@@ -71,15 +71,12 @@ export function useAuthForm({ onAuthenticated, initialError }: UseAuthFormProps)
         // Create auth state
         const authState: AuthState = {
           consoleApiKey: apiKey.trim(),
-          clientSdkKey: apiKey.trim(),
           isAuthenticated: true,
           isLoading: false,
-          projectName: validation.projectName,
         }
 
         // Save to storage
         await storageManager.storeConsoleApiKey(apiKey.trim())
-        await storageManager.storeClientSdkKey(apiKey.trim())
 
         // Authenticate
         onAuthenticated(authState)

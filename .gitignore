@@ -16,6 +16,7 @@ web-ext.config.ts
 coverage/
 playwright-report/
 test-results/
+tsconfig.tsbuildinfo
 
 # Editor directories and files
 .vscode/*

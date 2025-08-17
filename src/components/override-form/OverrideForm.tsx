@@ -112,7 +112,7 @@ export function OverrideForm({ onSubmit, onCancel, initialValues }: OverrideForm
           >
             <textarea
               id="value"
-              value={formData.value || ''}
+              value={typeof formData.value === 'string' ? formData.value : String(formData.value ?? '')}
               onChange={(e) => updateField('value', e.target.value)}
               placeholder="e.g., true, false, 123, or JSON object"
               rows={3}

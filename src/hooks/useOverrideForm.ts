@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { storageInjectionService } from '../services/storage-injection'
 
-import type { StorageOverride } from '../services/statsig-integration'
+import type { StorageOverride } from '../types'
 
 interface UseOverrideFormProps {
   onSubmit: (override: StorageOverride) => Promise<void>
@@ -32,7 +32,8 @@ export const useOverrideForm = ({ onSubmit, initialValues }: UseOverrideFormProp
       validationErrors.key = 'Key is required'
     }
 
-    if (!data.value?.trim()) {
+    const valueStr = typeof data.value === 'string' ? data.value : String(data.value ?? '')
+    if (!valueStr.trim()) {
       validationErrors.value = 'Value is required'
     }
 
@@ -41,9 +42,9 @@ export const useOverrideForm = ({ onSubmit, initialValues }: UseOverrideFormProp
     }
 
     // Validate JSON format for complex values
-    if (data.value && data.value.trim().startsWith('{')) {
+    if (valueStr && valueStr.trim().startsWith('{')) {
       try {
-        JSON.parse(data.value)
+        JSON.parse(valueStr)
       } catch {
         validationErrors.value = 'Invalid JSON format'
       }

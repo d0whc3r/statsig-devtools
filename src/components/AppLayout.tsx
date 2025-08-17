@@ -61,7 +61,7 @@ interface AppLayoutProps {
  * Common layout component shared between popup and sidepanel
  */
 export function AppLayout({ viewMode }: AppLayoutProps) {
-  const { authState, handleAuthenticated, handleLogout } = useAuth()
+  const { authState, login, logout } = useAuth()
 
   // Loading state
   if (authState.isLoading) {
@@ -83,7 +83,7 @@ export function AppLayout({ viewMode }: AppLayoutProps) {
           <div className={`flex items-center ${viewMode === 'popup' ? 'gap-1' : 'gap-3'}`}>
             {/* Show action buttons when authenticated, logo when not */}
             {authState.isAuthenticated ? (
-              <HeaderActionButtons viewMode={viewMode} authState={authState} onLogout={handleLogout} />
+              <HeaderActionButtons viewMode={viewMode} authState={authState} onLogout={logout} />
             ) : (
               <div className={getLogoStyles(viewMode)}>
                 <svg
@@ -137,7 +137,7 @@ export function AppLayout({ viewMode }: AppLayoutProps) {
               <div
                 className={`w-full ${viewMode === 'tab' ? 'max-w-2xl' : 'max-w-md'} ${viewMode === 'popup' ? 'px-4' : ''}`}
               >
-                <AuthForm onAuthenticated={handleAuthenticated} initialError={authState.error} viewMode={viewMode} />
+                <AuthForm onAuthenticated={login} initialError={authState.error} viewMode={viewMode} />
               </div>
             </div>
           )}

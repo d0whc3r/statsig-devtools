@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import { formatTypeName, formatValue, getTypeBadgeClass } from '../../utils/configuration-formatters'
 import { ConfigurationStatusIndicator } from '../ConfigurationStatusIndicator'
 
-import type { EvaluationResult } from '../../services/statsig-integration'
+import type { EvaluationResult } from '../../services/unified-statsig-api'
 import type { StatsigConfigurationItem } from '../../types'
 
 interface ConfigurationItemProps {

@@ -9,8 +9,8 @@ import { RuleHeader } from './rule-detail/RuleHeader'
 import { RuleConditions } from './RuleConditions'
 import { RuleDetailOverrideForm } from './RuleDetailOverrideForm'
 
-import type { EvaluationResult, StorageOverride } from '../services/statsig-integration'
-import type { StatsigConfigurationItem } from '../types'
+import type { EvaluationResult } from '../services/unified-statsig-api'
+import type { StatsigConfigurationItem, StorageOverride } from '../types'
 
 interface RuleDetailProps {
   configuration: StatsigConfigurationItem
@@ -109,10 +109,7 @@ export function RuleDetail({
         {/* Experiment Override Form - Only show for experiments */}
         {allowOverrides && showExperimentOverrideForm && configuration.type === 'experiment' && (
           <div className="mt-4">
-            <ExperimentOverrideForm
-              experiment={configuration}
-              onClose={() => setShowExperimentOverrideForm(false)}
-            />
+            <ExperimentOverrideForm experiment={configuration} onClose={() => setShowExperimentOverrideForm(false)} />
           </div>
         )}
 

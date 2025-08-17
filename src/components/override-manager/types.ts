@@ -1,4 +1,4 @@
-import type { StorageOverride } from '../../services/statsig-integration'
+import type { StorageOverride } from '../../types'
 
 export interface OverrideManagerProps {
   overrides: StorageOverride[]
@@ -46,5 +46,5 @@ export type OverrideType = 'localStorage' | 'sessionStorage' | 'cookie'
 export interface ExtendedStorageOverride extends StorageOverride {
   id?: string
   featureName?: string
-  featureType?: string
+  featureType?: 'feature_gate' | 'experiment' | 'dynamic_config'
 }

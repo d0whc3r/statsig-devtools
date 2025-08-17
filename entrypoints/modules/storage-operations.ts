@@ -8,7 +8,7 @@ import { executeScriptDirect, executeScriptWithResult } from './script-execution
 import { injectStatsigOverride } from './statsig-injection'
 
 import type { CookieData, StatsigWindow, StorageOperationResult } from '../types/content-types'
-import type { StorageOverride } from '@/src/services/statsig-integration'
+import type { StorageOverride } from '@/src/types'
 
 /**
  * Handle setting storage override
@@ -28,7 +28,7 @@ export async function handleSetStorageOverride(override: StorageOverride): Promi
             // eslint-disable-next-line no-console
             console.log('✅ STATSIG: localStorage set successfully', { key, value, verified })
           },
-          [override.key, override.value],
+          [override.key, String(override.value)],
         )
         break
       }
@@ -42,7 +42,7 @@ export async function handleSetStorageOverride(override: StorageOverride): Promi
             // eslint-disable-next-line no-console
             console.log('✅ STATSIG: sessionStorage set successfully', { key, value, verified })
           },
-          [override.key, override.value],
+          [override.key, String(override.value)],
         )
         break
       }
@@ -56,7 +56,7 @@ export async function handleSetStorageOverride(override: StorageOverride): Promi
             // eslint-disable-next-line no-console
             console.log('✅ STATSIG: Cookie set successfully', { cookieString })
           },
-          [override.key, override.value, override.path || '/', override.domain || ''],
+          [override.key, String(override.value), override.path || '/', override.domain || ''],
         )
         break
       }
