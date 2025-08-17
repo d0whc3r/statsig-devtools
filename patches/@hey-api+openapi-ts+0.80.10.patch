@@ -1,0 +1,110 @@
+diff --git a/node_modules/@hey-api/openapi-ts/dist/clients/core/params.ts b/node_modules/@hey-api/openapi-ts/dist/clients/core/params.ts
+index ba35263..b65cca0 100644
+--- a/node_modules/@hey-api/openapi-ts/dist/clients/core/params.ts
++++ b/node_modules/@hey-api/openapi-ts/dist/clients/core/params.ts
+@@ -54,8 +54,8 @@ const buildKeyMap = (fields: FieldsConfig, map?: KeyMap): KeyMap => {
+     if ('in' in config) {
+       if (config.key) {
+         map.set(config.key, {
+-          in: config.in,
+-          map: config.map,
++          in: config.in ?? '',
++          map: config.map ?? '',
+         });
+       }
+     } else if (config.args) {
+diff --git a/node_modules/@hey-api/openapi-ts/dist/clients/core/pathSerializer.ts b/node_modules/@hey-api/openapi-ts/dist/clients/core/pathSerializer.ts
+index d692cf0..9377fa2 100644
+--- a/node_modules/@hey-api/openapi-ts/dist/clients/core/pathSerializer.ts
++++ b/node_modules/@hey-api/openapi-ts/dist/clients/core/pathSerializer.ts
+@@ -97,7 +97,7 @@ export const serializeArrayParam = ({
+       }
+ 
+       return serializePrimitiveParam({
+-        allowReserved,
++        allowReserved: Boolean(allowReserved),
+         name,
+         value: v as string,
+       });
+@@ -167,7 +167,7 @@ export const serializeObjectParam = ({
+   const joinedValues = Object.entries(value)
+     .map(([key, v]) =>
+       serializePrimitiveParam({
+-        allowReserved,
++        allowReserved: Boolean(allowReserved),
+         name: style === 'deepObject' ? `${name}[${key}]` : key,
+         value: v as string,
+       }),
+diff --git a/node_modules/@hey-api/openapi-ts/dist/clients/fetch/client.ts b/node_modules/@hey-api/openapi-ts/dist/clients/fetch/client.ts
+index 72b0912..b569433 100644
+--- a/node_modules/@hey-api/openapi-ts/dist/clients/fetch/client.ts
++++ b/node_modules/@hey-api/openapi-ts/dist/clients/fetch/client.ts
+@@ -71,7 +71,7 @@ export const createClient = (config: Config = {}): Client => {
+ 
+     for (const fn of interceptors.request._fns) {
+       if (fn) {
+-        request = await fn(request, opts);
++        request = await fn(request, opts as unknown as ResolvedRequestOptions);
+       }
+     }
+ 
+@@ -82,7 +82,7 @@ export const createClient = (config: Config = {}): Client => {
+ 
+     for (const fn of interceptors.response._fns) {
+       if (fn) {
+-        response = await fn(response, request, opts);
++        response = await fn(response, request, opts as unknown as ResolvedRequestOptions);
+       }
+     }
+ 
+@@ -159,7 +159,7 @@ export const createClient = (config: Config = {}): Client => {
+ 
+     for (const fn of interceptors.error._fns) {
+       if (fn) {
+-        finalError = (await fn(error, response, request, opts)) as string;
++        finalError = (await fn(error, response, request, opts as unknown as ResolvedRequestOptions)) as string;
+       }
+     }
+ 
+diff --git a/node_modules/@hey-api/openapi-ts/dist/clients/fetch/utils.ts b/node_modules/@hey-api/openapi-ts/dist/clients/fetch/utils.ts
+index a52e672..043a024 100644
+--- a/node_modules/@hey-api/openapi-ts/dist/clients/fetch/utils.ts
++++ b/node_modules/@hey-api/openapi-ts/dist/clients/fetch/utils.ts
+@@ -109,7 +109,7 @@ export const createQuerySerializer = <T = unknown>({
+ 
+         if (Array.isArray(value)) {
+           const serializedArray = serializeArrayParam({
+-            allowReserved,
++            allowReserved: Boolean(allowReserved),
+             explode: true,
+             name,
+             style: 'form',
+@@ -119,7 +119,7 @@ export const createQuerySerializer = <T = unknown>({
+           if (serializedArray) search.push(serializedArray);
+         } else if (typeof value === 'object') {
+           const serializedObject = serializeObjectParam({
+-            allowReserved,
++            allowReserved: Boolean(allowReserved),
+             explode: true,
+             name,
+             style: 'deepObject',
+@@ -129,7 +129,7 @@ export const createQuerySerializer = <T = unknown>({
+           if (serializedObject) search.push(serializedObject);
+         } else {
+           const serializedPrimitive = serializePrimitiveParam({
+-            allowReserved,
++            allowReserved: Boolean(allowReserved),
+             name,
+             value: value as string,
+           });
+@@ -225,8 +225,8 @@ export const setAuthParams = async ({
+ export const buildUrl: Client['buildUrl'] = (options) => {
+   const url = getUrl({
+     baseUrl: options.baseUrl as string,
+-    path: options.path,
+-    query: options.query,
++    path: options.path ?? {},
++    query: options.query ?? {},
+     querySerializer:
+       typeof options.querySerializer === 'function'
+         ? options.querySerializer

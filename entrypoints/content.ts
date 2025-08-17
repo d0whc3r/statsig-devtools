@@ -1,23 +1,16 @@
+import { contentMessageAction } from '@/src/types/content.types'
 import { Logger } from '@/src/utils/logger'
 
+import type {
+  ContentScriptMessage,
+  ContentSendResponse,
+  GetStoragePayload,
+  StorageOverridePayload,
+  StorageOverrideResult,
+  StorageRemoveResult,
+} from '@/src/types/content.types'
+
 const logger = new Logger('CONTENT')
-
-interface StorageOverridePayload {
-  type: 'localStorage' | 'sessionStorage' | 'cookie'
-  key: string
-  value?: string
-  domain?: string
-}
-
-interface GetStoragePayload {
-  type: 'localStorage' | 'sessionStorage' | 'cookie'
-  key: string
-}
-
-interface ContentScriptMessage {
-  type: 'SET_STORAGE_OVERRIDE' | 'REMOVE_STORAGE_OVERRIDE' | 'GET_STORAGE_VALUE' | 'PING'
-  payload?: StorageOverridePayload | GetStoragePayload
-}
 
 export default defineContentScript({
   matches: ['<all_urls>'],
@@ -29,77 +22,79 @@ export default defineContentScript({
     })
 
     // Message listener for storage operations
-    browser.runtime.onMessage.addListener((message: ContentScriptMessage, _sender, sendResponse) => {
-      logger.debug('Received message', { type: message.type, hasPayload: !!message.payload })
-      switch (message.type) {
-        case 'SET_STORAGE_OVERRIDE':
-          if (!message.payload) {
-            logger.warn('SET_STORAGE_OVERRIDE called without payload')
-            sendResponse({ success: false, error: 'Payload is required' })
-            return true
-          }
-          handleSetStorageOverride(message.payload as StorageOverridePayload)
-            .then((result) => {
-              logger.info('Storage override set successfully', result)
-              sendResponse({ success: true, data: result })
-            })
-            .catch((error) => {
-              logger.error('Failed to set storage override', error)
-              sendResponse({ success: false, error: error.message })
-            })
-          return true
-
-        case 'REMOVE_STORAGE_OVERRIDE':
-          if (!message.payload) {
-            logger.warn('REMOVE_STORAGE_OVERRIDE called without payload')
-            sendResponse({ success: false, error: 'Payload is required' })
-            return true
-          }
-          handleRemoveStorageOverride(message.payload as StorageOverridePayload)
-            .then((result) => {
-              logger.info('Storage override removed successfully', result)
-              sendResponse({ success: true, data: result })
-            })
-            .catch((error) => {
-              logger.error('Failed to remove storage override', error)
-              sendResponse({ success: false, error: error.message })
-            })
-          return true
-
-        case 'GET_STORAGE_VALUE':
-          if (!message.payload) {
-            logger.warn('GET_STORAGE_VALUE called without payload')
-            sendResponse({ success: false, error: 'Payload is required' })
-            return true
-          }
-          getStorageValue(message.payload as GetStoragePayload)
-            .then((result) => {
-              logger.debug('Storage value retrieved', {
-                key: (message.payload as GetStoragePayload).key,
-                hasValue: !!result,
+    browser.runtime.onMessage.addListener(
+      (message: ContentScriptMessage, _sender, sendResponse: ContentSendResponse) => {
+        logger.debug('Received message', { type: message.type, hasPayload: !!message.payload })
+        switch (message.type) {
+          case contentMessageAction.SET_STORAGE_OVERRIDE:
+            if (!message.payload) {
+              logger.warn('SET_STORAGE_OVERRIDE called without payload')
+              sendResponse({ success: false, data: null, error: 'Payload is required' })
+              return true
+            }
+            handleSetStorageOverride(message.payload as StorageOverridePayload)
+              .then((result: StorageOverrideResult) => {
+                logger.info('Storage override set successfully', result)
+                sendResponse({ success: true, data: result })
               })
-              sendResponse({ success: true, data: result })
-            })
-            .catch((error) => {
-              logger.error('Failed to get storage value', error)
-              sendResponse({ success: false, error: error.message })
-            })
-          return true
+              .catch((error) => {
+                logger.error('Failed to set storage override', error)
+                sendResponse({ success: false, data: null, error: error.message })
+              })
+            return true
 
-        case 'PING':
-          logger.debug('PING received, responding with pong')
-          sendResponse({ success: true, data: 'pong' })
-          return true
+          case contentMessageAction.REMOVE_STORAGE_OVERRIDE:
+            if (!message.payload) {
+              logger.warn('REMOVE_STORAGE_OVERRIDE called without payload')
+              sendResponse({ success: false, data: null, error: 'Payload is required' })
+              return true
+            }
+            handleRemoveStorageOverride(message.payload as StorageOverridePayload)
+              .then((result: StorageRemoveResult) => {
+                logger.info('Storage override removed successfully', result)
+                sendResponse({ success: true, data: result })
+              })
+              .catch((error) => {
+                logger.error('Failed to remove storage override', error)
+                sendResponse({ success: false, data: null, error: error.message })
+              })
+            return true
 
-        default:
-          logger.warn('Unknown message type received', { type: message.type })
-          sendResponse({ success: false, error: `Unknown message type: ${message.type}` })
-          return true
-      }
-    })
+          case contentMessageAction.GET_STORAGE_VALUE:
+            if (!message.payload) {
+              logger.warn('GET_STORAGE_VALUE called without payload')
+              sendResponse({ success: false, data: null, error: 'Payload is required' })
+              return true
+            }
+            getStorageValue(message.payload as GetStoragePayload)
+              .then((result) => {
+                logger.debug('Storage value retrieved', {
+                  key: (message.payload as GetStoragePayload).key,
+                  hasValue: !!result,
+                })
+                sendResponse({ success: true, data: result })
+              })
+              .catch((error) => {
+                logger.error('Failed to get storage value', error)
+                sendResponse({ success: false, data: null, error: error.message })
+              })
+            return true
+
+          case contentMessageAction.PING:
+            logger.debug('PING received, responding with pong')
+            sendResponse({ success: true, data: 'pong' })
+            return true
+
+          default:
+            logger.warn('Unknown message type received', { type: message.type })
+            sendResponse({ success: false, data: null, error: `Unknown message type: ${message.type}` })
+            return true
+        }
+      },
+    )
 
     // Storage override handlers
-    async function handleSetStorageOverride(payload: StorageOverridePayload) {
+    async function handleSetStorageOverride(payload: StorageOverridePayload): Promise<StorageOverrideResult> {
       const { type, key, value, domain } = payload
 
       if (!value) {
@@ -133,7 +128,7 @@ export default defineContentScript({
       return { type, key, value, applied: true }
     }
 
-    async function handleRemoveStorageOverride(payload: StorageOverridePayload) {
+    async function handleRemoveStorageOverride(payload: StorageOverridePayload): Promise<StorageRemoveResult> {
       const { type, key, domain } = payload
 
       logger.debug('Removing storage override', { type, key, domain })
@@ -162,7 +157,7 @@ export default defineContentScript({
       return { type, key, removed: true }
     }
 
-    async function getStorageValue(payload: GetStoragePayload) {
+    async function getStorageValue(payload: GetStoragePayload): Promise<string | null> {
       const { type, key } = payload
 
       logger.debug('Getting storage value', { type, key })
@@ -181,7 +176,7 @@ export default defineContentScript({
         case 'cookie': {
           const cookies = document.cookie.split(';')
           const cookie = cookies.find((c) => c.trim().startsWith(`${key}=`))
-          const cookieValue = cookie ? cookie.split('=')[1] : null
+          const cookieValue = cookie ? (cookie.split('=')[1] ?? null) : null
           logger.debug('Cookie value retrieved', { key, hasValue: !!cookieValue })
           return cookieValue
         }

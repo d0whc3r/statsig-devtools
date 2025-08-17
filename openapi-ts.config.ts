@@ -6,7 +6,6 @@ export default defineConfig({
     path: 'src/client',
     indexFile: false,
     tsConfigPath: 'tsconfig.app.json',
-    case: 'camelCase',
     clean: true,
     format: 'prettier',
     lint: 'eslint',
@@ -15,11 +14,15 @@ export default defineConfig({
     '@hey-api/typescript',
     {
       name: '@hey-api/client-fetch',
-      runtimeConfigPath: './src/http-client.ts',
+      runtimeConfigPath: './src/api/http-client.ts',
     },
     {
       asClass: true,
       name: '@hey-api/sdk',
+    },
+    {
+      compatibilityVersion: 4,
+      name: 'zod',
     },
   ],
 })

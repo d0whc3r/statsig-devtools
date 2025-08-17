@@ -33,8 +33,8 @@ export type AlertSchemaDto = {
    * Alert message
    */
   message: string
-  creatorId?: string
-  companyId: string
+  creatorID?: string
+  companyID: string
   /**
    * Priority of this alert
    */
@@ -107,11 +107,11 @@ export type AssignmentSourceContractDto = {
   /**
    * Column name for the experiment ID associated with the assignments.
    */
-  experimentIdColumn: string
+  experimentIDColumn: string
   /**
    * Column name for the group ID linked to the assignments.
    */
-  groupIdColumn: string
+  groupIDColumn: string
   /**
    * Mappings of Statsig units to their respective columns.
    */
@@ -119,7 +119,7 @@ export type AssignmentSourceContractDto = {
     /**
      * ID for the Statsig unit.
      */
-    statsigUnitId: string
+    statsigUnitID: string
     /**
      * Column name associated with the ID type mapping.
      */
@@ -136,7 +136,7 @@ export type AssignmentSourceContractDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -157,7 +157,7 @@ export type AssignmentSourceContractDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
 }
 
 export type AssignmentSourceCreationDto = {
@@ -188,11 +188,11 @@ export type AssignmentSourceCreationDto = {
   /**
    * Column name for the experiment ID associated with the assignments.
    */
-  experimentIdColumn: string
+  experimentIDColumn: string
   /**
    * Column name for the group ID linked to the assignments.
    */
-  groupIdColumn: string
+  groupIDColumn: string
   /**
    * Mappings of Statsig units to their respective columns.
    */
@@ -200,7 +200,7 @@ export type AssignmentSourceCreationDto = {
     /**
      * ID for the Statsig unit.
      */
-    statsigUnitId: string
+    statsigUnitID: string
     /**
      * Column name associated with the ID type mapping.
      */
@@ -217,7 +217,7 @@ export type AssignmentSourceCreationDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -238,7 +238,7 @@ export type AssignmentSourceCreationDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Skips persisting the assignment source (used to validate that inputs are correct)
    */
@@ -273,11 +273,11 @@ export type AssignmentSourcePartialUpdateDto = {
   /**
    * Column name for the experiment ID associated with the assignments.
    */
-  experimentIdColumn?: string
+  experimentIDColumn?: string
   /**
    * Column name for the group ID linked to the assignments.
    */
-  groupIdColumn?: string
+  groupIDColumn?: string
   /**
    * Mappings of Statsig units to their respective columns.
    */
@@ -285,7 +285,7 @@ export type AssignmentSourcePartialUpdateDto = {
     /**
      * ID for the Statsig unit.
      */
-    statsigUnitId: string
+    statsigUnitID: string
     /**
      * Column name associated with the ID type mapping.
      */
@@ -302,7 +302,7 @@ export type AssignmentSourcePartialUpdateDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -323,7 +323,7 @@ export type AssignmentSourcePartialUpdateDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Skips persisting the assignment source (used to validate that inputs are correct)
    */
@@ -358,11 +358,11 @@ export type AssignmentSourceQueryUpdateDto = {
   /**
    * Column name for the experiment ID associated with the assignments.
    */
-  experimentIdColumn: string
+  experimentIDColumn: string
   /**
    * Column name for the group ID linked to the assignments.
    */
-  groupIdColumn: string
+  groupIDColumn: string
   /**
    * Mappings of Statsig units to their respective columns.
    */
@@ -370,7 +370,7 @@ export type AssignmentSourceQueryUpdateDto = {
     /**
      * ID for the Statsig unit.
      */
-    statsigUnitId: string
+    statsigUnitID: string
     /**
      * Column name associated with the ID type mapping.
      */
@@ -387,7 +387,7 @@ export type AssignmentSourceQueryUpdateDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -408,7 +408,7 @@ export type AssignmentSourceQueryUpdateDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Skips persisting the assignment source (used to validate that inputs are correct)
    */
@@ -434,7 +434,7 @@ export type AuditLogDto = {
   date: string
   time: string
   updatedBy: string
-  updatedByUserId: string
+  updatedByUserID: string
   modifierEmail: {
     [key: string]: unknown
   }
@@ -442,7 +442,7 @@ export type AuditLogDto = {
     [key: string]: unknown
   }
   tags: Array<string>
-  targetAppIds?: Array<string>
+  targetAppIDs?: Array<string>
 }
 
 export type AutotuneCreateDto = {
@@ -529,7 +529,7 @@ export type AutotuneCreateDto = {
   /**
    * Metric source to pull success event data from
    */
-  metricSourceId?: string
+  metricSourceID?: string
   /**
    * Linked experiment to measure the success of the Autotune
    */
@@ -645,7 +645,7 @@ export type AutotuneExperimentDto = {
   /**
    * Metric source to pull success event data from
    */
-  metricSourceId?: string
+  metricSourceID?: string
   /**
    * Linked experiment to measure the success of the Autotune
    */
@@ -681,7 +681,7 @@ export type AutotuneExperimentDto = {
   /**
    * ID of the last modifier.
    */
-  lastModifierId: string | null
+  lastModifierID: string | null
   /**
    * Time of the last modification.
    */
@@ -697,7 +697,7 @@ export type AutotuneExperimentDto = {
   /**
    * ID of the user who created the entity.
    */
-  creatorId: string | null
+  creatorID: string | null
   /**
    * Timestamp when the entity was created.
    */
@@ -721,7 +721,7 @@ export type AutotuneExperimentDto = {
   /**
    * Holdouts applied to this configuration.
    */
-  holdoutIds?: Array<string>
+  holdoutIDs?: Array<string>
   /**
    * Optional name for the responsible team.
    */
@@ -729,7 +729,7 @@ export type AutotuneExperimentDto = {
   /**
    * Optional ID of the responsible team.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Version number
    */
@@ -837,7 +837,7 @@ export type AutotuneFullUpdateDto = {
   /**
    * Metric source to pull success event data from
    */
-  metricSourceId?: string
+  metricSourceID?: string
   /**
    * Linked experiment to measure the success of the Autotune
    */
@@ -944,7 +944,7 @@ export type AutotunePartialUpdateDto = {
   /**
    * Metric source to pull success event data from
    */
-  metricSourceId?: string
+  metricSourceID?: string
   /**
    * Linked experiment to measure the success of the Autotune
    */
@@ -987,26 +987,26 @@ export type BulkAssignConfigTargetAppDto = {
 }
 
 export type ChangeValidationDto = {
-  reviewId: string
+  reviewID: string
   validated: boolean
   message?: string
 }
 
 export type ChangeValidationUpdateMessageDto = {
-  reviewId: string
+  reviewID: string
   message?: string
 }
 
 export type CompanyInfoResponseDto = {
-  companyId: string
+  companyID: string
   companyName: string
   isWarehouseNative: boolean
-  orgId: string | null
+  orgID: string | null
   orgName: string | null
 }
 
 export type CumulativeExposureResponseDto = Array<{
-  groupId: string
+  groupID: string
   groupName: string
   results: Array<{
     date: string
@@ -1043,7 +1043,7 @@ export type DynamicConfigCreateDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -1077,7 +1077,7 @@ export type DynamicConfigCreateDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     returnValue?: {
       [key: string]: unknown
     }
@@ -1118,7 +1118,7 @@ export type DynamicConfigCreateDto = {
    * The list of tag names attached to the dynamic config
    */
   tags?: Array<string>
-  creatorId?: string | null
+  creatorID?: string | null
   /**
    * Schema for owner data including ID, type, name. Note that if Entity is created by CONSOLE API, owner will be undefined.
    */
@@ -1126,7 +1126,7 @@ export type DynamicConfigCreateDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -1157,11 +1157,11 @@ export type DynamicConfigCreateDto = {
   /**
    * The team ID associated with the dynamic config, Enterprise only.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * The release pipeline ID associated with the dynamic config
    */
-  releasePipelineId?: string | null
+  releasePipelineID?: string | null
   id?: string
   isTemplate?: boolean
 }
@@ -1186,7 +1186,7 @@ export type DynamicConfigDto = {
   /**
    * ID of the last modifier.
    */
-  lastModifierId: string | null
+  lastModifierID: string | null
   /**
    * Time of the last modification.
    */
@@ -1199,7 +1199,7 @@ export type DynamicConfigDto = {
    * Name of the last modifier.
    */
   lastModifierName: string | null
-  creatorId?: string | null
+  creatorID?: string | null
   /**
    * Timestamp when the entity was created.
    */
@@ -1217,7 +1217,7 @@ export type DynamicConfigDto = {
   /**
    * Holdouts applied to this configuration.
    */
-  holdoutIds?: Array<string>
+  holdoutIDs?: Array<string>
   /**
    * The team name associated with the dynamic config, Enterprise only.
    */
@@ -1225,7 +1225,7 @@ export type DynamicConfigDto = {
   /**
    * The team ID associated with the dynamic config, Enterprise only.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Version number
    */
@@ -1253,7 +1253,7 @@ export type DynamicConfigDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -1287,7 +1287,7 @@ export type DynamicConfigDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     returnValue?: {
       [key: string]: unknown
     }
@@ -1327,7 +1327,7 @@ export type DynamicConfigDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -1352,7 +1352,7 @@ export type DynamicConfigDto = {
   /**
    * The release pipeline ID associated with the dynamic config
    */
-  releasePipelineId?: string | null
+  releasePipelineID?: string | null
   isTemplate?: boolean
 }
 
@@ -1388,7 +1388,7 @@ export type DynamicConfigFullUpdateDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -1422,7 +1422,7 @@ export type DynamicConfigFullUpdateDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     returnValue?: {
       [key: string]: unknown
     }
@@ -1463,7 +1463,7 @@ export type DynamicConfigFullUpdateDto = {
    * The list of tag names attached to the dynamic config
    */
   tags?: Array<string>
-  creatorId?: string | null
+  creatorID?: string | null
   /**
    * Schema for owner data including ID, type, name. Note that if Entity is created by CONSOLE API, owner will be undefined.
    */
@@ -1471,7 +1471,7 @@ export type DynamicConfigFullUpdateDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -1502,11 +1502,11 @@ export type DynamicConfigFullUpdateDto = {
   /**
    * The team ID associated with the dynamic config, Enterprise only.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * The release pipeline ID associated with the dynamic config
    */
-  releasePipelineId?: string | null
+  releasePipelineID?: string | null
 }
 
 export type DynamicConfigPartialUpdateDto = {
@@ -1541,7 +1541,7 @@ export type DynamicConfigPartialUpdateDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -1575,7 +1575,7 @@ export type DynamicConfigPartialUpdateDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     returnValue?: {
       [key: string]: unknown
     }
@@ -1616,7 +1616,7 @@ export type DynamicConfigPartialUpdateDto = {
    * The list of tag names attached to the dynamic config
    */
   tags?: Array<string>
-  creatorId?: string | null
+  creatorID?: string | null
   /**
    * Schema for owner data including ID, type, name. Note that if Entity is created by CONSOLE API, owner will be undefined.
    */
@@ -1624,7 +1624,7 @@ export type DynamicConfigPartialUpdateDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -1655,11 +1655,11 @@ export type DynamicConfigPartialUpdateDto = {
   /**
    * The team ID associated with the dynamic config, Enterprise only.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * The release pipeline ID associated with the dynamic config
    */
-  releasePipelineId?: string | null
+  releasePipelineID?: string | null
 }
 
 export type DynamicConfigRuleDto = {
@@ -1678,7 +1678,7 @@ export type DynamicConfigRuleDto = {
     targetValue?: Array<string> | Array<number> | string | number | null
     operator?: string
     field?: string | null
-    customId?: string | null
+    customID?: string | null
     type:
       | 'app_version'
       | 'browser_name'
@@ -1715,7 +1715,7 @@ export type DynamicConfigRuleDto = {
   /**
    * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
    */
-  baseId?: string
+  baseID?: string
   /**
    * The return value of the rule.
    */
@@ -1748,7 +1748,7 @@ export type DynamicConfigRulePartialDto = {
     targetValue?: Array<string> | Array<number> | string | number | null
     operator?: string
     field?: string | null
-    customId?: string | null
+    customID?: string | null
     type:
       | 'app_version'
       | 'browser_name'
@@ -1782,7 +1782,7 @@ export type DynamicConfigRulePartialDto = {
   /**
    * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
    */
-  baseId?: string
+  baseID?: string
   returnValue?: {
     [key: string]: unknown
   }
@@ -1823,7 +1823,7 @@ export type DynamicConfigRulesDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -1860,7 +1860,7 @@ export type DynamicConfigRulesDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     /**
      * The return value of the rule.
      */
@@ -1880,20 +1880,20 @@ export type DynamicConfigRulesDto = {
 
 export type EchidnaGateLoadPulseQueryDto = {
   refresh?: 'full' | 'incremental' | 'metric'
-  metricIds?: Array<string>
+  metricIDs?: Array<string>
   ruleId: string
   turboMode?: boolean
 }
 
 export type EchidnaLoadPulseQueryDto = {
   refresh?: 'full' | 'incremental' | 'metric'
-  metricIds?: Array<string>
+  metricIDs?: Array<string>
   ruleId?: string
   turboMode?: boolean
 }
 
 export type EnableDisableGroupsDto = {
-  groupNames: Array<string>
+  group_names: Array<string>
 }
 
 export type EntityPropertySourceCreationDto = {
@@ -1928,7 +1928,7 @@ export type EntityPropertySourceCreationDto = {
     /**
      * ID for the Statsig unit.
      */
-    statsigUnitId: string
+    statsigUnitID: string
     /**
      * Column name linked to the ID.
      */
@@ -1945,7 +1945,7 @@ export type EntityPropertySourceCreationDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Skips persisting the entity property source (used to validate that inputs are correct)
    */
@@ -1984,7 +1984,7 @@ export type EntityPropertySourceDto = {
     /**
      * ID for the Statsig unit.
      */
-    statsigUnitId: string
+    statsigUnitID: string
     /**
      * Column name linked to the ID.
      */
@@ -2001,7 +2001,7 @@ export type EntityPropertySourceDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -2022,7 +2022,7 @@ export type EntityPropertySourceDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
 }
 
 export type EntityPropertySourcePartialUpdateDto = {
@@ -2057,7 +2057,7 @@ export type EntityPropertySourcePartialUpdateDto = {
     /**
      * ID for the Statsig unit.
      */
-    statsigUnitId: string
+    statsigUnitID: string
     /**
      * Column name linked to the ID.
      */
@@ -2074,7 +2074,7 @@ export type EntityPropertySourcePartialUpdateDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Skips persisting the entity property source (used to validate that inputs are correct)
    */
@@ -2113,7 +2113,7 @@ export type EntityPropertySourceQueryUpdateDto = {
     /**
      * ID for the Statsig unit.
      */
-    statsigUnitId: string
+    statsigUnitID: string
     /**
      * Column name linked to the ID.
      */
@@ -2130,7 +2130,7 @@ export type EntityPropertySourceQueryUpdateDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Skips persisting the entity property source (used to validate that inputs are correct)
    */
@@ -2158,7 +2158,7 @@ export type EnvironmentsContractDto = {
     /**
      * The ID of the review group that the environment requires review from.
      */
-    requiredReviewGroupId?: string
+    requiredReviewGroupID?: string
     /**
      * Whether the environment requires a release pipeline.
      */
@@ -2187,7 +2187,7 @@ export type EnvironmentsUpdateContractDto = {
     /**
      * The ID of the review group that the environment requires review from.
      */
-    requiredReviewGroupId?: string
+    requiredReviewGroupID?: string
     /**
      * Whether the environment requires a release pipeline.
      */
@@ -2231,7 +2231,7 @@ export type ExperimentCreateDto = {
   /**
    * The secondary ID type for the experiment used in WHN for ID resolution
    */
-  secondaryIdType?: string | null
+  secondaryIDType?: string | null
   /**
    * The identifier mapping mode for the experiment used in WHN for ID resolution
    */
@@ -2269,12 +2269,12 @@ export type ExperimentCreateDto = {
     }
     disabled?: boolean
     description?: string
-    foreignGroupId?: string
+    foreignGroupID?: string
   }>
   /**
    * Optional control group ID
    */
-  controlGroupId?: string
+  controlGroupID?: string
   /**
    * Percent of layer allocated to this experiment
    */
@@ -2333,7 +2333,7 @@ export type ExperimentCreateDto = {
   /**
    * Restrict your experiment to users passing the selected feature gate
    */
-  targetingGateId?: string | null
+  targetingGateID?: string | null
   /**
    * Apply sequential testing?
    */
@@ -2388,7 +2388,7 @@ export type ExperimentCreateDto = {
   /**
    * ID of the launched group, null otherwise
    */
-  launchedGroupId?: string | null
+  launchedGroupID?: string | null
   /**
    * Source name of the assignment
    */
@@ -2400,7 +2400,7 @@ export type ExperimentCreateDto = {
   /**
    * The Statsig ID of the creator of this experiment
    */
-  creatorId?: string | null
+  creatorID?: string | null
   /**
    * The email of the creator of this experiment
    */
@@ -2416,7 +2416,7 @@ export type ExperimentCreateDto = {
   /**
    * The team ID associated with the experiment, Enterprise only.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Warehouse Native Only - Allocation duration in days
    */
@@ -2497,7 +2497,7 @@ export type ExperimentCreateDto = {
   /**
    * Which layer to place the experiment into.
    */
-  layerId?: string
+  layerID?: string
 }
 
 export type ExperimentFullUpdateDto = {
@@ -2516,7 +2516,7 @@ export type ExperimentFullUpdateDto = {
   /**
    * The secondary ID type for the experiment used in WHN for ID resolution
    */
-  secondaryIdType?: string | null
+  secondaryIDType?: string | null
   /**
    * The identifier mapping mode for the experiment used in WHN for ID resolution
    */
@@ -2554,12 +2554,12 @@ export type ExperimentFullUpdateDto = {
     }
     disabled?: boolean
     description?: string
-    foreignGroupId?: string
+    foreignGroupID?: string
   }>
   /**
    * Optional control group ID
    */
-  controlGroupId?: string
+  controlGroupID?: string
   /**
    * Percent of layer allocated to this experiment
    */
@@ -2618,7 +2618,7 @@ export type ExperimentFullUpdateDto = {
   /**
    * Restrict your experiment to users passing the selected feature gate
    */
-  targetingGateId: string | null
+  targetingGateID: string | null
   /**
    * Apply sequential testing?
    */
@@ -2673,7 +2673,7 @@ export type ExperimentFullUpdateDto = {
   /**
    * ID of the launched group, null otherwise
    */
-  launchedGroupId?: string | null
+  launchedGroupID?: string | null
   /**
    * Source name of the assignment
    */
@@ -2685,7 +2685,7 @@ export type ExperimentFullUpdateDto = {
   /**
    * The Statsig ID of the creator of this experiment
    */
-  creatorId?: string | null
+  creatorID?: string | null
   /**
    * The email of the creator of this experiment
    */
@@ -2701,7 +2701,7 @@ export type ExperimentFullUpdateDto = {
   /**
    * The team ID associated with the experiment, Enterprise only.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Warehouse Native Only - Allocation duration in days
    */
@@ -2793,16 +2793,16 @@ export type ExperimentOverridesDto = {
     /**
      * The experiment group which user will be forced into
      */
-    groupId: string
+    groupID: string
   }>
   /**
    * Array of user ID overrides, specifying which users to force into experiment groups.
    */
-  userIdOverrides: Array<{
+  userIDOverrides: Array<{
     /**
      * The experiment group the user will be forced into.
      */
-    groupId: string
+    groupID: string
     /**
      * Array of user IDs to be assigned to the specified experiment group.
      */
@@ -2834,7 +2834,7 @@ export type ExperimentPartialUpdateDto = {
   /**
    * The secondary ID type for the experiment used in WHN for ID resolution
    */
-  secondaryIdType?: string | null
+  secondaryIDType?: string | null
   /**
    * The identifier mapping mode for the experiment used in WHN for ID resolution
    */
@@ -2872,12 +2872,12 @@ export type ExperimentPartialUpdateDto = {
     }
     disabled?: boolean
     description?: string
-    foreignGroupId?: string
+    foreignGroupID?: string
   }>
   /**
    * Optional control group ID
    */
-  controlGroupId?: string
+  controlGroupID?: string
   /**
    * Percent of layer allocated to this experiment
    */
@@ -2936,7 +2936,7 @@ export type ExperimentPartialUpdateDto = {
   /**
    * Restrict your experiment to users passing the selected feature gate
    */
-  targetingGateId?: string | null
+  targetingGateID?: string | null
   /**
    * Apply sequential testing?
    */
@@ -2991,7 +2991,7 @@ export type ExperimentPartialUpdateDto = {
   /**
    * ID of the launched group, null otherwise
    */
-  launchedGroupId?: string | null
+  launchedGroupID?: string | null
   /**
    * Source name of the assignment
    */
@@ -3003,7 +3003,7 @@ export type ExperimentPartialUpdateDto = {
   /**
    * The Statsig ID of the creator of this experiment
    */
-  creatorId?: string | null
+  creatorID?: string | null
   /**
    * The email of the creator of this experiment
    */
@@ -3019,7 +3019,7 @@ export type ExperimentPartialUpdateDto = {
   /**
    * The team ID associated with the experiment, Enterprise only.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Warehouse Native Only - Allocation duration in days
    */
@@ -3101,7 +3101,7 @@ export type ExperimentPartialUpdateDto = {
 export type ExperimentPulseResultsDto = {
   ds: string
   primaryMetrics: Array<{
-    metricId: string
+    metricID: string
     metricName: string
     /**
      * Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
@@ -3133,7 +3133,7 @@ export type ExperimentPulseResultsDto = {
     projectedRelativeToplineImpactDelta?: number
   }>
   secondaryMetrics: Array<{
-    metricId: string
+    metricID: string
     metricName: string
     /**
      * Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
@@ -3165,7 +3165,7 @@ export type ExperimentPulseResultsDto = {
     projectedRelativeToplineImpactDelta?: number
   }>
   otherMetrics?: Array<{
-    metricId: string
+    metricID: string
     metricName: string
     /**
      * Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
@@ -3264,7 +3264,7 @@ export type ExternalExperimentDto = {
     }> | null
   }
   activeReview?: {
-    reviewId: string
+    reviewID: string
     reviewStatus: string
     description: string
   }
@@ -3284,7 +3284,7 @@ export type ExternalExperimentDto = {
   /**
    * ID of the last modifier.
    */
-  lastModifierId: string | null
+  lastModifierID: string | null
   /**
    * Time of the last modification.
    */
@@ -3300,7 +3300,7 @@ export type ExternalExperimentDto = {
   /**
    * The Statsig ID of the creator of this experiment
    */
-  creatorId?: string | null
+  creatorID?: string | null
   /**
    * Timestamp when the entity was created.
    */
@@ -3321,7 +3321,7 @@ export type ExternalExperimentDto = {
   /**
    * Holdouts applied to this configuration.
    */
-  holdoutIds?: Array<string>
+  holdoutIDs?: Array<string>
   /**
    * The team name associated with the experiment, Enterprise only.
    */
@@ -3329,7 +3329,7 @@ export type ExternalExperimentDto = {
   /**
    * The team ID associated with the experiment, Enterprise only.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Version number
    */
@@ -3337,7 +3337,7 @@ export type ExternalExperimentDto = {
   /**
    * The secondary ID type for the experiment used in WHN for ID resolution
    */
-  secondaryIdType?: string | null
+  secondaryIDType?: string | null
   /**
    * The identifier mapping mode for the experiment used in WHN for ID resolution
    */
@@ -3375,12 +3375,12 @@ export type ExternalExperimentDto = {
     }
     disabled?: boolean
     description?: string
-    foreignGroupId?: string
+    foreignGroupID?: string
   }>
   /**
    * Optional control group ID
    */
-  controlGroupId?: string
+  controlGroupID?: string
   /**
    * Percent of layer allocated to this experiment
    */
@@ -3425,7 +3425,7 @@ export type ExternalExperimentDto = {
   /**
    * Restrict your experiment to users passing the selected feature gate
    */
-  targetingGateId: string | null
+  targetingGateID: string | null
   /**
    * Apply sequential testing?
    */
@@ -3480,7 +3480,7 @@ export type ExternalExperimentDto = {
   /**
    * ID of the launched group, null otherwise
    */
-  launchedGroupId?: string | null
+  launchedGroupID?: string | null
   assignmentSourceName?: string
   /**
    * Name of the source experiment for assignment
@@ -3556,7 +3556,7 @@ export type ExternalExperimentDto = {
   decisionReason: string | null
   subtype?: 'conversion' | 'reactivation' | 'retention'
   externalExperimentName?: string
-  layerId: string | null
+  layerID: string | null
   startTime: number | null
   endTime: number | null
   decisionTime: number | null
@@ -3568,22 +3568,22 @@ export type ExternalExperimentDto = {
       type: string
       lastPulseLoadTime?: number
       crossoverPercent?: number
-      assignmentSourceId?: string
+      assignmentSourceID?: string
       assignmentSourceName?: string
-      foreignExperimentId?: string
-      deduplicationRate?: number
-      deduplicationRates?: Array<{
-        groupId: string
+      foreignExperimentID?: string
+      deduplication_rate?: number
+      deduplication_rates?: Array<{
+        group_id: string
         rate: number
-        groupName: string
+        group_name: string
       }>
-      primaryIdType: string
-      secondaryIdType?: string
+      primary_id_type: string
+      secondary_id_type?: string
       missingMetrics?: Array<string>
       metrics?: Array<{
-        metricName: string
-        earliestDate: string | null
-        latestDate: string | null
+        metric_name: string
+        earliest_date: string | null
+        latest_date: string | null
       }>
       lastUpdatedDs?: string
     }
@@ -3624,7 +3624,7 @@ export type ExternalExperimentDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -3638,7 +3638,7 @@ export type ExternalExperimentDto = {
      */
     ownerEmail?: string
   } | null
-  inlineTargetingRulesJson?: string | null
+  inlineTargetingRulesJSON?: string | null
   summarySections?: Array<{
     name: string
     content: string | null
@@ -3656,7 +3656,7 @@ export type ExternalGateDto = {
   /**
    * ID of the last modifier.
    */
-  lastModifierId: string | null
+  lastModifierID: string | null
   /**
    * Time of the last modification.
    */
@@ -3669,7 +3669,7 @@ export type ExternalGateDto = {
    * Name of the last modifier.
    */
   lastModifierName: string | null
-  creatorId?: string | null
+  creatorID?: string | null
   /**
    * Timestamp when the entity was created.
    */
@@ -3684,9 +3684,9 @@ export type ExternalGateDto = {
   /**
    * Holdouts applied to this configuration.
    */
-  holdoutIds?: Array<string>
+  holdoutIDs?: Array<string>
   team?: string | null
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Version number
    */
@@ -3711,7 +3711,7 @@ export type ExternalGateDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -3743,7 +3743,7 @@ export type ExternalGateDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -3780,7 +3780,7 @@ export type ExternalGateDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     /**
      * The return value of the rule.
      */
@@ -3809,9 +3809,9 @@ export type ExternalGateDto = {
       email: string
     }> | null
   }
-  releasePipelineId?: string | null
+  releasePipelineID?: string | null
   activeReview?: {
-    reviewId: string
+    reviewID: string
     reviewStatus: string
     description: string
   }
@@ -3838,6 +3838,7 @@ export type ExternalMetricDefinitionContractDto = {
     | 'composite_sum'
     | 'import_window'
     | 'user_warehouse'
+    | 'count_distinct'
   /**
    * Marks the metric as verified, indicating trustworthiness within the organization.
    */
@@ -4090,11 +4091,11 @@ export type ExternalMetricDefinitionContractDto = {
      */
     rollupTimeWindow?: string
     /**
-     * Custom start window for unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
+     * Custom start window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
      */
     customRollUpStart?: number
     /**
-     * Custom end window for unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
+     * Custom end window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
      */
     customRollUpEnd?: number
     /**
@@ -4140,7 +4141,7 @@ export type ExternalMetricDefinitionContractDto = {
     /**
      * Mean Squared Error for surrogate metric.
      */
-    surrogateMetricMse?: number | null
+    surrogateMetricMSE?: number | null
   }
   /**
    * The team associated with the metric, applicable for enterprise environments.
@@ -4149,7 +4150,7 @@ export type ExternalMetricDefinitionContractDto = {
   /**
    * The team ID associated with the metric, applicable for enterprise environments.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Skips persisting the metric (used to validate that inputs are correct)
    */
@@ -4187,7 +4188,7 @@ export type ExternalMetricDefinitionContractDto = {
   /**
    * ID of the last modifier.
    */
-  lastModifierId?: string | null
+  lastModifierID?: string | null
   /**
    * Time of the last modification to this metric.
    */
@@ -4204,7 +4205,7 @@ export type ExternalMetricDefinitionContractDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -4247,7 +4248,7 @@ export type GateCreateDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -4284,7 +4285,7 @@ export type GateCreateDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     /**
      * The return value of the rule.
      */
@@ -4304,10 +4305,10 @@ export type GateCreateDto = {
   type?: 'PERMANENT' | 'TEMPORARY'
   idType?: string
   targetApps?: string | Array<string>
-  creatorId?: string | null
+  creatorID?: string | null
   creatorEmail?: string | null
   team?: string | null
-  teamId?: string | null
+  teamID?: string | null
   measureMetricLifts?: boolean
   monitoringMetrics?: Array<{
     name: string
@@ -4319,7 +4320,7 @@ export type GateCreateDto = {
   reviewSettings?: {
     requiredReview: boolean
   }
-  releasePipelineId?: string | null
+  releasePipelineID?: string | null
   id?: string
   isTemplate?: boolean
 }
@@ -4344,7 +4345,7 @@ export type GateFullUpdateDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -4381,7 +4382,7 @@ export type GateFullUpdateDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     /**
      * The return value of the rule.
      */
@@ -4401,10 +4402,10 @@ export type GateFullUpdateDto = {
   type?: 'PERMANENT' | 'TEMPORARY'
   idType?: string
   targetApps?: string | Array<string>
-  creatorId?: string | null
+  creatorID?: string | null
   creatorEmail?: string | null
   team?: string | null
-  teamId?: string | null
+  teamID?: string | null
   measureMetricLifts?: boolean
   monitoringMetrics?: Array<{
     name: string
@@ -4416,7 +4417,7 @@ export type GateFullUpdateDto = {
   reviewSettings?: {
     requiredReview: boolean
   }
-  releasePipelineId?: string | null
+  releasePipelineID?: string | null
 }
 
 export type GatePartialUpdateDto = {
@@ -4439,7 +4440,7 @@ export type GatePartialUpdateDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -4476,7 +4477,7 @@ export type GatePartialUpdateDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     /**
      * The return value of the rule.
      */
@@ -4496,10 +4497,10 @@ export type GatePartialUpdateDto = {
   type?: 'PERMANENT' | 'TEMPORARY'
   idType?: string
   targetApps?: string | Array<string>
-  creatorId?: string | null
+  creatorID?: string | null
   creatorEmail?: string | null
   team?: string | null
-  teamId?: string | null
+  teamID?: string | null
   measureMetricLifts?: boolean
   monitoringMetrics?: Array<{
     name: string
@@ -4511,13 +4512,13 @@ export type GatePartialUpdateDto = {
   reviewSettings?: {
     requiredReview: boolean
   }
-  releasePipelineId?: string | null
+  releasePipelineID?: string | null
 }
 
 export type GatePulseResultsDto = {
   ds: string
   monitoringMetrics: Array<{
-    metricId: string
+    metricID: string
     metricName: string
     /**
      * Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
@@ -4575,7 +4576,7 @@ export type HoldoutCreateContractDto = {
   /**
    * id of the team
    */
-  teamId?: string | null
+  teamID?: string | null
 }
 
 export type HoldoutDto = {
@@ -4598,7 +4599,7 @@ export type HoldoutDto = {
   /**
    * ID of the last modifier.
    */
-  lastModifierId: string | null
+  lastModifierID: string | null
   /**
    * Time of the last modification.
    */
@@ -4614,7 +4615,7 @@ export type HoldoutDto = {
   /**
    * ID of the user who created the entity.
    */
-  creatorId: string | null
+  creatorID: string | null
   /**
    * Timestamp when the entity was created.
    */
@@ -4638,7 +4639,7 @@ export type HoldoutDto = {
   /**
    * Holdouts applied to this configuration.
    */
-  holdoutIds?: Array<string>
+  holdoutIDs?: Array<string>
   /**
    * Optional name for the responsible team.
    */
@@ -4646,7 +4647,7 @@ export type HoldoutDto = {
   /**
    * Optional ID of the responsible team.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Version number
    */
@@ -4662,15 +4663,15 @@ export type HoldoutDto = {
   /**
    * an array of gateIDs which this holdout is applied to
    */
-  gateIds: Array<string>
+  gateIDs: Array<string>
   /**
    * an array of experimentIDs which this holdout is applied to
    */
-  experimentIds: Array<string>
+  experimentIDs: Array<string>
   /**
    * an array of layerIDs which this holdout is applied to
    */
-  layerIds: Array<string>
+  layerIDs: Array<string>
   /**
    * whether the holdout is being applied to all new gates
    */
@@ -4678,7 +4679,7 @@ export type HoldoutDto = {
   /**
    * the gateID that the holdout is targeting
    */
-  targetingGateId: string | null
+  targetingGateID: string | null
   monitoringMetrics?: Array<{
     name: string
     type: string
@@ -4701,15 +4702,15 @@ export type HoldoutFullUpdateContractDto = {
   /**
    * an array of gateIDs which this holdout is applied to
    */
-  gateIds: Array<string>
+  gateIDs: Array<string>
   /**
    * an array of experimentIDs which this holdout is applied to
    */
-  experimentIds: Array<string>
+  experimentIDs: Array<string>
   /**
    * an array of layerIDs which this holdout is applied to
    */
-  layerIds: Array<string>
+  layerIDs: Array<string>
   /**
    * whether the holdout is being applied to all new gates
    */
@@ -4717,7 +4718,7 @@ export type HoldoutFullUpdateContractDto = {
   /**
    * the gateID that the holdout is targeting
    */
-  targetingGateId: string | null
+  targetingGateID: string | null
   monitoringMetrics?: Array<{
     name: string
     type: string
@@ -4740,15 +4741,15 @@ export type HoldoutPartialUpdateContractDto = {
   /**
    * an array of gateIDs which this holdout is applied to
    */
-  gateIds?: Array<string>
+  gateIDs?: Array<string>
   /**
    * an array of experimentIDs which this holdout is applied to
    */
-  experimentIds?: Array<string>
+  experimentIDs?: Array<string>
   /**
    * an array of layerIDs which this holdout is applied to
    */
-  layerIds?: Array<string>
+  layerIDs?: Array<string>
   /**
    * whether the holdout is being applied to all new gates
    */
@@ -4756,7 +4757,7 @@ export type HoldoutPartialUpdateContractDto = {
   /**
    * the gateID that the holdout is targeting
    */
-  targetingGateId?: string | null
+  targetingGateID?: string | null
   monitoringMetrics?: Array<{
     name: string
     type: string
@@ -4796,18 +4797,18 @@ export type IngestionBackfillContractDto = {
   /**
    * Expected valid date in the form of YYYY-MM-DD
    */
-  datestampStart: string
+  datestamp_start: string
   /**
    * Expected valid date in the form of YYYY-MM-DD
    */
-  datestampEnd: string
+  datestamp_end: string
   type: 'redshift' | 'bigquery-v2' | 'snowflake-v2' | 'databricks' | 'azure-synapse' | 's3' | 'athena' | 'adls'
   source?: string | Array<string> | null
   dataset: 'Events' | 'Metrics' | 'export_exposures' | 'entity_properties'
 }
 
 export type IngestionBackfillDataDto = {
-  runId: string
+  runID: string
 }
 
 export type IngestionCreateDatabricksConnectionContractDto = {
@@ -4832,14 +4833,14 @@ export type IngestionEventCountResponseDto =
       date: string
       event: string
       count: number
-      lastUpdatedTime: string
+      last_updated_time: string
     }>
   | Array<{
       date: string
       events: Array<{
         event: string
         count: number
-        lastUpdatedTime: string
+        last_updated_time: string
       }>
     }>
 
@@ -4848,27 +4849,27 @@ export type IngestionEventDeltaResponseDto =
       date: string
       source: string
       event: string
-      internalCount: number
-      externalCount: number
-      hasDiff: boolean
+      internal_count: number
+      external_count: number
+      has_diff: boolean
       threshold: number
-      lastUpdatedTime: string
+      last_updated_time: string
     }>
   | Array<{
       date: string
       events: Array<{
         source: string
         event: string
-        internalCount: number
-        externalCount: number
-        hasDiff: boolean
+        internal_count: number
+        external_count: number
+        has_diff: boolean
         threshold: number
-        lastUpdatedTime: string
+        last_updated_time: string
       }>
     }>
 
 export type IngestionRunDataContractDto = {
-  runId: string
+  runID: string
   latestStatus: string
   lastUpdatedAt: string
   createdAt: string
@@ -4894,26 +4895,26 @@ export type IngestionRunDataContractDto = {
 
 export type IngestionScheduleDto = {
   dataset: string
-  scheduledHourPst: number
+  scheduled_hour_pst: number
 }
 
 export type IngestionScheduleUpdateContractDto = {
   dataset: 'Events' | 'Metrics' | 'export_exposures' | 'entity_properties'
-  scheduledHourPst?: number
+  scheduled_hour_pst?: number
 }
 
 export type IngestionSourceCreateContractDto =
   | {
       dataset: 'Metrics'
-      columnMapping?: {
+      column_mapping?: {
         /**
          * The unique user identifier this metric is for. This might not necessarily be a user_id - it could be a custom_id of some kind. Make sure this is in the same format as your logged unit_ids.
          */
-        unitId: string
+        unit_id: string
         /**
          * The id_type the unit_id represents. Must be valid id_type. Default Statsig types are user_id/stable_id, but you may have generated custom id_types. Make sure this matches (case sensitive) a customID in your project, or you won’t get experiment results.
          */
-        idType: string
+        id_type: string
         /**
          * Date of the daily metric, ISO formatted (ex. 2021-02-17). We’ll load custom metrics to whatever date you use here.
          */
@@ -4921,11 +4922,11 @@ export type IngestionSourceCreateContractDto =
         /**
          * String format. Not null. Length < 128 characters.
          */
-        metricName: string
+        metric_name: string
         /**
          * Numeric value for the metric. This OR both of numerator and denominator need to be provided.
          */
-        metricValue?: string
+        metric_value?: string
         /**
          * Required for ratio metrics. If present along with a denominator in any record, the metric will be treated as ratio and only calculated for users with non-null denominators
          */
@@ -4936,9 +4937,9 @@ export type IngestionSourceCreateContractDto =
         denominator?: string
       }
       type: 'redshift' | 'bigquery-v2' | 'snowflake-v2' | 'databricks' | 'azure-synapse' | 's3' | 'athena' | 'adls'
-      sourceName: string
+      source_name: string
       query?: string
-      useDeltaSharing?: true
+      use_delta_sharing?: true
       share?: string
       schema?: string
       table?: string
@@ -4946,15 +4947,15 @@ export type IngestionSourceCreateContractDto =
     }
   | {
       dataset: 'Events'
-      columnMapping?: {
+      column_mapping?: {
         /**
          * The unique user identifier this event is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
          */
-        unitId?: string
+        unit_id?: string
         /**
          * Name of the event. String under 128 characters, using ‘_’ for spaces.
          */
-        eventName: string
+        event_name: string
         /**
          * Unix timestamp in seconds of the event (ex. 1613584800)
          */
@@ -4965,13 +4966,13 @@ export type IngestionSourceCreateContractDto =
         metadata?: {
           [key: string]: string
         }
-        metadataObject?: string
-        eventValue?: string
+        metadata_object?: string
+        event_value?: string
       }
       type: 'redshift' | 'bigquery-v2' | 'snowflake-v2' | 'databricks' | 'azure-synapse' | 's3' | 'athena' | 'adls'
-      sourceName: string
+      source_name: string
       query?: string
-      useDeltaSharing?: true
+      use_delta_sharing?: true
       share?: string
       schema?: string
       table?: string
@@ -4979,7 +4980,7 @@ export type IngestionSourceCreateContractDto =
     }
   | {
       dataset: 'Exposures' | 'export_exposures'
-      columnMapping?: {
+      column_mapping?: {
         /**
          * Unique identifier for the experiment.
          */
@@ -4987,11 +4988,11 @@ export type IngestionSourceCreateContractDto =
         /**
          * Unique identifier for the experiment groups.
          */
-        groupId: string
+        group_id: string
         /**
          * The unique user identifier this exposure is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
          */
-        unitId?: string
+        unit_id?: string
         /**
          * Unix timestamp in seconds of the event (ex. 1613584800)
          */
@@ -5002,13 +5003,13 @@ export type IngestionSourceCreateContractDto =
         metadata?: {
           [key: string]: string
         }
-        metadataObject?: string
-        eventValue?: string
+        metadata_object?: string
+        event_value?: string
       }
       type: 'redshift' | 'bigquery-v2' | 'snowflake-v2' | 'databricks' | 'azure-synapse' | 's3' | 'athena' | 'adls'
-      sourceName: string
+      source_name: string
       query?: string
-      useDeltaSharing?: true
+      use_delta_sharing?: true
       share?: string
       schema?: string
       table?: string
@@ -5017,9 +5018,9 @@ export type IngestionSourceCreateContractDto =
 
 export type IngestionStatusDto = {
   ds?: string
-  ingestionDataset: string | null
-  ingestionSource: string | null
-  sourceName: string | null
+  ingestion_dataset: string | null
+  ingestion_source: string | null
+  source_name: string | null
   message: string | null
   status: string | null
   rowCount?: number
@@ -5030,15 +5031,15 @@ export type IngestionStatusDto = {
 export type IngestionUpdateContractDto =
   | {
       dataset: 'Metrics'
-      columnMapping?: {
+      column_mapping?: {
         /**
          * The unique user identifier this metric is for. This might not necessarily be a user_id - it could be a custom_id of some kind. Make sure this is in the same format as your logged unit_ids.
          */
-        unitId: string
+        unit_id: string
         /**
          * The id_type the unit_id represents. Must be valid id_type. Default Statsig types are user_id/stable_id, but you may have generated custom id_types. Make sure this matches (case sensitive) a customID in your project, or you won’t get experiment results.
          */
-        idType: string
+        id_type: string
         /**
          * Date of the daily metric, ISO formatted (ex. 2021-02-17). We’ll load custom metrics to whatever date you use here.
          */
@@ -5046,11 +5047,11 @@ export type IngestionUpdateContractDto =
         /**
          * String format. Not null. Length < 128 characters.
          */
-        metricName: string
+        metric_name: string
         /**
          * Numeric value for the metric. This OR both of numerator and denominator need to be provided.
          */
-        metricValue?: string
+        metric_value?: string
         /**
          * Required for ratio metrics. If present along with a denominator in any record, the metric will be treated as ratio and only calculated for users with non-null denominators
          */
@@ -5061,7 +5062,7 @@ export type IngestionUpdateContractDto =
         denominator?: string
       }
       type: 'redshift' | 'bigquery-v2' | 'snowflake-v2' | 'databricks' | 'azure-synapse' | 's3' | 'athena' | 'adls'
-      sourceName?: string
+      source_name?: string
       query?: string
       share?: string
       schema?: string
@@ -5070,15 +5071,15 @@ export type IngestionUpdateContractDto =
     }
   | {
       dataset: 'Events'
-      columnMapping?: {
+      column_mapping?: {
         /**
          * The unique user identifier this event is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
          */
-        unitId?: string
+        unit_id?: string
         /**
          * Name of the event. String under 128 characters, using ‘_’ for spaces.
          */
-        eventName: string
+        event_name: string
         /**
          * Unix timestamp in seconds of the event (ex. 1613584800)
          */
@@ -5089,11 +5090,11 @@ export type IngestionUpdateContractDto =
         metadata?: {
           [key: string]: string
         }
-        metadataObject?: string
-        eventValue?: string
+        metadata_object?: string
+        event_value?: string
       }
       type: 'redshift' | 'bigquery-v2' | 'snowflake-v2' | 'databricks' | 'azure-synapse' | 's3' | 'athena' | 'adls'
-      sourceName?: string
+      source_name?: string
       query?: string
       share?: string
       schema?: string
@@ -5102,7 +5103,7 @@ export type IngestionUpdateContractDto =
     }
   | {
       dataset: 'Exposures' | 'export_exposures'
-      columnMapping?: {
+      column_mapping?: {
         /**
          * Unique identifier for the experiment.
          */
@@ -5110,11 +5111,11 @@ export type IngestionUpdateContractDto =
         /**
          * Unique identifier for the experiment groups.
          */
-        groupId: string
+        group_id: string
         /**
          * The unique user identifier this exposure is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
          */
-        unitId?: string
+        unit_id?: string
         /**
          * Unix timestamp in seconds of the event (ex. 1613584800)
          */
@@ -5125,11 +5126,11 @@ export type IngestionUpdateContractDto =
         metadata?: {
           [key: string]: string
         }
-        metadataObject?: string
-        eventValue?: string
+        metadata_object?: string
+        event_value?: string
       }
       type: 'redshift' | 'bigquery-v2' | 'snowflake-v2' | 'databricks' | 'azure-synapse' | 's3' | 'athena' | 'adls'
-      sourceName?: string
+      source_name?: string
       query?: string
       share?: string
       schema?: string
@@ -5151,8 +5152,8 @@ export type KeyCreateContractDto = {
     | 'personal_read_write'
   >
   environments?: Array<string>
-  targetAppId?: string
-  secondaryTargetAppIds?: Array<string>
+  targetAppID?: string
+  secondaryTargetAppIDs?: Array<string>
 }
 
 export type KeyDto = {
@@ -5188,8 +5189,8 @@ export type KeyUpdateContractDto = {
     | 'personal_read_write'
   >
   environments?: Array<string>
-  targetAppId?: string | null
-  secondaryTargetAppIds?: Array<string> | null
+  targetAppID?: string | null
+  secondaryTargetAppIDs?: Array<string> | null
 }
 
 export type LayerContractDto = {
@@ -5212,7 +5213,7 @@ export type LayerContractDto = {
   /**
    * ID of the last modifier.
    */
-  lastModifierId: string | null
+  lastModifierID: string | null
   /**
    * Time of the last modification.
    */
@@ -5228,7 +5229,7 @@ export type LayerContractDto = {
   /**
    * ID of the user who created the entity.
    */
-  creatorId: string | null
+  creatorID: string | null
   /**
    * Timestamp when the entity was created.
    */
@@ -5252,7 +5253,7 @@ export type LayerContractDto = {
   /**
    * Holdouts applied to this configuration.
    */
-  holdoutIds?: Array<string>
+  holdoutIDs?: Array<string>
   /**
    * Optional name for the responsible team.
    */
@@ -5260,7 +5261,7 @@ export type LayerContractDto = {
   /**
    * Optional ID of the responsible team.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Version number
    */
@@ -5489,7 +5490,7 @@ export type LoggedEventDto = {
   /**
    * The ID of the user who triggered the event.
    */
-  userId: string
+  userID: string
 }
 
 export type MetricCreationContractDto = {
@@ -5760,11 +5761,11 @@ export type MetricCreationContractDto = {
      */
     rollupTimeWindow?: string
     /**
-     * Custom start window for unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
+     * Custom start window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
      */
     customRollUpStart?: number
     /**
-     * Custom end window for unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
+     * Custom end window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
      */
     customRollUpEnd?: number
     /**
@@ -5810,7 +5811,7 @@ export type MetricCreationContractDto = {
     /**
      * Mean Squared Error for surrogate metric.
      */
-    surrogateMetricMse?: number | null
+    surrogateMetricMSE?: number | null
   }
   /**
    * The team associated with the metric, applicable for enterprise environments.
@@ -5819,7 +5820,7 @@ export type MetricCreationContractDto = {
   /**
    * The team ID associated with the metric, applicable for enterprise environments.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Skips persisting the metric (used to validate that inputs are correct)
    */
@@ -5902,7 +5903,7 @@ export type MetricSourceContractDto = {
     /**
      * The identifier mapping for Statsig units.
      */
-    statsigUnitId: string
+    statsigUnitID: string
     /**
      * The corresponding column name in the source that relates to the Statsig unit ID.
      */
@@ -5944,7 +5945,7 @@ export type MetricSourceContractDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -5965,7 +5966,7 @@ export type MetricSourceContractDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
 }
 
 export type MetricSourceCreationContractDto = {
@@ -6000,7 +6001,7 @@ export type MetricSourceCreationContractDto = {
     /**
      * The identifier mapping for Statsig units.
      */
-    statsigUnitId: string
+    statsigUnitID: string
     /**
      * The corresponding column name in the source that relates to the Statsig unit ID.
      */
@@ -6042,7 +6043,7 @@ export type MetricSourceCreationContractDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -6063,7 +6064,7 @@ export type MetricSourceCreationContractDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Skips persisting the source (used to validate that inputs are correct)
    */
@@ -6102,7 +6103,7 @@ export type MetricSourceUpdateContractDto = {
     /**
      * The identifier mapping for Statsig units.
      */
-    statsigUnitId: string
+    statsigUnitID: string
     /**
      * The corresponding column name in the source that relates to the Statsig unit ID.
      */
@@ -6144,7 +6145,7 @@ export type MetricSourceUpdateContractDto = {
     /**
      * ID of the owner
      */
-    ownerId?: string
+    ownerID?: string
     /**
      * Type of the owner (e.g., SDK_KEY or USER)
      */
@@ -6165,7 +6166,7 @@ export type MetricSourceUpdateContractDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Skips persisting updates to the source (used to validate that inputs are correct)
    */
@@ -6364,11 +6365,11 @@ export type MetricsUpdateContractDto = {
      */
     rollupTimeWindow?: string
     /**
-     * Custom start window for unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
+     * Custom start window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
      */
     customRollUpStart?: number
     /**
-     * Custom end window for unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
+     * Custom end window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
      */
     customRollUpEnd?: number
     /**
@@ -6414,7 +6415,7 @@ export type MetricsUpdateContractDto = {
     /**
      * Mean Squared Error for surrogate metric.
      */
-    surrogateMetricMse?: number | null
+    surrogateMetricMSE?: number | null
   }
   /**
    * Array of unit types that the metric can utilize, such as stableID, userID, or other custom identifiers.
@@ -6427,7 +6428,7 @@ export type MetricsUpdateContractDto = {
   /**
    * Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
    */
@@ -6444,7 +6445,7 @@ export type MetricsUpdateContractDto = {
     /**
      * ID of the updated owner responsible for the metric’s management.
      */
-    ownerId?: string
+    ownerID?: string
   }
 }
 
@@ -6466,11 +6467,11 @@ export type MetricValuesDto = {
   /**
    * Unit of the metric: stableID, userID, and other custom ids
    */
-  unitType: string
+  unit_type: string
   /**
    * Row count for imported metric, optional
    */
-  rowCount?: number
+  row_count?: number
   /**
    * Numerator of a ratio metric, optional
    */
@@ -6498,7 +6499,7 @@ export type MultiRuleDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -6535,7 +6536,7 @@ export type MultiRuleDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     /**
      * The return value of the rule.
      */
@@ -6570,7 +6571,7 @@ export type MultiRuleUpdateDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -6607,7 +6608,7 @@ export type MultiRuleUpdateDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     /**
      * The return value of the rule.
      */
@@ -6632,19 +6633,19 @@ export type OverrideDto = {
   /**
    * List of user IDs
    */
-  passingUserIds: Array<string>
+  passingUserIDs: Array<string>
   /**
    * List of user IDs
    */
-  failingUserIds: Array<string>
+  failingUserIDs: Array<string>
   /**
    * Optional list of custom IDs
    */
-  passingCustomIds?: Array<string>
+  passingCustomIDs?: Array<string>
   /**
    * Optional list of custom IDs
    */
-  failingCustomIds?: Array<string>
+  failingCustomIDs?: Array<string>
   environmentOverrides: Array<{
     /**
      * Environment
@@ -6653,15 +6654,15 @@ export type OverrideDto = {
     /**
      * Unit ID
      */
-    unitId: string | null
+    unitID: string | null
     /**
      * List of passing IDs
      */
-    passingIds: Array<string>
+    passingIDs: Array<string>
     /**
      * List of failing IDs
      */
-    failingIds: Array<string>
+    failingIDs: Array<string>
   }>
 }
 
@@ -6707,7 +6708,7 @@ export type ParamStoreCreateDto = {
   /**
    * Target App IDs
    */
-  targetAppIds?: Array<string>
+  targetAppIDs?: Array<string>
   /**
    * Tags
    */
@@ -6742,64 +6743,64 @@ export type ParamStoreDto = {
   /**
    * Creator ID
    */
-  creatorId: string
+  creatorID: string
   /**
    * Last Modifier ID
    */
-  lastModifierId: string
+  lastModifierID: string
   /**
    * Parameter Definition
    */
   parameters: Array<
     | {
-        refType: 'static'
+        ref_type: 'static'
         /**
          * Parameter Name
          */
         name: string
-        paramType: 'boolean'
+        param_type: 'boolean'
         value: boolean
       }
     | {
-        refType: 'static'
+        ref_type: 'static'
         /**
          * Parameter Name
          */
         name: string
-        paramType: 'number'
+        param_type: 'number'
         value: number
       }
     | {
-        refType: 'static'
+        ref_type: 'static'
         /**
          * Parameter Name
          */
         name: string
-        paramType: 'string'
+        param_type: 'string'
         value: string
       }
     | {
-        refType: 'static'
+        ref_type: 'static'
         /**
          * Parameter Name
          */
         name: string
-        paramType: 'object'
+        param_type: 'object'
         value: {
           [key: string]: unknown
         }
       }
     | {
-        refType: 'static'
+        ref_type: 'static'
         /**
          * Parameter Name
          */
         name: string
-        paramType: 'array'
+        param_type: 'array'
         value: Array<unknown>
       }
     | {
-        refType: 'gate'
+        ref_type: 'gate'
         /**
          * Parameter Name
          */
@@ -6807,13 +6808,13 @@ export type ParamStoreDto = {
         /**
          * Gate Name
          */
-        gateName: string
-        paramType: 'boolean'
-        passValue: boolean
-        failValue: boolean
+        gate_name: string
+        param_type: 'boolean'
+        pass_value: boolean
+        fail_value: boolean
       }
     | {
-        refType: 'gate'
+        ref_type: 'gate'
         /**
          * Parameter Name
          */
@@ -6821,13 +6822,13 @@ export type ParamStoreDto = {
         /**
          * Gate Name
          */
-        gateName: string
-        paramType: 'number'
-        passValue: number
-        failValue: number
+        gate_name: string
+        param_type: 'number'
+        pass_value: number
+        fail_value: number
       }
     | {
-        refType: 'gate'
+        ref_type: 'gate'
         /**
          * Parameter Name
          */
@@ -6835,13 +6836,13 @@ export type ParamStoreDto = {
         /**
          * Gate Name
          */
-        gateName: string
-        paramType: 'string'
-        passValue: string
-        failValue: string
+        gate_name: string
+        param_type: 'string'
+        pass_value: string
+        fail_value: string
       }
     | {
-        refType: 'gate'
+        ref_type: 'gate'
         /**
          * Parameter Name
          */
@@ -6849,17 +6850,17 @@ export type ParamStoreDto = {
         /**
          * Gate Name
          */
-        gateName: string
-        paramType: 'object'
-        passValue: {
+        gate_name: string
+        param_type: 'object'
+        pass_value: {
           [key: string]: unknown
         }
-        failValue: {
+        fail_value: {
           [key: string]: unknown
         }
       }
     | {
-        refType: 'gate'
+        ref_type: 'gate'
         /**
          * Parameter Name
          */
@@ -6867,13 +6868,13 @@ export type ParamStoreDto = {
         /**
          * Gate Name
          */
-        gateName: string
-        paramType: 'array'
-        passValue: Array<unknown>
-        failValue: Array<unknown>
+        gate_name: string
+        param_type: 'array'
+        pass_value: Array<unknown>
+        fail_value: Array<unknown>
       }
     | {
-        refType: 'layer'
+        ref_type: 'layer'
         /**
          * Parameter Name
          */
@@ -6881,18 +6882,18 @@ export type ParamStoreDto = {
         /**
          * Parameter Type
          */
-        paramType: 'string' | 'boolean' | 'number' | 'array' | 'object'
+        param_type: 'string' | 'boolean' | 'number' | 'array' | 'object'
         /**
          * Layer Name
          */
-        layerName: string
+        layer_name: string
         /**
          * Parameter Name in Layer
          */
-        paramName: string
+        param_name: string
       }
     | {
-        refType: 'dynamic_config'
+        ref_type: 'dynamic_config'
         /**
          * Parameter Name
          */
@@ -6900,18 +6901,18 @@ export type ParamStoreDto = {
         /**
          * Parameter Type
          */
-        paramType: 'string' | 'boolean' | 'number' | 'array' | 'object'
+        param_type: 'string' | 'boolean' | 'number' | 'array' | 'object'
         /**
          * Dynamic Config Name
          */
-        configName: string
+        config_name: string
         /**
          * Parameter Name in Config
          */
-        paramName: string
+        param_name: string
       }
     | {
-        refType: 'experiment'
+        ref_type: 'experiment'
         /**
          * Parameter Name
          */
@@ -6919,15 +6920,15 @@ export type ParamStoreDto = {
         /**
          * Parameter Type
          */
-        paramType: 'string' | 'boolean' | 'number' | 'array' | 'object'
+        param_type: 'string' | 'boolean' | 'number' | 'array' | 'object'
         /**
          * Experiment Name
          */
-        experimentName: string
+        experiment_name: string
         /**
          * Parameter Name in Experiment
          */
-        paramName: string
+        param_name: string
       }
   >
 }
@@ -6942,54 +6943,54 @@ export type ParamStoreUpdateDto = {
    */
   parameters?: Array<
     | {
-        refType: 'static'
+        ref_type: 'static'
         /**
          * Parameter Name
          */
         name: string
-        paramType: 'boolean'
+        param_type: 'boolean'
         value: boolean
       }
     | {
-        refType: 'static'
+        ref_type: 'static'
         /**
          * Parameter Name
          */
         name: string
-        paramType: 'number'
+        param_type: 'number'
         value: number
       }
     | {
-        refType: 'static'
+        ref_type: 'static'
         /**
          * Parameter Name
          */
         name: string
-        paramType: 'string'
+        param_type: 'string'
         value: string
       }
     | {
-        refType: 'static'
+        ref_type: 'static'
         /**
          * Parameter Name
          */
         name: string
-        paramType: 'object'
+        param_type: 'object'
         value: {
           [key: string]: unknown
         }
       }
     | {
-        refType: 'static'
+        ref_type: 'static'
         /**
          * Parameter Name
          */
         name: string
-        paramType: 'array'
+        param_type: 'array'
         value: Array<unknown>
       }
     | {
-        refType: 'gate'
+        ref_type: 'gate'
         /**
          * Parameter Name
          */
@@ -6997,13 +6998,13 @@ export type ParamStoreUpdateDto = {
         /**
          * Gate Name
          */
-        gateName: string
-        paramType: 'boolean'
-        passValue: boolean
-        failValue: boolean
+        gate_name: string
+        param_type: 'boolean'
+        pass_value: boolean
+        fail_value: boolean
       }
     | {
-        refType: 'gate'
+        ref_type: 'gate'
         /**
          * Parameter Name
          */
@@ -7011,13 +7012,13 @@ export type ParamStoreUpdateDto = {
         /**
          * Gate Name
          */
-        gateName: string
-        paramType: 'number'
-        passValue: number
-        failValue: number
+        gate_name: string
+        param_type: 'number'
+        pass_value: number
+        fail_value: number
       }
     | {
-        refType: 'gate'
+        ref_type: 'gate'
         /**
          * Parameter Name
          */
@@ -7025,13 +7026,13 @@ export type ParamStoreUpdateDto = {
         /**
          * Gate Name
          */
-        gateName: string
-        paramType: 'string'
-        passValue: string
-        failValue: string
+        gate_name: string
+        param_type: 'string'
+        pass_value: string
+        fail_value: string
       }
     | {
-        refType: 'gate'
+        ref_type: 'gate'
         /**
          * Parameter Name
          */
@@ -7039,17 +7040,17 @@ export type ParamStoreUpdateDto = {
         /**
          * Gate Name
          */
-        gateName: string
-        paramType: 'object'
-        passValue: {
+        gate_name: string
+        param_type: 'object'
+        pass_value: {
           [key: string]: unknown
         }
-        failValue: {
+        fail_value: {
           [key: string]: unknown
         }
       }
     | {
-        refType: 'gate'
+        ref_type: 'gate'
         /**
          * Parameter Name
          */
@@ -7057,13 +7058,13 @@ export type ParamStoreUpdateDto = {
         /**
          * Gate Name
          */
-        gateName: string
-        paramType: 'array'
-        passValue: Array<unknown>
-        failValue: Array<unknown>
+        gate_name: string
+        param_type: 'array'
+        pass_value: Array<unknown>
+        fail_value: Array<unknown>
       }
     | {
-        refType: 'layer'
+        ref_type: 'layer'
         /**
          * Parameter Name
          */
@@ -7071,18 +7072,18 @@ export type ParamStoreUpdateDto = {
         /**
          * Parameter Type
          */
-        paramType: 'string' | 'boolean' | 'number' | 'array' | 'object'
+        param_type: 'string' | 'boolean' | 'number' | 'array' | 'object'
         /**
          * Layer Name
          */
-        layerName: string
+        layer_name: string
         /**
          * Parameter Name in Layer
          */
-        paramName: string
+        param_name: string
       }
     | {
-        refType: 'dynamic_config'
+        ref_type: 'dynamic_config'
         /**
          * Parameter Name
          */
@@ -7090,18 +7091,18 @@ export type ParamStoreUpdateDto = {
         /**
          * Parameter Type
          */
-        paramType: 'string' | 'boolean' | 'number' | 'array' | 'object'
+        param_type: 'string' | 'boolean' | 'number' | 'array' | 'object'
         /**
          * Dynamic Config Name
          */
-        configName: string
+        config_name: string
         /**
          * Parameter Name in Config
          */
-        paramName: string
+        param_name: string
       }
     | {
-        refType: 'experiment'
+        ref_type: 'experiment'
         /**
          * Parameter Name
          */
@@ -7109,29 +7110,29 @@ export type ParamStoreUpdateDto = {
         /**
          * Parameter Type
          */
-        paramType: 'string' | 'boolean' | 'number' | 'array' | 'object'
+        param_type: 'string' | 'boolean' | 'number' | 'array' | 'object'
         /**
          * Experiment Name
          */
-        experimentName: string
+        experiment_name: string
         /**
          * Parameter Name in Experiment
          */
-        paramName: string
+        param_name: string
       }
   >
 }
 
 export type PrecommitHookArgsDto =
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'gate'
-      configName: string
+      config_type: 'gate'
+      config_name: string
       type: 'rules'
       diffs: Array<unknown> | null
-      oldConfig?: {
+      old_config?: {
         /**
          * ID
          */
@@ -7142,7 +7143,7 @@ export type PrecommitHookArgsDto =
         /**
          * ID of the last modifier.
          */
-        lastModifierId: string | null
+        lastModifierID: string | null
         /**
          * Time of the last modification.
          */
@@ -7155,7 +7156,7 @@ export type PrecommitHookArgsDto =
          * Name of the last modifier.
          */
         lastModifierName: string | null
-        creatorId?: string | null
+        creatorID?: string | null
         /**
          * Timestamp when the entity was created.
          */
@@ -7170,9 +7171,9 @@ export type PrecommitHookArgsDto =
         /**
          * Holdouts applied to this configuration.
          */
-        holdoutIds?: Array<string>
+        holdoutIDs?: Array<string>
         team?: string | null
-        teamId?: string | null
+        teamID?: string | null
         /**
          * Version number
          */
@@ -7197,7 +7198,7 @@ export type PrecommitHookArgsDto =
           /**
            * ID of the owner
            */
-          ownerId?: string
+          ownerID?: string
           /**
            * Type of the owner (e.g., SDK_KEY or USER)
            */
@@ -7229,7 +7230,7 @@ export type PrecommitHookArgsDto =
             targetValue?: Array<string> | Array<number> | string | number | null
             operator?: string
             field?: string | null
-            customId?: string | null
+            customID?: string | null
             type:
               | 'app_version'
               | 'browser_name'
@@ -7266,7 +7267,7 @@ export type PrecommitHookArgsDto =
           /**
            * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
            */
-          baseId?: string
+          baseID?: string
           /**
            * The return value of the rule.
            */
@@ -7295,14 +7296,14 @@ export type PrecommitHookArgsDto =
             email: string
           }> | null
         }
-        releasePipelineId?: string | null
+        releasePipelineID?: string | null
         activeReview?: {
-          reviewId: string
+          reviewID: string
           reviewStatus: string
           description: string
         }
       }
-      newConfig?: {
+      new_config?: {
         /**
          * ID
          */
@@ -7313,7 +7314,7 @@ export type PrecommitHookArgsDto =
         /**
          * ID of the last modifier.
          */
-        lastModifierId: string | null
+        lastModifierID: string | null
         /**
          * Time of the last modification.
          */
@@ -7326,7 +7327,7 @@ export type PrecommitHookArgsDto =
          * Name of the last modifier.
          */
         lastModifierName: string | null
-        creatorId?: string | null
+        creatorID?: string | null
         /**
          * Timestamp when the entity was created.
          */
@@ -7341,9 +7342,9 @@ export type PrecommitHookArgsDto =
         /**
          * Holdouts applied to this configuration.
          */
-        holdoutIds?: Array<string>
+        holdoutIDs?: Array<string>
         team?: string | null
-        teamId?: string | null
+        teamID?: string | null
         /**
          * Version number
          */
@@ -7368,7 +7369,7 @@ export type PrecommitHookArgsDto =
           /**
            * ID of the owner
            */
-          ownerId?: string
+          ownerID?: string
           /**
            * Type of the owner (e.g., SDK_KEY or USER)
            */
@@ -7400,7 +7401,7 @@ export type PrecommitHookArgsDto =
             targetValue?: Array<string> | Array<number> | string | number | null
             operator?: string
             field?: string | null
-            customId?: string | null
+            customID?: string | null
             type:
               | 'app_version'
               | 'browser_name'
@@ -7437,7 +7438,7 @@ export type PrecommitHookArgsDto =
           /**
            * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
            */
-          baseId?: string
+          baseID?: string
           /**
            * The return value of the rule.
            */
@@ -7466,33 +7467,33 @@ export type PrecommitHookArgsDto =
             email: string
           }> | null
         }
-        releasePipelineId?: string | null
+        releasePipelineID?: string | null
         activeReview?: {
-          reviewId: string
+          reviewID: string
           reviewStatus: string
           description: string
         }
       }
     }
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'gate'
-      configName: string
+      config_type: 'gate'
+      config_name: string
       type: 'update_target_apps'
-      oldTargetApps: Array<string>
-      newTargetApps: Array<string>
+      old_target_apps: Array<string>
+      new_target_apps: Array<string>
     }
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'dynamic_config'
-      configName: string
+      config_type: 'dynamic_config'
+      config_name: string
       type: 'rules'
       diffs: Array<unknown> | null
-      oldConfig?: {
+      old_config?: {
         /**
          * ID
          */
@@ -7512,7 +7513,7 @@ export type PrecommitHookArgsDto =
         /**
          * ID of the last modifier.
          */
-        lastModifierId: string | null
+        lastModifierID: string | null
         /**
          * Time of the last modification.
          */
@@ -7525,7 +7526,7 @@ export type PrecommitHookArgsDto =
          * Name of the last modifier.
          */
         lastModifierName: string | null
-        creatorId?: string | null
+        creatorID?: string | null
         /**
          * Timestamp when the entity was created.
          */
@@ -7543,7 +7544,7 @@ export type PrecommitHookArgsDto =
         /**
          * Holdouts applied to this configuration.
          */
-        holdoutIds?: Array<string>
+        holdoutIDs?: Array<string>
         /**
          * The team name associated with the dynamic config, Enterprise only.
          */
@@ -7551,7 +7552,7 @@ export type PrecommitHookArgsDto =
         /**
          * The team ID associated with the dynamic config, Enterprise only.
          */
-        teamId?: string | null
+        teamID?: string | null
         /**
          * Version number
          */
@@ -7579,7 +7580,7 @@ export type PrecommitHookArgsDto =
             targetValue?: Array<string> | Array<number> | string | number | null
             operator?: string
             field?: string | null
-            customId?: string | null
+            customID?: string | null
             type:
               | 'app_version'
               | 'browser_name'
@@ -7613,7 +7614,7 @@ export type PrecommitHookArgsDto =
           /**
            * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
            */
-          baseId?: string
+          baseID?: string
           returnValue?: {
             [key: string]: unknown
           }
@@ -7653,7 +7654,7 @@ export type PrecommitHookArgsDto =
           /**
            * ID of the owner
            */
-          ownerId?: string
+          ownerID?: string
           /**
            * Type of the owner (e.g., SDK_KEY or USER)
            */
@@ -7678,10 +7679,10 @@ export type PrecommitHookArgsDto =
         /**
          * The release pipeline ID associated with the dynamic config
          */
-        releasePipelineId?: string | null
+        releasePipelineID?: string | null
         isTemplate?: boolean
       }
-      newConfig?: {
+      new_config?: {
         /**
          * ID
          */
@@ -7701,7 +7702,7 @@ export type PrecommitHookArgsDto =
         /**
          * ID of the last modifier.
          */
-        lastModifierId: string | null
+        lastModifierID: string | null
         /**
          * Time of the last modification.
          */
@@ -7714,7 +7715,7 @@ export type PrecommitHookArgsDto =
          * Name of the last modifier.
          */
         lastModifierName: string | null
-        creatorId?: string | null
+        creatorID?: string | null
         /**
          * Timestamp when the entity was created.
          */
@@ -7732,7 +7733,7 @@ export type PrecommitHookArgsDto =
         /**
          * Holdouts applied to this configuration.
          */
-        holdoutIds?: Array<string>
+        holdoutIDs?: Array<string>
         /**
          * The team name associated with the dynamic config, Enterprise only.
          */
@@ -7740,7 +7741,7 @@ export type PrecommitHookArgsDto =
         /**
          * The team ID associated with the dynamic config, Enterprise only.
          */
-        teamId?: string | null
+        teamID?: string | null
         /**
          * Version number
          */
@@ -7768,7 +7769,7 @@ export type PrecommitHookArgsDto =
             targetValue?: Array<string> | Array<number> | string | number | null
             operator?: string
             field?: string | null
-            customId?: string | null
+            customID?: string | null
             type:
               | 'app_version'
               | 'browser_name'
@@ -7802,7 +7803,7 @@ export type PrecommitHookArgsDto =
           /**
            * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
            */
-          baseId?: string
+          baseID?: string
           returnValue?: {
             [key: string]: unknown
           }
@@ -7842,7 +7843,7 @@ export type PrecommitHookArgsDto =
           /**
            * ID of the owner
            */
-          ownerId?: string
+          ownerID?: string
           /**
            * Type of the owner (e.g., SDK_KEY or USER)
            */
@@ -7867,29 +7868,29 @@ export type PrecommitHookArgsDto =
         /**
          * The release pipeline ID associated with the dynamic config
          */
-        releasePipelineId?: string | null
+        releasePipelineID?: string | null
         isTemplate?: boolean
       }
     }
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'dynamic_config'
-      configName: string
+      config_type: 'dynamic_config'
+      config_name: string
       type: 'update_target_apps'
-      oldTargetApps: Array<string>
-      newTargetApps: Array<string>
+      old_target_apps: Array<string>
+      new_target_apps: Array<string>
     }
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'segment'
-      configName: string
+      config_type: 'segment'
+      config_name: string
       type: 'rules'
       diffs: Array<unknown> | null
-      oldConfig?: {
+      old_config?: {
         /**
          * Is the segment enabled.
          */
@@ -7918,7 +7919,7 @@ export type PrecommitHookArgsDto =
             targetValue?: Array<string> | Array<number> | string | number | null
             operator?: string
             field?: string | null
-            customId?: string | null
+            customID?: string | null
             type:
               | 'app_version'
               | 'browser_name'
@@ -7955,7 +7956,7 @@ export type PrecommitHookArgsDto =
           /**
            * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
            */
-          baseId?: string
+          baseID?: string
           /**
            * The return value of the rule.
            */
@@ -7986,7 +7987,7 @@ export type PrecommitHookArgsDto =
         /**
          * ID of the last modifier.
          */
-        lastModifierId: string | null
+        lastModifierID: string | null
         /**
          * Time of the last modification.
          */
@@ -8002,7 +8003,7 @@ export type PrecommitHookArgsDto =
         /**
          * ID of the user who created the entity.
          */
-        creatorId: string | null
+        creatorID: string | null
         /**
          * Timestamp when the entity was created.
          */
@@ -8022,7 +8023,7 @@ export type PrecommitHookArgsDto =
         /**
          * Holdouts applied to this configuration.
          */
-        holdoutIds?: Array<string>
+        holdoutIDs?: Array<string>
         /**
          * Optional name for the responsible team.
          */
@@ -8030,13 +8031,13 @@ export type PrecommitHookArgsDto =
         /**
          * Optional ID of the responsible team.
          */
-        teamId?: string | null
+        teamID?: string | null
         /**
          * Version number
          */
         version?: number
       }
-      newConfig?: {
+      new_config?: {
         /**
          * Is the segment enabled.
          */
@@ -8065,7 +8066,7 @@ export type PrecommitHookArgsDto =
             targetValue?: Array<string> | Array<number> | string | number | null
             operator?: string
             field?: string | null
-            customId?: string | null
+            customID?: string | null
             type:
               | 'app_version'
               | 'browser_name'
@@ -8102,7 +8103,7 @@ export type PrecommitHookArgsDto =
           /**
            * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
            */
-          baseId?: string
+          baseID?: string
           /**
            * The return value of the rule.
            */
@@ -8133,7 +8134,7 @@ export type PrecommitHookArgsDto =
         /**
          * ID of the last modifier.
          */
-        lastModifierId: string | null
+        lastModifierID: string | null
         /**
          * Time of the last modification.
          */
@@ -8149,7 +8150,7 @@ export type PrecommitHookArgsDto =
         /**
          * ID of the user who created the entity.
          */
-        creatorId: string | null
+        creatorID: string | null
         /**
          * Timestamp when the entity was created.
          */
@@ -8169,7 +8170,7 @@ export type PrecommitHookArgsDto =
         /**
          * Holdouts applied to this configuration.
          */
-        holdoutIds?: Array<string>
+        holdoutIDs?: Array<string>
         /**
          * Optional name for the responsible team.
          */
@@ -8177,7 +8178,7 @@ export type PrecommitHookArgsDto =
         /**
          * Optional ID of the responsible team.
          */
-        teamId?: string | null
+        teamID?: string | null
         /**
          * Version number
          */
@@ -8185,87 +8186,87 @@ export type PrecommitHookArgsDto =
       }
     }
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'segment'
-      configName: string
+      config_type: 'segment'
+      config_name: string
       type: 'update_target_apps'
-      oldTargetApps: Array<string>
-      newTargetApps: Array<string>
+      old_target_apps: Array<string>
+      new_target_apps: Array<string>
     }
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'experiment'
-      experimentName: string
+      config_type: 'experiment'
+      experiment_name: string
       type: 'update_allocation'
-      oldAllocation: number
-      newAllocation: number
+      old_allocation: number
+      new_allocation: number
     }
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'experiment'
-      experimentName: string
+      config_type: 'experiment'
+      experiment_name: string
       type: 'start_experiment'
-      newAllocation: number
+      new_allocation: number
     }
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'experiment'
-      experimentName: string
+      config_type: 'experiment'
+      experiment_name: string
       type: 'ship_experiment'
       group: string
     }
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'experiment'
-      experimentName: string
+      config_type: 'experiment'
+      experiment_name: string
       type: 'abandon_experiment'
     }
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'experiment'
-      experimentName: string
+      config_type: 'experiment'
+      experiment_name: string
       type: 'update_target_apps'
-      oldTargetApps: Array<string>
-      newTargetApps: Array<string>
+      old_target_apps: Array<string>
+      new_target_apps: Array<string>
     }
   | {
-      reviewId: string
+      review_id: string
       submitter: string
       committer: string
-      configType: 'experiment'
-      experimentName: string
+      config_type: 'experiment'
+      experiment_name: string
       type: 'update_experiment_settings'
-      oldSettings: {
+      old_settings: {
         groups: Array<{
           name: string
-          parameterValuesJson: string
+          parameterValuesJSON: string
           size: number
         }>
         allocation: number
-        targetingGateId: string | null
-        inlineTargetingRulesJson: string | null
+        targetingGateID: string | null
+        inlineTargetingRulesJSON: string | null
       }
-      newSettings: {
+      new_settings: {
         groups: Array<{
           name: string
-          parameterValuesJson: string
+          parameterValuesJSON: string
           size: number
         }>
         allocation: number
-        targetingGateId: string | null
-        inlineTargetingRulesJson: string | null
+        targetingGateID: string | null
+        inlineTargetingRulesJSON: string | null
       }
     }
 
@@ -8328,7 +8329,7 @@ export type ReleasePipelineCreateDto = {
         targetValue?: Array<string> | Array<number> | string | number | null
         operator?: string
         field?: string | null
-        customId?: string | null
+        customID?: string | null
         type:
           | 'app_version'
           | 'browser_name'
@@ -8374,7 +8375,7 @@ export type ReleasePipelineDto = {
   /**
    * Pipeline Creator ID
    */
-  creatorId: string
+  creatorID: string
   /**
    * Pipeline Creation Time
    */
@@ -8382,7 +8383,7 @@ export type ReleasePipelineDto = {
   /**
    * Last Modifier ID
    */
-  lastModifierId: string
+  lastModifierID: string
   /**
    * Phases of the release pipeline that will be executed in order.
    */
@@ -8422,7 +8423,7 @@ export type ReleasePipelineDto = {
         targetValue?: Array<string> | Array<number> | string | number | null
         operator?: string
         field?: string | null
-        customId?: string | null
+        customID?: string | null
         type:
           | 'app_version'
           | 'browser_name'
@@ -8460,7 +8461,7 @@ export type ReleasePipelineTriggerActionBodyDto = {
   /**
    * Phase ID to ensure the correct state of the pipeline is updated
    */
-  phaseId: string
+  phaseID: string
 }
 
 export type ReleasePipelineTriggerResponseDto = {
@@ -8471,21 +8472,21 @@ export type ReleasePipelineTriggerResponseDto = {
   /**
    * Release Pipeline ID
    */
-  releasePipelineId: string
+  releasePipelineID: string
   /**
    * Actions
    */
   actions: Array<{
     type: 'STARTED' | 'ABORTED' | 'PAUSED' | 'UNPAUSED' | 'APPROVED_FOR' | 'SKIPPED' | 'FULL_ROLL_OUT' | 'CLEANED_UP'
     timeMs: number
-    phaseId: string
-    actorId: string
+    phaseID: string
+    actorID: string
     actorName: string
   }>
   /**
    * Trigger Creator ID
    */
-  creatorId: string
+  creatorID: string
   /**
    * Trigger Creation Time
    */
@@ -8497,15 +8498,15 @@ export type ReleasePipelineTriggerResponseDto = {
   /**
    * Gate ID
    */
-  gateId?: string
+  gateID?: string
   /**
    * Dynamic Config ID
    */
-  dynamicConfigId?: string
+  dynamicConfigID?: string
   /**
    * Last modifier ID
    */
-  lastModifierId: string
+  lastModifierID: string
   /**
    * Last modifier name
    */
@@ -8521,7 +8522,7 @@ export type ReleasePipelineTriggerResponseDto = {
   /**
    * Current phase ID
    */
-  currentPhaseId: string | null
+  currentPhaseID: string | null
 }
 
 export type ReleasePipelineUpdateDto = {
@@ -8568,7 +8569,7 @@ export type ReleasePipelineUpdateDto = {
         targetValue?: Array<string> | Array<number> | string | number | null
         operator?: string
         field?: string | null
-        customId?: string | null
+        customID?: string | null
         type:
           | 'app_version'
           | 'browser_name'
@@ -8647,7 +8648,7 @@ export type RuleDto = {
     targetValue?: Array<string> | Array<number> | string | number | null
     operator?: string
     field?: string | null
-    customId?: string | null
+    customID?: string | null
     type:
       | 'app_version'
       | 'browser_name'
@@ -8684,7 +8685,7 @@ export type RuleDto = {
   /**
    * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
    */
-  baseId?: string
+  baseID?: string
   /**
    * The return value of the rule.
    */
@@ -8717,7 +8718,7 @@ export type RuleUpdateDto = {
     targetValue?: Array<string> | Array<number> | string | number | null
     operator?: string
     field?: string | null
-    customId?: string | null
+    customID?: string | null
     type:
       | 'app_version'
       | 'browser_name'
@@ -8754,7 +8755,7 @@ export type RuleUpdateDto = {
   /**
    * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
    */
-  baseId?: string
+  baseID?: string
   /**
    * The return value of the rule.
    */
@@ -8799,7 +8800,7 @@ export type SegmentCreateContractDto = {
   /**
    * the Statsig ID of the creator of this experiment
    */
-  creatorId?: string | null
+  creatorID?: string | null
   /**
    * the email of the creator of this experiment
    */
@@ -8811,7 +8812,7 @@ export type SegmentCreateContractDto = {
   /**
    * optional identifier for the responsible team (enterprise only)
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Rule Object
    */
@@ -8828,7 +8829,7 @@ export type SegmentCreateContractDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -8856,7 +8857,7 @@ export type SegmentCreateContractDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     /**
      * The return value of the rule.
      */
@@ -8903,7 +8904,7 @@ export type SegmentDto = {
       targetValue?: Array<string> | Array<number> | string | number | null
       operator?: string
       field?: string | null
-      customId?: string | null
+      customID?: string | null
       type:
         | 'app_version'
         | 'browser_name'
@@ -8940,7 +8941,7 @@ export type SegmentDto = {
     /**
      * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
      */
-    baseId?: string
+    baseID?: string
     /**
      * The return value of the rule.
      */
@@ -8971,7 +8972,7 @@ export type SegmentDto = {
   /**
    * ID of the last modifier.
    */
-  lastModifierId: string | null
+  lastModifierID: string | null
   /**
    * Time of the last modification.
    */
@@ -8987,7 +8988,7 @@ export type SegmentDto = {
   /**
    * ID of the user who created the entity.
    */
-  creatorId: string | null
+  creatorID: string | null
   /**
    * Timestamp when the entity was created.
    */
@@ -9007,7 +9008,7 @@ export type SegmentDto = {
   /**
    * Holdouts applied to this configuration.
    */
-  holdoutIds?: Array<string>
+  holdoutIDs?: Array<string>
   /**
    * Optional name for the responsible team.
    */
@@ -9015,7 +9016,7 @@ export type SegmentDto = {
   /**
    * Optional ID of the responsible team.
    */
-  teamId?: string | null
+  teamID?: string | null
   /**
    * Version number
    */
@@ -9048,7 +9049,7 @@ export type SegmentRulesDto = Array<{
     targetValue?: Array<string> | Array<number> | string | number | null
     operator?: string
     field?: string | null
-    customId?: string | null
+    customID?: string | null
     type:
       | 'app_version'
       | 'browser_name'
@@ -9076,7 +9077,7 @@ export type SegmentRulesDto = Array<{
   /**
    * The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
    */
-  baseId?: string
+  baseID?: string
   /**
    * The return value of the rule.
    */
@@ -9105,44 +9106,44 @@ export type SettingsProjectContractDto = {
   /**
    * The default unit ID type of the project for newly created gates, experiments, and metrics. If not provided, there will be no default unit type.
    */
-  defaultUnitType?: string
+  default_unit_type?: string
 }
 
 export type SettingsReviewsContractDto = {
   /**
    * Whether config reviews are required.
    */
-  isConfigReviewRequired: boolean
+  is_config_review_required: boolean
   /**
    * Whether metric reviews are required.
    */
-  isMetricReviewRequired: boolean
+  is_metric_review_required: boolean
   /**
    * Whether metric reviews are only required for verified metrics.
    */
-  isMetricReviewRequiredOnVerifiedOnly: boolean
+  is_metric_review_required_on_verified_only: boolean
   /**
    * Whether analysis-only experiment reviews are required. Only applicable to WHN projects.
    */
-  isWhnAnalysisOnlyReviewRequired?: boolean
+  is_whn_analysis_only_review_required?: boolean
   /**
    * Whether metric/assignment/entity property source reviews are required. Only applicable to WHN projects.
    */
-  isWhnSourceReviewRequired?: boolean
+  is_whn_source_review_required?: boolean
 }
 
 export type SettingsRolesContractDto = {
   /**
    * The name of the default project role. This is the role that will be initially assigned to new users joining the project.
    */
-  defaultProjectRole: string
+  default_project_role: string
 }
 
 export type SettingsTeamsContractDto = {
   /**
    * Whether a team is required on each new config.
    */
-  requireTeamsOnConfigs: boolean
+  require_teams_on_configs: boolean
 }
 
 export type SingleDataResponse = {
@@ -9307,7 +9308,7 @@ export type TeamCreationDto = {
   /**
    * Default holdout ID for the team, if applicable.
    */
-  defaultHoldoutId?: string | null
+  defaultHoldoutID?: string | null
   /**
    * Whether reviews are required for changes, if applicable.
    */
@@ -9406,7 +9407,7 @@ export type TeamDto = {
   /**
    * Default holdout ID for the team, if applicable.
    */
-  defaultHoldoutId?: string | null
+  defaultHoldoutID?: string | null
   /**
    * Whether reviews are required for changes, if applicable.
    */
@@ -9549,7 +9550,7 @@ export type TeamPartialUpdateDto = {
   /**
    * Default holdout ID for the team, if applicable.
    */
-  defaultHoldoutId?: string | null
+  defaultHoldoutID?: string | null
   /**
    * Whether reviews are required for changes, if applicable.
    */
@@ -9606,34 +9607,34 @@ export type UpdateOverridesContractDto =
         /**
          * Unit ID
          */
-        unitId: string | null
+        unitID: string | null
         /**
          * List of passing IDs
          */
-        passingIds: Array<string>
+        passingIDs: Array<string>
         /**
          * List of failing IDs
          */
-        failingIds: Array<string>
+        failingIDs: Array<string>
       }>
     }
   | {
       /**
        * List of user IDs
        */
-      passingUserIds: Array<string>
+      passingUserIDs: Array<string>
       /**
        * List of user IDs
        */
-      failingUserIds: Array<string>
+      failingUserIDs: Array<string>
       /**
        * Optional list of custom IDs
        */
-      passingCustomIds?: Array<string>
+      passingCustomIDs?: Array<string>
       /**
        * Optional list of custom IDs
        */
-      failingCustomIds?: Array<string>
+      failingCustomIDs?: Array<string>
     }
 
 export type UpdateTargetAppDto = {
@@ -9708,7 +9709,7 @@ export type WhConnectionUpdateDto = {
      * Statsig will use this Database to save intermediate tables in the experimentation pipeline. Must be a database that the service user has write access to.
      */
     stagingDatabase?: string
-    oauthClientId?: string | null
+    oauthClientID?: string | null
     /**
      * An optional separate path that Statsig will use to run interactive queries made from the Console.
      */
@@ -9745,7 +9746,7 @@ export type GetConsoleV1AlertsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -9756,7 +9757,7 @@ export type GetConsoleV1AlertsData = {
     /**
      * ID of the user who created the entity.
      */
-    creatorId?: string | null
+    creatorID?: string | null
     /**
      * Filter by tags
      */
@@ -9802,14 +9803,14 @@ export type GetConsoleV1AuditLogsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
     id?: string
     sortKey?: 'id' | 'name' | 'changeLog' | 'actionType' | 'date' | 'time' | 'updatedBy' | 'updatedByUserID'
     sortOrder?: 'asc' | 'desc'
-    latestId?: string
+    latestID?: string
     tags?: string | Array<string>
     actionType?:
       | 'start_ai_config_version_evaluation_job'
@@ -9820,6 +9821,9 @@ export type GetConsoleV1AuditLogsData = {
       | 'ai_config_create'
       | 'create_ai_config_version'
       | 'upsert_ai_config_version'
+      | 'create_ai_config_eval_grader'
+      | 'edit_ai_config_eval_grader'
+      | 'delete_ai_config_eval_grader'
       | 'set_enable_id_resolution_toggle'
       | 'dynamic_config_create'
       | 'dynamic_config_template_create'
@@ -10206,6 +10210,9 @@ export type GetConsoleV1AuditLogsData = {
       | 'ai_config_create'
       | 'create_ai_config_version'
       | 'upsert_ai_config_version'
+      | 'create_ai_config_eval_grader'
+      | 'edit_ai_config_eval_grader'
+      | 'delete_ai_config_eval_grader'
       | 'set_enable_id_resolution_toggle'
       | 'dynamic_config_create'
       | 'dynamic_config_template_create'
@@ -10621,7 +10628,7 @@ export type GetConsoleV1AutotunesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -10654,7 +10661,7 @@ export type PostConsoleV1AutotunesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -10697,7 +10704,7 @@ export type DeleteConsoleV1AutotunesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -10747,7 +10754,7 @@ export type GetConsoleV1AutotunesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -10796,7 +10803,7 @@ export type PatchConsoleV1AutotunesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -10853,7 +10860,7 @@ export type PostConsoleV1AutotunesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -10902,7 +10909,7 @@ export type PutConsoleV1AutotunesByIdMakeDecisionData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -10959,7 +10966,7 @@ export type PutConsoleV1AutotunesByIdResetData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11016,7 +11023,7 @@ export type PutConsoleV1AutotunesByIdStartData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11046,7 +11053,7 @@ export type PostConsoleV1ChangeValidationData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -11071,7 +11078,7 @@ export type PatchConsoleV1ChangeValidationMessageData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -11096,7 +11103,7 @@ export type GetConsoleV1CompanyData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -11132,14 +11139,14 @@ export type GetConsoleV1DynamicConfigsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
     /**
      * The release pipeline ID associated with the dynamic config
      */
-    releasePipelineId?: string | null
+    releasePipelineID?: string | null
     /**
      * Name of the creator.
      */
@@ -11147,7 +11154,7 @@ export type GetConsoleV1DynamicConfigsData = {
     /**
      * ID of the user who created the entity.
      */
-    creatorId?: string | null
+    creatorID?: string | null
     /**
      * Filter by tags
      */
@@ -11194,7 +11201,7 @@ export type PostConsoleV1DynamicConfigsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -11246,7 +11253,7 @@ export type DeleteConsoleV1DynamicConfigsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11296,7 +11303,7 @@ export type GetConsoleV1DynamicConfigsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11346,7 +11353,7 @@ export type PatchConsoleV1DynamicConfigsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11396,7 +11403,7 @@ export type PostConsoleV1DynamicConfigsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11453,7 +11460,7 @@ export type PutConsoleV1DynamicConfigsByIdDisableData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11483,7 +11490,7 @@ export type PutConsoleV1DynamicConfigsByIdEnableData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11513,7 +11520,7 @@ export type DeleteConsoleV1DynamicConfigsByIdRuleByRuleIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11547,7 +11554,7 @@ export type GetConsoleV1DynamicConfigsByIdRuleByRuleIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11581,7 +11588,7 @@ export type PatchConsoleV1DynamicConfigsByIdRuleByRuleIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11615,7 +11622,7 @@ export type GetConsoleV1DynamicConfigsByIdRulesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11645,7 +11652,7 @@ export type GetConsoleV1DynamicConfigsByIdVersionsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -11697,7 +11704,7 @@ export type GetConsoleV1EnvironmentsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -11741,7 +11748,7 @@ export type PostConsoleV1EnvironmentsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -11785,7 +11792,7 @@ export type GetConsoleV1EventsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -11837,7 +11844,7 @@ export type GetConsoleV1EventsByEventNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     eventName: string
@@ -11893,7 +11900,7 @@ export type GetConsoleV1EventsByEventNameMetricsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     eventName: string
@@ -11949,14 +11956,14 @@ export type GetConsoleV1ExperimentsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
     /**
      * Which layer to place the experiment into.
      */
-    layerId?: string
+    layerID?: string
     /**
      * The idType the experiment will be performed on
      */
@@ -11964,7 +11971,7 @@ export type GetConsoleV1ExperimentsData = {
     /**
      * The team ID associated with the experiment, Enterprise only.
      */
-    teamId?: string | null
+    teamID?: string | null
     /**
      * The current status of the experiment
      */
@@ -11979,7 +11986,7 @@ export type GetConsoleV1ExperimentsData = {
       | Array<
           'active' | 'setup' | 'decision_made' | 'abandoned' | 'archived' | 'experiment_stopped' | 'assignment_stopped'
         >
-    targetAppId?: string
+    targetAppID?: string
     /**
      * Name of the creator.
      */
@@ -11987,7 +11994,7 @@ export type GetConsoleV1ExperimentsData = {
     /**
      * ID of the user who created the entity.
      */
-    creatorId?: string | null
+    creatorID?: string | null
     /**
      * Filter by tags
      */
@@ -12033,7 +12040,7 @@ export type PostConsoleV1ExperimentsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -12077,7 +12084,7 @@ export type DeleteConsoleV1ExperimentsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12127,7 +12134,7 @@ export type GetConsoleV1ExperimentsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12177,7 +12184,7 @@ export type PatchConsoleV1ExperimentsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12227,7 +12234,7 @@ export type PostConsoleV1ExperimentsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12277,7 +12284,7 @@ export type PutConsoleV1ExperimentsByIdAbandonData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12334,7 +12341,7 @@ export type PutConsoleV1ExperimentsByIdArchiveData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12384,7 +12391,7 @@ export type GetConsoleV1ExperimentsByIdCumulativeExposuresData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12414,7 +12421,7 @@ export type PostConsoleV1ExperimentsByIdDisableGroupsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12471,7 +12478,7 @@ export type PostConsoleV1ExperimentsByIdEnableGroupsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12528,7 +12535,7 @@ export type PostConsoleV1ExperimentsByIdLoadPulseData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12538,7 +12545,7 @@ export type PostConsoleV1ExperimentsByIdLoadPulseData = {
   }
   query?: {
     refresh?: 'full' | 'incremental' | 'metric'
-    metricIds?: Array<string>
+    metricIDs?: Array<string>
     ruleId?: string
     turboMode?: boolean
   }
@@ -12583,7 +12590,7 @@ export type PutConsoleV1ExperimentsByIdMakeDecisionData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12640,7 +12647,7 @@ export type DeleteConsoleV1ExperimentsByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12690,7 +12697,7 @@ export type GetConsoleV1ExperimentsByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12740,7 +12747,7 @@ export type PatchConsoleV1ExperimentsByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12790,7 +12797,7 @@ export type PostConsoleV1ExperimentsByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12840,7 +12847,7 @@ export type GetConsoleV1ExperimentsByIdPulseLoadHistoryData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12899,7 +12906,7 @@ export type GetConsoleV1ExperimentsByIdPulseResultsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -12970,7 +12977,7 @@ export type PutConsoleV1ExperimentsByIdResetData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13027,7 +13034,7 @@ export type PutConsoleV1ExperimentsByIdStartData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13084,7 +13091,7 @@ export type PutConsoleV1ExperimentsByIdUnarchiveData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13134,7 +13141,7 @@ export type DeleteConsoleV1ExperimentsAssignmentSourceByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13164,7 +13171,7 @@ export type PatchConsoleV1ExperimentsAssignmentSourceByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13221,7 +13228,7 @@ export type PostConsoleV1ExperimentsAssignmentSourceByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13278,7 +13285,7 @@ export type GetConsoleV1ExperimentsAssignmentSourcesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -13332,7 +13339,7 @@ export type PostConsoleV1ExperimentsAssignmentSourcesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -13377,7 +13384,7 @@ export type GetConsoleV1ExperimentsEntityPropertiesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -13431,7 +13438,7 @@ export type PostConsoleV1ExperimentsEntityPropertiesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -13483,7 +13490,7 @@ export type DeleteConsoleV1ExperimentsEntityPropertyByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13540,7 +13547,7 @@ export type GetConsoleV1ExperimentsEntityPropertyByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13590,7 +13597,7 @@ export type PatchConsoleV1ExperimentsEntityPropertyByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13647,7 +13654,7 @@ export type PostConsoleV1ExperimentsEntityPropertyByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13704,7 +13711,7 @@ export type GetConsoleV1ExperimentsQualifyingEventsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -13758,7 +13765,7 @@ export type PostConsoleV1ExperimentsQualifyingEventsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -13803,7 +13810,7 @@ export type DeleteConsoleV1ExperimentsQualifyingEventsByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13853,7 +13860,7 @@ export type GetConsoleV1ExperimentsQualifyingEventsByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13903,7 +13910,7 @@ export type PostConsoleV1ExperimentsQualifyingEventsByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -13953,7 +13960,7 @@ export type GetConsoleV1ExposureCountData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -14001,7 +14008,7 @@ export type GetConsoleV1GatesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -14037,7 +14044,7 @@ export type GetConsoleV1GatesData = {
     /**
      * Filter by release pipeline ID
      */
-    releasePipelineId?: string | null
+    releasePipelineID?: string | null
     /**
      * Name of the creator.
      */
@@ -14045,7 +14052,7 @@ export type GetConsoleV1GatesData = {
     /**
      * ID of the user who created the entity.
      */
-    creatorId?: string | null
+    creatorID?: string | null
     /**
      * Filter by tags
      */
@@ -14091,7 +14098,7 @@ export type PostConsoleV1GatesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -14115,7 +14122,7 @@ export type DeleteConsoleV1GatesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14145,7 +14152,7 @@ export type GetConsoleV1GatesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14174,7 +14181,7 @@ export type PatchConsoleV1GatesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14203,7 +14210,7 @@ export type PostConsoleV1GatesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14232,7 +14239,7 @@ export type PutConsoleV1GatesByIdArchiveData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14262,7 +14269,7 @@ export type PutConsoleV1GatesByIdDisableData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14292,7 +14299,7 @@ export type PutConsoleV1GatesByIdEnableData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14322,7 +14329,7 @@ export type PutConsoleV1GatesByIdLaunchData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14352,7 +14359,7 @@ export type PostConsoleV1GatesByIdLoadPulseData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14382,7 +14389,7 @@ export type DeleteConsoleV1GatesByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14412,7 +14419,7 @@ export type GetConsoleV1GatesByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14442,7 +14449,7 @@ export type PatchConsoleV1GatesByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14472,7 +14479,7 @@ export type PostConsoleV1GatesByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14502,7 +14509,7 @@ export type PostConsoleV1GatesByIdRuleData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14532,7 +14539,7 @@ export type GetConsoleV1GatesByIdRulesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14562,7 +14569,7 @@ export type PatchConsoleV1GatesByIdRulesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14592,7 +14599,7 @@ export type PostConsoleV1GatesByIdRulesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14622,7 +14629,7 @@ export type DeleteConsoleV1GatesByIdRulesByRuleIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14632,7 +14639,7 @@ export type DeleteConsoleV1GatesByIdRulesByRuleIdData = {
     /**
      * Rule ID
      */
-    ruleId: string
+    ruleID: string
   }
   query?: never
   url: '/console/v1/gates/{id}/rules/{ruleID}'
@@ -14656,7 +14663,7 @@ export type PatchConsoleV1GatesByIdRulesByRuleIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14666,7 +14673,7 @@ export type PatchConsoleV1GatesByIdRulesByRuleIdData = {
     /**
      * Rule ID
      */
-    ruleId: string
+    ruleID: string
   }
   query?: never
   url: '/console/v1/gates/{id}/rules/{ruleID}'
@@ -14690,7 +14697,7 @@ export type GetConsoleV1GatesByIdRulesByRuleIdPulseLoadHistoryData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14700,7 +14707,7 @@ export type GetConsoleV1GatesByIdRulesByRuleIdPulseLoadHistoryData = {
     /**
      * Rule ID
      */
-    ruleId: string
+    ruleID: string
   }
   query?: {
     /**
@@ -14733,7 +14740,7 @@ export type GetConsoleV1GatesByIdRulesByRuleIdPulseResultsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14743,7 +14750,7 @@ export type GetConsoleV1GatesByIdRulesByRuleIdPulseResultsData = {
     /**
      * Rule ID
      */
-    ruleId: string
+    ruleID: string
   }
   query?: {
     /**
@@ -14776,7 +14783,7 @@ export type PutConsoleV1GatesByIdUnarchiveData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14806,7 +14813,7 @@ export type GetConsoleV1GatesByIdVersionsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -14858,7 +14865,7 @@ export type GetConsoleV1HoldoutsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -14869,7 +14876,7 @@ export type GetConsoleV1HoldoutsData = {
     /**
      * ID of the user who created the entity.
      */
-    creatorId?: string | null
+    creatorID?: string | null
     /**
      * Filter by tags
      */
@@ -14915,7 +14922,7 @@ export type PostConsoleV1HoldoutsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -14965,7 +14972,7 @@ export type DeleteConsoleV1HoldoutsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -15015,7 +15022,7 @@ export type GetConsoleV1HoldoutsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -15057,7 +15064,7 @@ export type PatchConsoleV1HoldoutsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -15106,7 +15113,7 @@ export type PostConsoleV1HoldoutsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -15162,7 +15169,7 @@ export type DeleteConsoleV1HoldoutsByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -15212,7 +15219,7 @@ export type GetConsoleV1HoldoutsByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -15255,7 +15262,7 @@ export type PatchConsoleV1HoldoutsByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -15285,7 +15292,7 @@ export type PostConsoleV1HoldoutsByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -15328,7 +15335,7 @@ export type GetConsoleV1HoldoutsByIdPulseResultsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -15367,13 +15374,13 @@ export type DeleteConsoleV1IngestionData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query: {
     type: 'redshift' | 'bigquery-v2' | 'snowflake-v2' | 'databricks' | 'azure-synapse' | 's3' | 'athena' | 'adls'
     dataset: 'Events' | 'Metrics' | 'export_exposures' | 'entity_properties'
-    sourceName?: string
+    source_name?: string
   }
   url: '/console/v1/ingestion'
 }
@@ -15396,13 +15403,13 @@ export type GetConsoleV1IngestionData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query: {
     type: 'redshift' | 'bigquery-v2' | 'snowflake-v2' | 'databricks' | 'azure-synapse' | 's3' | 'athena' | 'adls'
     dataset: 'Events' | 'Metrics' | 'export_exposures' | 'entity_properties'
-    sourceName?: string
+    source_name?: string
   }
   url: '/console/v1/ingestion'
 }
@@ -15424,7 +15431,7 @@ export type PatchConsoleV1IngestionData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -15448,7 +15455,7 @@ export type PostConsoleV1IngestionData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -15491,7 +15498,7 @@ export type PostConsoleV1IngestionBackfillData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -15529,7 +15536,7 @@ export type PostConsoleV1IngestionConnectionDatabricksData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -15554,20 +15561,20 @@ export type GetConsoleV1IngestionEventsCountData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query: {
-    sourceName?: string
-    eventName?: string
+    source_name?: string
+    event_name?: string
     /**
      * Expected valid date in the form of YYYY-MM-DD
      */
-    startDate: string
+    start_date: string
     /**
      * Expected valid date in the form of YYYY-MM-DD
      */
-    endDate: string
+    end_date: string
   }
   url: '/console/v1/ingestion/events/count'
 }
@@ -15590,20 +15597,20 @@ export type GetConsoleV1IngestionEventsDeltaData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query: {
-    sourceName?: string
-    eventName?: string
+    source_name?: string
+    event_name?: string
     /**
      * Expected valid date in the form of YYYY-MM-DD
      */
-    startDate: string
+    start_date: string
     /**
      * Expected valid date in the form of YYYY-MM-DD
      */
-    endDate: string
+    end_date: string
   }
   url: '/console/v1/ingestion/events/delta'
 }
@@ -15626,7 +15633,7 @@ export type GetConsoleV1IngestionRunsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -15653,7 +15660,7 @@ export type GetConsoleV1IngestionRunsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -15703,7 +15710,7 @@ export type GetConsoleV1IngestionScheduleData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query: {
@@ -15730,7 +15737,7 @@ export type PostConsoleV1IngestionScheduleData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -15755,7 +15762,7 @@ export type GetConsoleV1IngestionStatusData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query: {
@@ -15845,7 +15852,7 @@ export type GetConsoleV1KeysData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -15892,7 +15899,7 @@ export type PostConsoleV1KeysData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -15928,7 +15935,7 @@ export type DeleteConsoleV1KeysByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -15973,7 +15980,7 @@ export type GetConsoleV1KeysByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -16018,7 +16025,7 @@ export type PatchConsoleV1KeysByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -16063,7 +16070,7 @@ export type PatchConsoleV1KeysByIdDeactivateData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -16110,7 +16117,7 @@ export type PatchConsoleV1KeysByIdRotateData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -16157,7 +16164,7 @@ export type GetConsoleV1LayersData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -16209,7 +16216,7 @@ export type PostConsoleV1LayersData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -16252,7 +16259,7 @@ export type DeleteConsoleV1LayersByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16308,7 +16315,7 @@ export type GetConsoleV1LayersByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16363,7 +16370,7 @@ export type PatchConsoleV1LayersByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16412,7 +16419,7 @@ export type PostConsoleV1LayersByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16460,7 +16467,7 @@ export type GetConsoleV1LayersByIdExperimentsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16499,7 +16506,7 @@ export type DeleteConsoleV1LayersByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16549,7 +16556,7 @@ export type GetConsoleV1LayersByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16599,7 +16606,7 @@ export type PatchConsoleV1LayersByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16649,7 +16656,7 @@ export type PostConsoleV1LayersByIdOverridesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16699,7 +16706,7 @@ export type GetConsoleV1MetricsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query: {
@@ -16744,7 +16751,7 @@ export type PostConsoleV1MetricsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -16780,7 +16787,7 @@ export type DeleteConsoleV1MetricsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16829,7 +16836,7 @@ export type GetConsoleV1MetricsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16870,7 +16877,7 @@ export type PostConsoleV1MetricsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16919,7 +16926,7 @@ export type PutConsoleV1MetricsByIdCancelArchiveData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16969,7 +16976,7 @@ export type GetConsoleV1MetricsByIdExperimentsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -16981,7 +16988,7 @@ export type GetConsoleV1MetricsByIdExperimentsData = {
     /**
      * Which layer to place the experiment into.
      */
-    layerId?: string
+    layerID?: string
     /**
      * The idType the experiment will be performed on
      */
@@ -16989,7 +16996,7 @@ export type GetConsoleV1MetricsByIdExperimentsData = {
     /**
      * The team ID associated with the experiment, Enterprise only.
      */
-    teamId?: string | null
+    teamID?: string | null
     /**
      * The current status of the experiment
      */
@@ -17004,7 +17011,7 @@ export type GetConsoleV1MetricsByIdExperimentsData = {
       | Array<
           'active' | 'setup' | 'decision_made' | 'abandoned' | 'archived' | 'experiment_stopped' | 'assignment_stopped'
         >
-    targetAppId?: string
+    targetAppID?: string
     /**
      * Name of the creator.
      */
@@ -17012,7 +17019,7 @@ export type GetConsoleV1MetricsByIdExperimentsData = {
     /**
      * ID of the user who created the entity.
      */
-    creatorId?: string | null
+    creatorID?: string | null
     /**
      * Filter by tags
      */
@@ -17060,7 +17067,7 @@ export type PostConsoleV1MetricsByIdReloadData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -17115,7 +17122,7 @@ export type PutConsoleV1MetricsByIdScheduleArchiveData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -17165,7 +17172,7 @@ export type PutConsoleV1MetricsByIdUnarchiveData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -17215,7 +17222,7 @@ export type GetConsoleV1MetricsListData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -17272,7 +17279,7 @@ export type PostConsoleV1MetricsMetricSourceData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -17317,7 +17324,7 @@ export type DeleteConsoleV1MetricsMetricSourceByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -17367,7 +17374,7 @@ export type GetConsoleV1MetricsMetricSourceByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -17417,7 +17424,7 @@ export type PostConsoleV1MetricsMetricSourceByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -17467,7 +17474,7 @@ export type GetConsoleV1MetricsMetricSourceByNameMetricsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -17526,7 +17533,7 @@ export type GetConsoleV1MetricsMetricSourceListData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -17580,7 +17587,7 @@ export type GetConsoleV1MetricsValuesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query: {
@@ -17632,7 +17639,7 @@ export type GetConsoleV1ParamStoresData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -17665,7 +17672,7 @@ export type PostConsoleV1ParamStoresData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -17690,7 +17697,7 @@ export type GetConsoleV1ParamStoresByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     name: string
@@ -17717,7 +17724,7 @@ export type PostConsoleV1ParamStoresByNameData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     name: string
@@ -17744,7 +17751,7 @@ export type GetConsoleV1ProjectData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -17768,7 +17775,7 @@ export type GetConsoleV1ProjectUsageBillingReportData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query: {
@@ -17820,22 +17827,22 @@ export type GetConsoleV1ReleasePipelineTriggersData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
     /**
      * Filter by Release Pipeline ID
      */
-    releasePipelineId?: string
+    releasePipelineID?: string
     /**
      * Filter by Gate ID
      */
-    gateId?: string
+    gateID?: string
     /**
      * Filter by Dynamic Config ID
      */
-    dynamicConfigId?: string
+    dynamicConfigID?: string
     /**
      * Results per page
      */
@@ -17866,7 +17873,7 @@ export type GetConsoleV1ReleasePipelineTriggersByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -17893,7 +17900,7 @@ export type PutConsoleV1ReleasePipelineTriggersByIdAbortData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -17920,7 +17927,7 @@ export type PutConsoleV1ReleasePipelineTriggersByIdApproveData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -17947,7 +17954,7 @@ export type PutConsoleV1ReleasePipelineTriggersByIdPauseData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -17974,7 +17981,7 @@ export type PutConsoleV1ReleasePipelineTriggersByIdRolloutData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -18001,7 +18008,7 @@ export type PutConsoleV1ReleasePipelineTriggersByIdSkipData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -18028,7 +18035,7 @@ export type PutConsoleV1ReleasePipelineTriggersByIdUnpauseData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -18055,7 +18062,7 @@ export type GetConsoleV1ReleasePipelinesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -18089,7 +18096,7 @@ export type PostConsoleV1ReleasePipelinesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -18114,7 +18121,7 @@ export type DeleteConsoleV1ReleasePipelinesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -18141,7 +18148,7 @@ export type GetConsoleV1ReleasePipelinesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -18168,7 +18175,7 @@ export type PostConsoleV1ReleasePipelinesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -18195,7 +18202,7 @@ export type GetConsoleV1ReportsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query: {
@@ -18247,7 +18254,7 @@ export type GetConsoleV1RolesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -18299,7 +18306,7 @@ export type PostConsoleV1RolesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -18342,7 +18349,7 @@ export type DeleteConsoleV1RolesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -18391,7 +18398,7 @@ export type GetConsoleV1RolesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -18439,7 +18446,7 @@ export type PatchConsoleV1RolesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -18487,7 +18494,7 @@ export type GetConsoleV1SegmentsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -18532,7 +18539,7 @@ export type PostConsoleV1SegmentsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -18568,7 +18575,7 @@ export type DeleteConsoleV1SegmentsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -18618,7 +18625,7 @@ export type GetConsoleV1SegmentsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -18667,7 +18674,7 @@ export type PatchConsoleV1SegmentsByIdAddIdsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -18717,7 +18724,7 @@ export type PutConsoleV1SegmentsByIdArchiveData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -18767,7 +18774,7 @@ export type PostConsoleV1SegmentsByIdConditionalData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -18824,7 +18831,7 @@ export type DeleteConsoleV1SegmentsByIdIdListData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -18881,7 +18888,7 @@ export type GetConsoleV1SegmentsByIdIdListData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -18917,7 +18924,7 @@ export type PatchConsoleV1SegmentsByIdIdListData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -18974,7 +18981,7 @@ export type PostConsoleV1SegmentsByIdIdListResetData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -19004,7 +19011,7 @@ export type GetConsoleV1SegmentsByIdIdlistMetadataData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     id: string
@@ -19031,7 +19038,7 @@ export type PatchConsoleV1SegmentsByIdRemoveIdsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -19081,7 +19088,7 @@ export type GetConsoleV1SettingsProjectData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19126,7 +19133,7 @@ export type PostConsoleV1SettingsProjectData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19171,7 +19178,7 @@ export type GetConsoleV1SettingsReviewsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19216,7 +19223,7 @@ export type PostConsoleV1SettingsReviewsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19261,7 +19268,7 @@ export type GetConsoleV1SettingsRolesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19305,7 +19312,7 @@ export type PostConsoleV1SettingsRolesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19349,7 +19356,7 @@ export type GetConsoleV1SettingsTeamsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19393,7 +19400,7 @@ export type PostConsoleV1SettingsTeamsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19437,7 +19444,7 @@ export type GetConsoleV1TagsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -19482,7 +19489,7 @@ export type PostConsoleV1TagsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19506,7 +19513,7 @@ export type DeleteConsoleV1TagsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -19535,7 +19542,7 @@ export type GetConsoleV1TagsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -19576,7 +19583,7 @@ export type PatchConsoleV1TagsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -19605,7 +19612,7 @@ export type GetConsoleV1TargetAppData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -19650,7 +19657,7 @@ export type PatchConsoleV1TargetAppData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19693,7 +19700,7 @@ export type PostConsoleV1TargetAppData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19717,7 +19724,7 @@ export type DeleteConsoleV1TargetAppByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -19747,7 +19754,7 @@ export type GetConsoleV1TargetAppByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -19789,7 +19796,7 @@ export type PatchConsoleV1TargetAppByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -19839,7 +19846,7 @@ export type GetConsoleV1UnitIdTypesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -19891,7 +19898,7 @@ export type PostConsoleV1UnitIdTypesData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -19935,7 +19942,7 @@ export type DeleteConsoleV1UnitIdTypesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -19978,7 +19985,7 @@ export type GetConsoleV1UnitIdTypesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -20028,7 +20035,7 @@ export type PatchConsoleV1UnitIdTypesByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -20071,7 +20078,7 @@ export type GetConsoleV1UsersData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -20123,7 +20130,7 @@ export type GetConsoleV1UsersByEmailData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -20179,7 +20186,7 @@ export type PostConsoleV1UsersByEmailData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -20242,7 +20249,7 @@ export type PostConsoleV1UsersInviteData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -20286,7 +20293,7 @@ export type GetConsoleV1UsersTeamsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: {
@@ -20338,7 +20345,7 @@ export type PostConsoleV1UsersTeamsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never
@@ -20381,7 +20388,7 @@ export type DeleteConsoleV1UsersTeamsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -20411,7 +20418,7 @@ export type GetConsoleV1UsersTeamsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -20460,7 +20467,7 @@ export type PatchConsoleV1UsersTeamsByIdData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path: {
     /**
@@ -20510,7 +20517,7 @@ export type PatchConsoleV1WhConnectionsData = {
     /**
      * Optional header to respect review settings for mutation endpoints.
      */
-    xRespectReviewSettings?: string
+    'x-respect-review-settings'?: string
   }
   path?: never
   query?: never

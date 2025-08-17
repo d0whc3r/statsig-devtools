@@ -127,28 +127,26 @@ export function createExtensionSharedStore<T>(
 ) {
   // Create a custom storage that uses browser.storage.local (WXT provides cross-browser compatibility)
   const extensionStorage = {
-    getItem: (name: string): Promise<StorageValue<unknown> | null> => {
+    getItem: async (name: string): Promise<StorageValue<unknown> | null> => {
       if (typeof browser !== 'undefined') {
-        return browser.storage.local.get([name]).then((result) => {
-          const value = result[name]
-          if (value === undefined || value === null) return null
-          // If it's already a StorageValue object, return it as is
-          if (typeof value === 'object' && 'state' in value) {
-            return value as StorageValue<unknown>
+        const result = await browser.storage.local.get([name])
+        const value = result[name]
+        if (value === undefined || value === null) return null
+        // If it's already a StorageValue object, return it as is
+        if (typeof value === 'object' && 'state' in value) {
+          return value as StorageValue<unknown>
+        }
+        // If it's a string, try to parse it as JSON (legacy format)
+        if (typeof value === 'string') {
+          try {
+            const parsed = JSON.parse(value)
+            return parsed as StorageValue<unknown>
+          } catch {
+            // If parsing fails, wrap it in StorageValue format
+            return { state: value }
           }
-          // If it's a string, try to parse it as JSON (legacy format)
-          if (typeof value === 'string') {
-            try {
-              const parsed = JSON.parse(value)
-              return parsed as StorageValue<unknown>
-            } catch {
-              // If parsing fails, wrap it in StorageValue format
-              return { state: value }
-            }
-          }
-          // For other types, wrap in StorageValue format
-          return { state: value }
-        })
+        }
+        return { state: value }
       }
       // Fallback to localStorage
       const value = window.localStorage.getItem(name)

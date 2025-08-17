@@ -1,7 +1,6 @@
 {
   "recommendations": [
     // React Development
-    "ms-vscode.vscode-typescript-next",
     "bradlc.vscode-tailwindcss",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
@@ -21,6 +20,5 @@
     // Debugging and Development Tools
     "ms-vscode.vscode-chrome-debug-core",
     "firefox-devtools.vscode-firefox-debug"
-  ],
-  "unwantedRecommendations": ["ms-vscode.vscode-typescript", "hookyqr.beautify"]
+  ]
 }

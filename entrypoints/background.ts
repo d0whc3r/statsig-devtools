@@ -1,3 +1,10 @@
+import {
+  type ActiveTabData,
+  backgroundCommand,
+  backgroundMessageAction,
+  type ManifestInfoData,
+  type SendResponse,
+} from '@/src/types/background.types'
 import { Logger } from '@/src/utils/logger'
 
 const logger = new Logger('BACKGROUND')
@@ -18,71 +25,62 @@ export default defineBackground(() => {
   })
 
   // Handle messages from popup/sidebar/tab interfaces
-  browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  browser.runtime.onMessage.addListener((message, _sender, sendResponse: SendResponse) => {
     logger.debug('Received message', { type: message.type, sender: _sender.tab?.url })
 
     switch (message.type) {
-      case 'GET_ACTIVE_TAB':
+      case backgroundMessageAction.GET_ACTIVE_TAB:
         browser.tabs
           .query({ active: true, currentWindow: true })
           .then((tabs) => {
             const activeTab = tabs[0]
             if (activeTab) {
               const canInject = canInjectIntoTab(activeTab.url)
-              logger.debug('Active tab retrieved', {
-                id: activeTab.id,
-                url: activeTab.url,
-                title: activeTab.title,
+              const tabData: ActiveTabData = {
+                ...activeTab,
                 canInject,
-              })
+              }
+              logger.debug('Active tab retrieved', tabData)
               sendResponse({
                 success: true,
-                data: {
-                  id: activeTab.id,
-                  url: activeTab.url,
-                  title: activeTab.title,
-                  canInject,
-                },
+                data: tabData,
               })
             } else {
               logger.warn('No active tab found')
-              sendResponse({ success: false, error: 'No active tab found' })
+              sendResponse({ success: false, data: null, error: 'No active tab found' })
             }
           })
           .catch((error) => {
             logger.error('Failed to get active tab', error)
-            sendResponse({ success: false, error: error.message })
+            sendResponse({ success: false, data: null, error: error.message })
           })
         return true
 
-      case 'GET_MANIFEST_INFO':
+      case backgroundMessageAction.GET_MANIFEST_INFO:
         try {
           const manifest = browser.runtime.getManifest()
-          logger.debug('Manifest info retrieved', {
+          const manifestData: ManifestInfoData = {
             name: manifest.name,
             version: manifest.version,
-            description: manifest.description,
-          })
+            description: manifest.description ?? '',
+          }
+          logger.debug('Manifest info retrieved', manifestData)
           sendResponse({
             success: true,
-            data: {
-              name: manifest.name,
-              version: manifest.version,
-              description: manifest.description,
-            },
+            data: manifestData,
           })
         } catch (error) {
           logger.error('Failed to get manifest info', error)
-          sendResponse({ success: false, error: 'Failed to get manifest info' })
+          sendResponse({ success: false, data: null, error: 'Failed to get manifest info' })
         }
         return true
 
-      case 'PING_BACKGROUND':
+      case backgroundMessageAction.PING_BACKGROUND:
         logger.debug('PING_BACKGROUND received, responding with timestamp')
-        sendResponse({ success: true, timestamp: Date.now() })
+        sendResponse({ success: true, data: { timestamp: Date.now() } })
         return true
 
-      case 'OPEN_SIDEPANEL':
+      case backgroundMessageAction.OPEN_SIDEPANEL:
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (browser.sidePanel?.open) {
           logger.debug('Opening sidepanel')
@@ -96,21 +94,21 @@ export default defineBackground(() => {
             })
             .then(() => {
               logger.info('Sidepanel opened successfully')
-              sendResponse({ success: true })
+              sendResponse({ success: true, data: undefined })
             })
             .catch((error) => {
               logger.error('Failed to open sidepanel', error)
-              sendResponse({ success: false, error: error.message })
+              sendResponse({ success: false, data: null, error: error.message })
             })
         } else {
           logger.warn('Sidepanel API not available')
-          sendResponse({ success: false, error: 'Sidepanel not available' })
+          sendResponse({ success: false, data: null, error: 'Sidepanel not available' })
         }
         return true
 
       default:
         logger.warn('Unknown message type received', { type: message.type })
-        sendResponse({ success: false, error: 'Unknown message type' })
+        sendResponse({ success: false, data: null, error: 'Unknown message type' })
         return true
     }
   })
@@ -135,7 +133,11 @@ export default defineBackground(() => {
     }
 
     // Block browser store pages
-    if (url.includes('chromewebstore.google.com') || url.includes('addons.mozilla.org')) {
+    if (
+      url.includes('chromewebstore.google.com') ||
+      url.includes('addons.mozilla.org') ||
+      url.includes('microsoftedge.microsoft.com/addons')
+    ) {
       logger.debug('Cannot inject: browser store page', { url })
       return false
     }
@@ -167,7 +169,7 @@ export default defineBackground(() => {
     logger.debug('Keyboard command received', { command })
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (command === 'open-sidepanel' && browser.sidePanel?.open) {
+    if (command === backgroundCommand.OPEN_SIDEPANEL && browser.sidePanel?.open) {
       logger.debug('Opening sidepanel via keyboard shortcut')
       browser.tabs
         .query({ active: true, currentWindow: true })

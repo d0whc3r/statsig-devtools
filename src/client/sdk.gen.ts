@@ -880,7 +880,7 @@ export class Autotunes {
   }
 }
 
-export class Configs {
+export class ChangeValidation {
   /**
    * Change Validation
    */
@@ -926,29 +926,6 @@ export class Configs {
         'Content-Type': 'application/json',
         ...options.headers,
       },
-    })
-  }
-
-  /**
-   * Read Exposure Event Count
-   * Get the count of exposure events recently received by Statsig.
-   */
-  public static getConsoleV1ExposureCount<ThrowOnError extends boolean = false>(
-    options?: Options<GetConsoleV1ExposureCountData, ThrowOnError>,
-  ) {
-    return (options?.client ?? _heyApiClient).get<
-      GetConsoleV1ExposureCountResponses,
-      GetConsoleV1ExposureCountErrors,
-      ThrowOnError
-    >({
-      security: [
-        {
-          name: 'STATSIG-API-KEY',
-          type: 'apiKey',
-        },
-      ],
-      url: '/console/v1/exposure_count',
-      ...options,
     })
   }
 }
@@ -4527,6 +4504,31 @@ export class ExperimentsWarehouseNative {
         'Content-Type': 'application/json',
         ...options.headers,
       },
+    })
+  }
+}
+
+export class Configs {
+  /**
+   * Read Exposure Event Count
+   * Get the count of exposure events recently received by Statsig.
+   */
+  public static getConsoleV1ExposureCount<ThrowOnError extends boolean = false>(
+    options?: Options<GetConsoleV1ExposureCountData, ThrowOnError>,
+  ) {
+    return (options?.client ?? _heyApiClient).get<
+      GetConsoleV1ExposureCountResponses,
+      GetConsoleV1ExposureCountErrors,
+      ThrowOnError
+    >({
+      security: [
+        {
+          name: 'STATSIG-API-KEY',
+          type: 'apiKey',
+        },
+      ],
+      url: '/console/v1/exposure_count',
+      ...options,
     })
   }
 }

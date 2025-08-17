@@ -1,23 +1,25 @@
 import { useEffect } from 'react'
 
-import { LoginForm } from '@/src/components/auth/LoginForm/LoginForm'
+import { setupClientCache } from '@/src/api/cache/client-cache'
 import { Dashboard } from '@/src/components/Dashboard/Dashboard'
-import { GlobalErrorAlert } from '@/src/components/GlobalErrorAlert/GlobalErrorAlert'
+import { LoginForm } from '@/src/components/LoginForm/LoginForm'
 import { Navbar } from '@/src/components/Navbar/Navbar'
-import { useAuthStore } from '@/src/stores/auth-store'
-import { useThemeStore } from '@/src/stores/theme-store'
+import { GlobalErrorAlert } from '@/src/components/ui/GlobalErrorAlert/GlobalErrorAlert'
+import { useViewMode } from '@/src/hooks/useViewMode'
+import { useAuthStore } from '@/src/stores/auth.store'
+import { useThemeStore } from '@/src/stores/theme.store'
+import { cn } from '@/src/utils/cn'
 
 export interface AppLayoutProps {
-  viewMode: 'popup' | 'sidebar' | 'tab'
+  viewMode: 'popup' | 'tab' | 'sidebar'
 }
 
 export function AppLayout({ viewMode }: AppLayoutProps) {
-  const { isAuthenticated } = useAuthStore()
+  const { isAuthenticated, initializeAuth } = useAuthStore()
   const { theme, initializeTheme } = useThemeStore()
+  const { setViewMode } = useViewMode()
 
-  // Initialize theme on app mount
   useEffect(() => {
-    // Apply the current theme to the DOM
     const root = window.document.documentElement
     root.classList.remove('light', 'dark')
     root.classList.add(theme)
@@ -26,27 +28,34 @@ export function AppLayout({ viewMode }: AppLayoutProps) {
     initializeTheme()
   }, [theme, initializeTheme])
 
-  const containerClasses = {
-    popup: 'popup-container',
-    sidebar: 'sidebar-container',
-    tab: 'tab-container',
-  }
+  // Initialize the viewMode in the store when the component mounts
+  useEffect(() => {
+    setViewMode(viewMode)
+  }, [viewMode, setViewMode])
 
-  const layoutClasses = {
-    popup: 'popup-layout',
-    sidebar: 'sidebar-layout',
-    tab: 'tab-layout',
-  }
+  // Initialize auth store
+  useEffect(() => {
+    initializeAuth()
+  }, [initializeAuth])
+
+  // Initialize client cache
+  useEffect(() => {
+    setupClientCache()
+  }, [])
 
   return (
-    <>
+    <div
+      className={cn('bg-background text-foreground relative', {
+        'h-[600px] max-h-[600px]': viewMode === 'popup',
+        'min-h-screen w-full': viewMode === 'tab',
+        'h-screen max-h-screen': viewMode === 'sidebar',
+      })}
+    >
       <GlobalErrorAlert />
-      <div className={`${containerClasses[viewMode]} animate-fade-in`}>
-        <div className={`${layoutClasses[viewMode]} text-foreground`}>
-          <Navbar viewMode={viewMode} />
-          {isAuthenticated ? <Dashboard viewMode={viewMode} /> : <LoginForm viewMode={viewMode} />}
-        </div>
+      <div className="flex h-full flex-col">
+        <Navbar />
+        <div className="flex flex-1 flex-col">{isAuthenticated ? <Dashboard /> : <LoginForm />}</div>
       </div>
-    </>
+    </div>
   )
 }
