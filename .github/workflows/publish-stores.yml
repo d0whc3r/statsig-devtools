@@ -95,7 +95,7 @@ jobs:
     if: needs.validate.outputs.skip-build != 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js and dependencies
         uses: ./.github/actions/setup-node-deps
@@ -134,7 +134,7 @@ jobs:
       needs.validate.outputs.is-dry-run == 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js and dependencies
         uses: ./.github/actions/setup-node-deps
@@ -177,7 +177,7 @@ jobs:
     environment: production
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js and dependencies
         uses: ./.github/actions/setup-node-deps
