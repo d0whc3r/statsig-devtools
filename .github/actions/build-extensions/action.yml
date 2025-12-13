@@ -57,7 +57,7 @@ runs:
 
     - name: Upload build artifacts
       if: inputs.upload-artifacts == 'true'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: extension-builds-${{ github.run_id }}
         path: |
