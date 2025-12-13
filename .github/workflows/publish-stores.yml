@@ -116,7 +116,7 @@ jobs:
           create-firefox-zip: ${{ needs.validate.outputs.should-publish-firefox }}
 
       - name: Upload publishing artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: extension-packages-${{ github.run_id }}
           path: |
@@ -143,7 +143,7 @@ jobs:
 
       - name: Download build artifacts
         if: needs.validate.outputs.skip-build != 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: extension-packages-${{ github.run_id }}
           path: .output/
@@ -186,7 +186,7 @@ jobs:
 
       - name: Download build artifacts
         if: needs.validate.outputs.skip-build != 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: extension-packages-${{ github.run_id }}
           path: .output/
